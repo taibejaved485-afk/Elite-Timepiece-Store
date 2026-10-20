@@ -28,7 +28,7 @@ const ARTICLES_DATA: Record<string, Article> = {
     date: 'October 2026',
     read: '4 min read',
     author: 'Jean-Luc Favre, Head of R&D Le Brassus',
-    image: '/assets/images/watch_skeleton_tourbillon_1791612558576.jpg',
+    image: './assets/images/watch_skeleton_tourbillon_1791612558576.jpg',
     content: [
       'Traditional regulator index pins restrict the active length of the balance spring, introducing positional error and chronometric drift over time. Aurelia’s proprietary free-sprung variable inertia balance wheel utilizes aerodynamic platinum micro-weights poised directly on the rim.',
       'Combined with our anti-magnetic silicon hairspring, this architecture maintains rate stability within ±1 second across all five testing positions. The geometry of the balance bridge has been recalculated to eliminate torsional vibration under high G-forces.',
@@ -43,7 +43,7 @@ const ARTICLES_DATA: Record<string, Article> = {
     read: '6 min read',
     author: 'Atelier Design Bureau',
     image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80',
-    fallbackImage: '/assets/images/hero_luxury_chronograph_1791612522214.jpg',
+    fallbackImage: './assets/images/hero_luxury_chronograph_1791612522214.jpg',
     content: [
       'Perched 1,004 meters above sea level in the Vallée de Joux, the Aurelia manufacture is an exercise in structural lightness. Floor-to-ceiling electrochromic triple-glazed glass walls curve along the contours of the Jura topography.',
       'Bathing master watchmakers in diffuse northern light, the building maintains an optimal working environment while ground-source geothermal loops maintain 0.1°C temperature stability across all cleanrooms.',
@@ -57,7 +57,7 @@ const ARTICLES_DATA: Record<string, Article> = {
     date: 'August 2026',
     read: '5 min read',
     author: 'Master Angleur Yvan Doret',
-    image: '/assets/images/craftsmanship_watchmaker_1791612587562.jpg',
+    image: './assets/images/craftsmanship_watchmaker_1791612587562.jpg',
     content: [
       'While 5-axis CNC mills can shape bridge blanks to micron tolerances, the acute internal angles of haute horlogerie remain strictly impassable for machines.',
       'Each interior corner of an Aurelia bridge is finished by hand using files and polished with pegwood stems harvested from local Jura gentian plants, impregnated with diamond paste to achieve a flawless speculaire black-polish reflection.',

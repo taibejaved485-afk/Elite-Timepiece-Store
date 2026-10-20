@@ -26,7 +26,7 @@ const JOURNAL_ARTICLES: JournalArticle[] = [
     date: 'October 2026',
     read: '4 min read',
     excerpt: 'Examining thermal compensation alloys and inertia block regulation in high-beat calibres.',
-    image: '/assets/images/watch_skeleton_tourbillon_1791612558576.jpg',
+    image: './assets/images/watch_skeleton_tourbillon_1791612558576.jpg',
     fullText: 'Traditional regulator index pins restrict the active length of the balance spring, introducing positional error and chronometric drift over time. Aurelia’s proprietary free-sprung variable inertia balance wheel utilizes aerodynamic platinum micro-weights poised directly on the rim. Combined with our anti-magnetic silicon hairspring, this architecture maintains rate stability within ±1 second across all five testing positions.'
   },
   {
@@ -37,7 +37,7 @@ const JOURNAL_ARTICLES: JournalArticle[] = [
     read: '6 min read',
     excerpt: 'How our zero-carbon manufacture integrates natural alpine light into watchmaking benches.',
     image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80',
-    fallbackImage: '/assets/images/hero_luxury_chronograph_1791612522214.jpg',
+    fallbackImage: './assets/images/hero_luxury_chronograph_1791612522214.jpg',
     fullText: 'Perched 1,004 meters above sea level in the Vallée de Joux, the Aurelia manufacture is an exercise in structural lightness. Floor-to-ceiling electrochromic triple-glazed glass walls curve along the contours of the Jura topography, bathing master watchmakers in diffuse northern light while ground-source geothermal loops maintain 0.1°C temperature stability.'
   },
   {
@@ -47,7 +47,7 @@ const JOURNAL_ARTICLES: JournalArticle[] = [
     date: 'August 2026',
     read: '5 min read',
     excerpt: 'Why machine-cut bevels can never replicate the mirror polish achieved by gentian wood.',
-    image: '/assets/images/craftsmanship_watchmaker_1791612587562.jpg',
+    image: './assets/images/craftsmanship_watchmaker_1791612587562.jpg',
     fullText: 'While 5-axis CNC mills can shape bridge blanks to micron tolerances, the acute internal angles of haute horlogerie remain strictly impassable for machines. Each interior corner of an Aurelia bridge is finished by hand using files and polished with pegwood stems harvested from local Jura gentian plants, impregnated with diamond paste to achieve a flawless speculaire black-polish reflection.'
   }
 ];
@@ -458,10 +458,10 @@ export const HomePage: React.FC<HomePageProps> = ({
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[
-            { title: 'Tourbillon Escapement', desc: 'Gravitational Error Compensation', img: featuredWatches[0]?.image || '/assets/images/craftsmanship_watchmaker_1791612587562.jpg' },
-            { title: 'Hand-Chamfered Bridges', desc: 'Internal Angle Mirror Polishing', img: featuredWatches[1]?.image || '/assets/images/craftsmanship_watchmaker_1791612587562.jpg' },
-            { title: 'Guilloché Sunburst Dial', desc: 'Engine-Turned Cotes de Geneve', img: featuredWatches[2]?.image || '/assets/images/craftsmanship_watchmaker_1791612587562.jpg' },
-            { title: 'Solid 22k Gold Rotor', desc: 'High-Inertia Oscillating Weight', img: featuredWatches[3]?.image || '/assets/images/craftsmanship_watchmaker_1791612587562.jpg' },
+            { title: 'Tourbillon Escapement', desc: 'Gravitational Error Compensation', img: featuredWatches[0]?.image || './assets/images/craftsmanship_watchmaker_1791612587562.jpg' },
+            { title: 'Hand-Chamfered Bridges', desc: 'Internal Angle Mirror Polishing', img: featuredWatches[1]?.image || './assets/images/craftsmanship_watchmaker_1791612587562.jpg' },
+            { title: 'Guilloché Sunburst Dial', desc: 'Engine-Turned Cotes de Geneve', img: featuredWatches[2]?.image || './assets/images/craftsmanship_watchmaker_1791612587562.jpg' },
+            { title: 'Solid 22k Gold Rotor', desc: 'High-Inertia Oscillating Weight', img: featuredWatches[3]?.image || './assets/images/craftsmanship_watchmaker_1791612587562.jpg' },
           ].map((item, idx) => (
             <div key={`gallery-${idx}`} className="group relative aspect-[4/5] rounded-xl overflow-hidden border border-slate-200 shadow-sm">
               <img src={item.img} alt={item.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" referrerPolicy="no-referrer" />

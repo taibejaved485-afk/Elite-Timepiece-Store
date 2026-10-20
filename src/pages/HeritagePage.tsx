@@ -80,7 +80,7 @@ export const HeritagePage: React.FC<HeritagePageProps> = ({ onNavigate }) => {
 
         <div className="lg:col-span-6 relative rounded-lg overflow-hidden border border-white/[0.1] shadow-xl">
           <img
-            src="/assets/images/craftsmanship_watchmaker_1791612587562.jpg"
+            src="./assets/images/craftsmanship_watchmaker_1791612587562.jpg"
             alt="Historical watchmaking bench in Le Brassus"
             className="w-full h-auto object-cover"
             referrerPolicy="no-referrer"

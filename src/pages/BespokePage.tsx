@@ -57,12 +57,12 @@ export const BespokePage: React.FC<BespokePageProps> = ({ currency, onAddBespoke
       priceUSD: totalPriceUSD,
       image:
         config.movementType === 'skeleton-tourbillon'
-          ? '/assets/images/watch_skeleton_tourbillon_1791612558576.jpg'
+          ? './assets/images/watch_skeleton_tourbillon_1791612558576.jpg'
           : config.caseMaterial === '18k-rose-gold'
-          ? '/assets/images/hero_luxury_chronograph_1791612522214.jpg'
+          ? './assets/images/hero_luxury_chronograph_1791612522214.jpg'
           : config.caseMaterial === 'titanium-grade-5'
-          ? '/assets/images/watch_diver_submariner_1791612540699.jpg'
-          : '/assets/images/watch_dress_minimalist_1791612572332.jpg',
+          ? './assets/images/watch_diver_submariner_1791612540699.jpg'
+          : './assets/images/watch_dress_minimalist_1791612572332.jpg',
       gallery: [],
       specs: {
         caseDiameter: '40.5 mm',
