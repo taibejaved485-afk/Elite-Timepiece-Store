@@ -192,14 +192,6 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onReplayPreloader })
               </li>
               <li>
                 <button
-                  onClick={() => handleNav('bespoke')}
-                  className="hover:text-[#9A7B38] hover:font-medium transition-colors text-left"
-                >
-                  Bespoke Studio
-                </button>
-              </li>
-              <li>
-                <button
                   onClick={() => handleNav('heritage')}
                   className="hover:text-[#9A7B38] hover:font-medium transition-colors text-left"
                 >
@@ -211,7 +203,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onReplayPreloader })
                   onClick={() => handleNav('concierge')}
                   className="hover:text-[#9A7B38] hover:font-medium transition-colors text-left"
                 >
-                  Private Concierge
+                  Contact Us
                 </button>
               </li>
               <li>
@@ -249,22 +241,6 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onReplayPreloader })
               </li>
               <li>
                 <button
-                  onClick={() => handleNav('craftsmanship')}
-                  className="hover:text-[#9A7B38] hover:font-medium transition-colors text-left"
-                >
-                  Calibre Acoustic Studio
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => handleNav('bespoke')}
-                  className="hover:text-[#9A7B38] hover:font-medium transition-colors text-left"
-                >
-                  Bespoke Configurator
-                </button>
-              </li>
-              <li>
-                <button
                   onClick={() => handleNav('heritage')}
                   className="hover:text-[#9A7B38] hover:font-medium transition-colors text-left"
                 >
@@ -273,10 +249,10 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onReplayPreloader })
               </li>
               <li>
                 <button
-                  onClick={() => handleNav('home')}
+                  onClick={() => handleNav('concierge')}
                   className="hover:text-[#9A7B38] hover:font-medium transition-colors text-left"
                 >
-                  Founder Club & Salons
+                  Geneva Salons Directory
                 </button>
               </li>
               <li>
@@ -284,7 +260,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onReplayPreloader })
                   onClick={() => setActiveModal('cert')}
                   className="hover:text-[#9A7B38] hover:font-medium transition-colors text-left"
                 >
-                  Digital Provenance
+                  Geneva Seal Certificate
                 </button>
               </li>
             </ul>

@@ -18,9 +18,8 @@ const NAV_LINKS: { label: string; page: PageRoute }[] = [
   { label: 'Atelier', page: 'home' },
   { label: 'Collections', page: 'collections' },
   { label: 'Craftsmanship', page: 'craftsmanship' },
-  { label: 'Bespoke Studio', page: 'bespoke' },
   { label: 'Heritage', page: 'heritage' },
-  { label: 'Concierge', page: 'concierge' },
+  { label: 'Contact Us', page: 'concierge' },
 ];
 
 export const Navbar: React.FC<NavbarProps> = ({

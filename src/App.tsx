@@ -75,8 +75,8 @@ export default function App() {
   // Routing state
   const [currentPage, setCurrentPage] = useState<PageRoute>('home');
 
-  // Currency state
-  const [currency, setCurrency] = useState<CurrencyCode>('USD');
+  // Currency state (Default to PKR)
+  const [currency, setCurrency] = useState<CurrencyCode>('PKR');
 
   // E-Commerce state
   const [cart, setCart] = useState<CartItem[]>(() => {
