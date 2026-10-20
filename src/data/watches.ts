@@ -9,10 +9,10 @@ export const WATCHES: Watch[] = [
     tagline: 'Haute Horlogerie in 18k Rose Gold with sunburst navy dial',
     description: 'An icon of contemporary luxury horology. Encased in hand-satin finished 18k rose gold with mirror-beveled angles, the Royal Chronograph houses our in-house integrated flyback calibre AH-820. Featuring dual sub-dial registers, screw-down sapphire exhibition caseback, and a 55-hour power reserve.',
     priceUSD: 42500,
-    image: '/src/assets/images/hero_luxury_chronograph_1791612522214.jpg',
+    image: '/assets/images/hero_luxury_chronograph_1791612522214.jpg',
     gallery: [
-      '/src/assets/images/hero_luxury_chronograph_1791612522214.jpg',
-      '/src/assets/images/watch_dress_minimalist_1791612572332.jpg',
+      '/assets/images/hero_luxury_chronograph_1791612522214.jpg',
+      '/assets/images/watch_dress_minimalist_1791612572332.jpg',
     ],
     specs: {
       caseDiameter: '41 mm',
@@ -42,9 +42,9 @@ export const WATCHES: Watch[] = [
     tagline: 'Grade 5 Titanium with deep emerald ceramic diving bezel',
     description: 'Forged for profound ocean expeditions. The Abyss Master Diver is sculpted from feather-light Grade 5 aerospace titanium, matched with an unscratchable unidirectional emerald ceramic bezel calibrated to 60 minutes. Super-LumiNova BGW9 indices guarantee uncompromised legibility in abyssal depths.',
     priceUSD: 14800,
-    image: '/src/assets/images/watch_diver_submariner_1791612540699.jpg',
+    image: '/assets/images/watch_diver_submariner_1791612540699.jpg',
     gallery: [
-      '/src/assets/images/watch_diver_submariner_1791612540699.jpg',
+      '/assets/images/watch_diver_submariner_1791612540699.jpg',
     ],
     specs: {
       caseDiameter: '42 mm',
@@ -73,9 +73,9 @@ export const WATCHES: Watch[] = [
     tagline: 'Architectural openworked caliber with 60-second flying cage',
     description: 'The pinnacle of fine mechanical artistry. Every bridge of Calibre AH-900 is hand-beveled and mirror-polished with gentian wood by our master artisans in Le Brassus. The 60-second flying tourbillon defies gravitational errors, floating weightlessly at 6 o’clock against flame-blued titanium hands.',
     priceUSD: 88000,
-    image: '/src/assets/images/watch_skeleton_tourbillon_1791612558576.jpg',
+    image: '/assets/images/watch_skeleton_tourbillon_1791612558576.jpg',
     gallery: [
-      '/src/assets/images/watch_skeleton_tourbillon_1791612558576.jpg',
+      '/assets/images/watch_skeleton_tourbillon_1791612558576.jpg',
     ],
     specs: {
       caseDiameter: '40 mm',
@@ -106,9 +106,9 @@ export const WATCHES: Watch[] = [
     tagline: 'Timeless restraint in warm gold with champagne opaline dial',
     description: 'Understated elegance at its zenith. Measuring a razor-thin 6.8 mm, the Patrimoine Étoile rests effortlessly beneath the finest bespoke shirt cuff. Pure minimalist dot minute markers, hand-curved flame-blued feuille hands, and an unhurried, serene dial aesthetic honor 1920s Swiss heritage.',
     priceUSD: 24500,
-    image: '/src/assets/images/watch_dress_minimalist_1791612572332.jpg',
+    image: '/assets/images/watch_dress_minimalist_1791612572332.jpg',
     gallery: [
-      '/src/assets/images/watch_dress_minimalist_1791612572332.jpg',
+      '/assets/images/watch_dress_minimalist_1791612572332.jpg',
     ],
     specs: {
       caseDiameter: '38.5 mm',
@@ -137,9 +137,9 @@ export const WATCHES: Watch[] = [
     tagline: 'Vintage panda racing dial with tachymeter ceramic ring',
     description: 'Inspired by the thrilling golden era of 1960s Alpine road rallies. Hand-lacquered off-white opaline dial with dual contrasting black azure registers, high-precision chronograph pushers, and a domed box sapphire crystal paying homage to the legendary drivers of the Riviera.',
     priceUSD: 18900,
-    image: '/src/assets/images/hero_luxury_chronograph_1791612522214.jpg',
+    image: '/assets/images/hero_luxury_chronograph_1791612522214.jpg',
     gallery: [
-      '/src/assets/images/hero_luxury_chronograph_1791612522214.jpg',
+      '/assets/images/hero_luxury_chronograph_1791612522214.jpg',
     ],
     specs: {
       caseDiameter: '40 mm',
@@ -168,9 +168,9 @@ export const WATCHES: Watch[] = [
     tagline: 'Monolithic matte black ceramic with carbon dial',
     description: 'Engineered for night tactical diving and high-impact aquatic performance. The solid zirconium oxide ceramic case is impervious to scratches and saltwater corrosion. Features an integrated helium escape valve and stealth luminescent indicators.',
     priceUSD: 16400,
-    image: '/src/assets/images/watch_diver_submariner_1791612540699.jpg',
+    image: '/assets/images/watch_diver_submariner_1791612540699.jpg',
     gallery: [
-      '/src/assets/images/watch_diver_submariner_1791612540699.jpg',
+      '/assets/images/watch_diver_submariner_1791612540699.jpg',
     ],
     specs: {
       caseDiameter: '43 mm',
@@ -198,9 +198,9 @@ export const WATCHES: Watch[] = [
     tagline: 'Astronomical precision with Aventurine glass starry dial',
     description: 'A miniature cosmos on your wrist. The Céleste features a glittering midnight-blue Italian aventurine glass dial with two hand-carved mother-of-pearl moons accurate to one full day every 122 years. Quadruple calendar apertures display day, date, month, and leap year cycles.',
     priceUSD: 56000,
-    image: '/src/assets/images/watch_skeleton_tourbillon_1791612558576.jpg',
+    image: '/assets/images/watch_skeleton_tourbillon_1791612558576.jpg',
     gallery: [
-      '/src/assets/images/watch_skeleton_tourbillon_1791612558576.jpg',
+      '/assets/images/watch_skeleton_tourbillon_1791612558576.jpg',
     ],
     specs: {
       caseDiameter: '41 mm',
@@ -230,9 +230,9 @@ export const WATCHES: Watch[] = [
     tagline: 'Historical regulator dial separation for astronomical precision',
     description: 'Honoring the reference clocks used by master watchmakers to regulate workshop movements since 1892. Features decentralized hours at 12 o’clock, running seconds at 6 o’clock, and a majestic sweeping central blued minutes hand across a hand-guilloché silver dial.',
     priceUSD: 29500,
-    image: '/src/assets/images/watch_dress_minimalist_1791612572332.jpg',
+    image: '/assets/images/watch_dress_minimalist_1791612572332.jpg',
     gallery: [
-      '/src/assets/images/watch_dress_minimalist_1791612572332.jpg',
+      '/assets/images/watch_dress_minimalist_1791612572332.jpg',
     ],
     specs: {
       caseDiameter: '39 mm',
@@ -260,10 +260,10 @@ export const WATCHES: Watch[] = [
     tagline: 'Physical acoustic acoustic resonance synchronizing dual escapements',
     description: 'An extraordinary triumph of chronometric physics. Two independently beating balances placed in close proximity naturally synchronize their oscillations through the acoustic wave resonance in the mainplate, eliminating gravitational positional deviation with unmatched precision.',
     priceUSD: 112000,
-    image: '/src/assets/images/watch_skeleton_tourbillon_1791612558576.jpg',
+    image: '/assets/images/watch_skeleton_tourbillon_1791612558576.jpg',
     gallery: [
-      '/src/assets/images/watch_skeleton_tourbillon_1791612558576.jpg',
-      '/src/assets/images/watch_dress_minimalist_1791612572332.jpg',
+      '/assets/images/watch_skeleton_tourbillon_1791612558576.jpg',
+      '/assets/images/watch_dress_minimalist_1791612572332.jpg',
     ],
     specs: {
       caseDiameter: '40 mm',
@@ -294,9 +294,9 @@ export const WATCHES: Watch[] = [
     tagline: 'Twin column-wheel chronograph with instant split-lap timing',
     description: 'Engineered for absolute chronometric command. Two superimposed center seconds hands allow the measurement of intermediate and simultaneous split times. Features an instantaneous 30-minute jumping counter and an exhibition caseback displaying the hand-beveled split-seconds isolator mechanism.',
     priceUSD: 68500,
-    image: '/src/assets/images/hero_luxury_chronograph_1791612522214.jpg',
+    image: '/assets/images/hero_luxury_chronograph_1791612522214.jpg',
     gallery: [
-      '/src/assets/images/hero_luxury_chronograph_1791612522214.jpg',
+      '/assets/images/hero_luxury_chronograph_1791612522214.jpg',
     ],
     specs: {
       caseDiameter: '42 mm',
@@ -325,9 +325,9 @@ export const WATCHES: Watch[] = [
     tagline: 'Dual timezone chronometer with 24-hour bi-color ceramic bezel',
     description: 'The definitive voyager timepiece. Displays two timezones simultaneously via an arrow-tipped 24-hour hand and a two-tone 24-click ceramic bezel in deep sapphire blue and obsidian black. Screw-down crown with triple waterproof seals rated to 300 meters.',
     priceUSD: 17200,
-    image: '/src/assets/images/watch_diver_submariner_1791612540699.jpg',
+    image: '/assets/images/watch_diver_submariner_1791612540699.jpg',
     gallery: [
-      '/src/assets/images/watch_diver_submariner_1791612540699.jpg',
+      '/assets/images/watch_diver_submariner_1791612540699.jpg',
     ],
     specs: {
       caseDiameter: '42 mm',
@@ -357,9 +357,9 @@ export const WATCHES: Watch[] = [
     tagline: 'Coaxial crown monopusher in tribute to early aviation instruments',
     description: 'A single pusher integrated directly into the winding crown governs start, stop, and reset functions with seamless mechanical harmony. Features Breguet numerals hand-painted in liquid enamel, snail-track telemetric scales, and blued steel leaf hands.',
     priceUSD: 33500,
-    image: '/src/assets/images/watch_dress_minimalist_1791612572332.jpg',
+    image: '/assets/images/watch_dress_minimalist_1791612572332.jpg',
     gallery: [
-      '/src/assets/images/watch_dress_minimalist_1791612572332.jpg',
+      '/assets/images/watch_dress_minimalist_1791612572332.jpg',
     ],
     specs: {
       caseDiameter: '39.5 mm',

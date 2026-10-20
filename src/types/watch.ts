@@ -53,4 +53,4 @@ export interface BespokeConfiguration {
   engravingText: string;
 }
 
-export type PageRoute = 'home' | 'collections' | 'craftsmanship' | 'bespoke' | 'heritage' | 'concierge' | 'admin' | `product-${string}` | `article-${string}`;
+export type PageRoute = 'home' | 'collections' | 'craftsmanship' | 'bespoke' | 'heritage' | 'concierge' | 'admin' | 'privacy' | 'terms' | 'provenance' | `product-${string}` | `article-${string}`;

@@ -19,10 +19,10 @@ interface AdminPageProps {
 }
 
 const PRESET_IMAGES = [
-  { label: 'Royal Chronograph', url: '/src/assets/images/hero_luxury_chronograph_1791612522214.jpg' },
-  { label: 'Abyss Diver Titanium', url: '/src/assets/images/watch_diver_submariner_1791612540699.jpg' },
-  { label: 'Symphonie Skeleton', url: '/src/assets/images/watch_skeleton_tourbillon_1791612558576.jpg' },
-  { label: 'Patrimoine Minimalist', url: '/src/assets/images/watch_dress_minimalist_1791612572332.jpg' },
+  { label: 'Royal Chronograph', url: '/assets/images/hero_luxury_chronograph_1791612522214.jpg' },
+  { label: 'Abyss Diver Titanium', url: '/assets/images/watch_diver_submariner_1791612540699.jpg' },
+  { label: 'Symphonie Skeleton', url: '/assets/images/watch_skeleton_tourbillon_1791612558576.jpg' },
+  { label: 'Patrimoine Minimalist', url: '/assets/images/watch_dress_minimalist_1791612572332.jpg' },
 ];
 
 const INITIAL_FORM_STATE: Omit<Watch, 'id'> = {
@@ -32,8 +32,8 @@ const INITIAL_FORM_STATE: Omit<Watch, 'id'> = {
   tagline: '',
   description: '',
   priceUSD: 35000,
-  image: '/src/assets/images/hero_luxury_chronograph_1791612522214.jpg',
-  gallery: ['/src/assets/images/hero_luxury_chronograph_1791612522214.jpg'],
+  image: '/assets/images/hero_luxury_chronograph_1791612522214.jpg',
+  gallery: ['/assets/images/hero_luxury_chronograph_1791612522214.jpg'],
   specs: {
     caseDiameter: '41 mm',
     caseThickness: '11.5 mm',
@@ -134,7 +134,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
         tagline: 'Titanium Grade 5 openworked flying tourbillon with ruby pallet fork',
         description: 'An architectural feat of Swiss micromechanics. Hand-finished titanium bridges framing a one-minute flying tourbillon cage floating over a deep meteorite dial with 72-hour power reserve.',
         priceUSD: 94000,
-        image: '/src/assets/images/watch_skeleton_tourbillon_1791612558576.jpg',
+        image: '/assets/images/watch_skeleton_tourbillon_1791612558576.jpg',
         specs: {
           caseDiameter: '41 mm',
           caseThickness: '10.2 mm',
@@ -161,7 +161,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
         tagline: 'Extreme ocean flyback chronograph in 904L steel and ceramic',
         description: 'Engineered for absolute underwater fidelity. Unidirectional ceramic timing bezel, locking chronograph pushers, automatic helium relief valve, and high-contrast tritium glow markers.',
         priceUSD: 21500,
-        image: '/src/assets/images/watch_diver_submariner_1791612540699.jpg',
+        image: '/assets/images/watch_diver_submariner_1791612540699.jpg',
         specs: {
           caseDiameter: '43 mm',
           caseThickness: '13.9 mm',
@@ -679,7 +679,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                       image: e.target.value,
                       gallery: [e.target.value]
                     })}
-                    placeholder="e.g. /src/assets/images/... or https://..."
+                    placeholder="e.g. /assets/images/... or https://..."
                     className="w-full px-3.5 py-2 text-xs bg-[#141824] border border-white/15 rounded-lg text-white font-mono focus:outline-none focus:border-gold"
                   />
                 </div>

@@ -23,6 +23,7 @@ import { ConciergePage } from './pages/ConciergePage';
 import { AdminPage } from './pages/AdminPage';
 import { ProductDetailPage } from './pages/ProductDetailPage';
 import { ArticlePage } from './pages/ArticlePage';
+import { LegalPage } from './pages/LegalPage';
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -112,6 +113,9 @@ export default function App() {
         'heritage',
         'concierge',
         'admin',
+        'privacy',
+        'terms',
+        'provenance',
       ];
       if (validRoutes.includes(hash) || hash.startsWith('product-') || hash.startsWith('article-')) {
         setCurrentPage(hash);
@@ -304,6 +308,10 @@ export default function App() {
             {currentPage === 'heritage' && <HeritagePage onNavigate={handleNavigate} />}
 
             {currentPage === 'concierge' && <ConciergePage onNavigate={handleNavigate} />}
+
+            {currentPage === 'privacy' && <LegalPage route="privacy" onNavigate={handleNavigate} />}
+            {currentPage === 'terms' && <LegalPage route="terms" onNavigate={handleNavigate} />}
+            {currentPage === 'provenance' && <LegalPage route="provenance" onNavigate={handleNavigate} />}
 
             {currentPage === 'admin' && (
               <AdminPage

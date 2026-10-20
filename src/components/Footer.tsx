@@ -18,8 +18,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onReplayPreloader })
   const [subscribed, setSubscribed] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Policy modal states
-  const [activeModal, setActiveModal] = useState<'privacy' | 'terms' | 'cert' | null>(null);
+
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -257,7 +256,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onReplayPreloader })
               </li>
               <li>
                 <button
-                  onClick={() => setActiveModal('cert')}
+                  onClick={() => handleNav('provenance')}
                   className="hover:text-[#9A7B38] hover:font-medium transition-colors text-left"
                 >
                   Geneva Seal Certificate
@@ -368,21 +367,30 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onReplayPreloader })
           <p>© 2026 Aurelia Horology. All Rights Reserved. Swiss Manufacture Vallée de Joux.</p>
           <div className="flex items-center gap-6">
             <button
-              onClick={() => setActiveModal('privacy')}
+              onClick={() => {
+                onNavigate('privacy');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
               className="hover:text-[#9A7B38] transition-colors"
             >
               Privacy Policy
             </button>
             <span>·</span>
             <button
-              onClick={() => setActiveModal('terms')}
+              onClick={() => {
+                onNavigate('terms');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
               className="hover:text-[#9A7B38] transition-colors"
             >
               Terms of Service
             </button>
             <span>·</span>
             <button
-              onClick={() => setActiveModal('cert')}
+              onClick={() => {
+                onNavigate('provenance');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
               className="hover:text-[#9A7B38] transition-colors"
             >
               Provenance Registry
@@ -403,65 +411,6 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onReplayPreloader })
           </div>
         </div>
       </div>
-
-      {/* Interactive Information Modals */}
-      {activeModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-          <div className="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl p-6 sm:p-8 text-slate-800 border border-slate-200">
-            <button
-              onClick={() => setActiveModal(null)}
-              className="absolute top-4 right-4 text-slate-400 hover:text-slate-700 p-1.5 rounded-lg hover:bg-slate-100 transition-colors"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            {activeModal === 'privacy' && (
-              <div className="space-y-4">
-                <h4 className="text-xl font-bold text-slate-900 font-serif">Privacy Policy</h4>
-                <p className="text-sm text-slate-600 leading-relaxed">
-                  Aurelia Horology adheres to strict Swiss banking-grade data privacy standards. All collector credentials, provenance records, and private commission inquiries are protected by 256-bit AES encryption.
-                </p>
-                <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg text-xs text-[#9A7B38] font-medium">
-                  No patron data is ever sold or transferred to third-party marketing entities.
-                </div>
-              </div>
-            )}
-
-            {activeModal === 'terms' && (
-              <div className="space-y-4">
-                <h4 className="text-xl font-bold text-slate-900 font-serif">Terms of Service</h4>
-                <p className="text-sm text-slate-600 leading-relaxed">
-                  Every Aurelia Horology timepiece is covered by our lifetime guarantee of authenticity and 5-year international mechanical warranty, registered in the Le Brassus central archives.
-                </p>
-                <ul className="text-xs text-slate-600 list-disc pl-5 space-y-1">
-                  <li>Global insured door-to-door courier delivery.</li>
-                  <li>Complimentary movement regulation within the first 24 months.</li>
-                  <li>Serial certificate authenticated by the Master Watchmaker.</li>
-                </ul>
-              </div>
-            )}
-
-            {activeModal === 'cert' && (
-              <div className="space-y-4">
-                <h4 className="text-xl font-bold text-slate-900 font-serif">Digital Provenance Registry</h4>
-                <p className="text-sm text-slate-600 leading-relaxed">
-                  Every mechanical timepiece forged in our atelier is accompanied by an immutable digital passport verifying its calibre number, assembly date, and hand-finishing master watchmaker.
-                </p>
-                <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg text-xs text-[#9A7B38] font-semibold">
-                  Official Swiss Horological Certification: COSC & Chronofiable® Certified.
-                </div>
-              </div>
-            )}
-
-            <button
-              onClick={() => setActiveModal(null)}
-              className="mt-6 w-full py-2.5 bg-gradient-to-r from-[#C5A059] to-[#9A7B38] hover:from-[#B89243] hover:to-[#856525] text-slate-950 rounded-lg text-sm font-bold transition-all shadow-sm"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
     </footer>
   );
 };

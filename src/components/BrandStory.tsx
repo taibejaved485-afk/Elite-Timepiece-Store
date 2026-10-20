@@ -31,7 +31,7 @@ export const BrandStory: React.FC<BrandStoryProps> = ({ onNavigate }) => {
             {/* Main Image Container stretched to 100% height */}
             <div className="relative rounded-xl overflow-hidden border-2 border-[#C5A059]/80 shadow-[0_20px_45px_rgba(15,18,28,0.12)] bg-slate-900 group flex-1 h-full w-full flex flex-col justify-end">
               <img
-                src="/src/assets/images/craftsmanship_watchmaker_1791612587562.jpg"
+                src="/assets/images/craftsmanship_watchmaker_1791612587562.jpg"
                 alt="Aurelia Horology Master Watchmaker assembling hand-chamfered calibre in Le Brassus"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 absolute inset-0"
                 referrerPolicy="no-referrer"
