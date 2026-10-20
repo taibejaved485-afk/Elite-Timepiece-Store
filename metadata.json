@@ -1,0 +1,6 @@
+{
+  "name": "Aurelia Horology",
+  "description": "Haute Horlogerie Swiss luxury timepieces, bespoke mechanical collections, and master watchmaking atelier.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
