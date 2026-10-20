@@ -7,6 +7,7 @@ import { Footer } from './components/Footer';
 import { CartDrawer } from './components/CartDrawer';
 import { WishlistDrawer } from './components/WishlistDrawer';
 import { CheckoutModal } from './components/CheckoutModal';
+import { SearchModal } from './components/SearchModal';
 
 import { CompareModal } from './components/CompareModal';
 import { LoadingSpinner } from './components/LoadingSpinner';
@@ -28,14 +29,28 @@ import { LegalPage } from './pages/LegalPage';
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
 
-  // Timepieces Catalog state with persistent localStorage
+  // Timepieces Catalog state with persistent localStorage and image path auto-healing
   const [watches, setWatches] = useState<Watch[]>(() => {
     try {
-      const saved = localStorage.getItem('aurelia_watches_catalog');
+      // Clear legacy broken cached catalog
+      localStorage.removeItem('aurelia_watches_catalog');
+      localStorage.removeItem('aurelia_watches_catalog_v2');
+
+      const saved = localStorage.getItem('aurelia_watches_catalog_v3');
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          return parsed;
+          return parsed.map((w: Watch) => {
+            const canonical = WATCHES.find((cw) => cw.id === w.id);
+            if (canonical) {
+              return {
+                ...w,
+                image: canonical.image,
+                gallery: canonical.gallery,
+              };
+            }
+            return w;
+          });
         }
       }
     } catch (e) {
@@ -47,7 +62,7 @@ export default function App() {
   // Sync watches to localStorage whenever modified
   useEffect(() => {
     try {
-      localStorage.setItem('aurelia_watches_catalog', JSON.stringify(watches));
+      localStorage.setItem('aurelia_watches_catalog_v3', JSON.stringify(watches));
     } catch (e) {
       console.error('Error saving watches to localStorage', e);
     }
@@ -69,12 +84,13 @@ export default function App() {
   const handleResetCatalog = () => {
     if (window.confirm('Reset catalog back to initial factory Swiss watches? Any custom added watches will be cleared.')) {
       setWatches(WATCHES);
-      localStorage.removeItem('aurelia_watches_catalog');
+      localStorage.removeItem('aurelia_watches_catalog_v3');
     }
   };
 
   // Routing state
   const [currentPage, setCurrentPage] = useState<PageRoute>('home');
+  const [catalogCategory, setCatalogCategory] = useState<string>('all');
 
   // Currency state (Default to PKR)
   const [currency, setCurrency] = useState<CurrencyCode>('PKR');
@@ -95,6 +111,7 @@ export default function App() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isWishlistOpen, setIsWishlistOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const handleOpenProduct = (watch: Watch) => {
     handleNavigate(`product-${watch.id}`);
   };
@@ -224,13 +241,14 @@ export default function App() {
         wishlistCount={wishlist.length}
         onOpenCart={() => setIsCartOpen(true)}
         onOpenWishlist={() => setIsWishlistOpen(true)}
+        onOpenSearch={() => setIsSearchOpen(true)}
         currentCurrency={currency}
         onSelectCurrency={setCurrency}
       />
 
       {/* Subpage Breadcrumbs & Horological Navigation Ribbon */}
       {currentPage !== 'home' && (
-        <nav aria-label="Breadcrumb navigation" className="w-full bg-[#030509]/95 backdrop-blur-md border-b border-gold/20 py-2.5 px-4 sm:px-8 lg:px-16 xl:px-24 flex items-center justify-between text-xs sticky top-0 z-30 shadow-md">
+        <nav aria-label="Breadcrumb navigation" className="w-full bg-[#030509]/95 backdrop-blur-md border-b border-gold/20 py-2 sm:py-2.5 px-3 sm:px-8 lg:px-16 xl:px-24 flex items-center justify-between text-xs relative z-20 shadow-sm">
           <div className="flex items-center gap-2 overflow-x-auto scrollbar-none whitespace-nowrap">
             <button 
               onClick={() => handleNavigate('home')} 
@@ -244,8 +262,13 @@ export default function App() {
               {currentPage === 'craftsmanship' && 'Haute Calibres & Craftsmanship'}
               {currentPage === 'bespoke' && 'Bespoke Atelier Studio'}
               {currentPage === 'heritage' && 'Manufacture Heritage (1892)'}
-              {currentPage === 'concierge' && 'Private Concierge & Salons'}
+              {currentPage === 'concierge' && 'Contact Us & Private Concierge'}
               {currentPage === 'admin' && 'Atelier Management Portal'}
+              {currentPage === 'privacy' && 'Privacy Policy'}
+              {currentPage === 'terms' && 'Terms of Service'}
+              {currentPage === 'provenance' && 'Digital Provenance Registry'}
+              {currentPage.startsWith('product-') && 'Master Timepiece Details'}
+              {currentPage.startsWith('article-') && 'Horological Journal & Notes'}
             </span>
           </div>
 
@@ -278,6 +301,7 @@ export default function App() {
                 currency={currency}
                 onOpenQuickView={handleOpenProduct}
                 onAddToCart={handleAddToCart}
+                onSelectCategory={setCatalogCategory}
               />
             )}
 
@@ -292,6 +316,7 @@ export default function App() {
                 comparisonList={comparisonList}
                 onToggleCompare={handleToggleCompare}
                 onOpenCompare={() => setIsCompareOpen(true)}
+                initialCategory={catalogCategory}
               />
             )}
 
@@ -396,6 +421,12 @@ export default function App() {
         items={cart}
         currency={currency}
         onClearCart={handleClearCart}
+      />
+
+      <SearchModal
+        isOpen={isSearchOpen}
+        onClose={() => setIsSearchOpen(false)}
+        onNavigate={handleNavigate}
       />
 
       {isCompareOpen && (

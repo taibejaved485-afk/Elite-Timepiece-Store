@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { motion, Variants } from 'framer-motion';
-import { ArrowRight, Sparkles, Award, Shield, Compass, ChevronRight, Eye, Clock, Calendar, Bookmark, Heart, MapPin, Users, Building, History, BookOpen, X } from 'lucide-react';
+import { ArrowRight, Sparkles, Award, Shield, Compass, ChevronRight, Eye, Clock, Calendar, Bookmark, Heart, MapPin, Users, Building, History, BookOpen } from 'lucide-react';
 import { Watch, PageRoute, CurrencyCode } from '../types/watch';
 import { formatPrice } from '../utils/currency';
 import { BrandStory } from '../components/BrandStory';
 import { CollectorMarqueeSection } from '../components/CollectorMarqueeSection';
+import { handleImageFallback } from '../utils/imageFallback';
 
 interface JournalArticle {
   id: string;
@@ -58,6 +59,7 @@ interface HomePageProps {
   currency: CurrencyCode;
   onOpenQuickView: (watch: Watch) => void;
   onAddToCart: (watch: Watch) => void;
+  onSelectCategory?: (category: string) => void;
 }
 
 const sectionVariants: Variants = {
@@ -101,8 +103,8 @@ export const HomePage: React.FC<HomePageProps> = ({
   currency,
   onOpenQuickView,
   onAddToCart,
+  onSelectCategory,
 }) => {
-  const [selectedArticle, setSelectedArticle] = useState<JournalArticle | null>(null);
 
   return (
     <div className="space-y-0 pb-20 bg-white text-slate-900">
@@ -228,6 +230,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                 <img
                   src={watch.image}
                   alt={watch.name}
+                  onError={handleImageFallback}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                   referrerPolicy="no-referrer"
                 />
@@ -290,29 +293,100 @@ export const HomePage: React.FC<HomePageProps> = ({
           </p>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6">
           {[
-            { id: 'Chronograph', name: 'Chronographs', desc: 'Precision Flyback Timing', count: '4 Models' },
-            { id: 'Tourbillon', name: 'Tourbillons', desc: 'Gravitational Compensation', count: '3 Models' },
-            { id: 'Diver', name: 'Diver 300M', desc: 'Helium Escape & Luminescence', count: '3 Models' },
-            { id: 'Dress', name: 'Ultra-Thin Dress', desc: 'Sub-8mm Elegance', count: '3 Models' },
-            { id: 'Heritage', name: 'Heritage Classics', desc: 'Revival of 1892 Pockets', count: '3 Models' },
-          ].map((cat) => (
+            {
+              id: 'Chronograph',
+              name: 'Chronographs',
+              desc: 'Precision Flyback Timing',
+              count: '4 Models',
+              image: '/assets/images/hero_luxury_chronograph_1791612522214.jpg',
+              fallbackImage: '/hero_luxury_chronograph_1791612522214.jpg',
+            },
+            {
+              id: 'Tourbillon',
+              name: 'Tourbillons',
+              desc: 'Gravitational Compensation',
+              count: '3 Models',
+              image: '/assets/images/watch_skeleton_tourbillon_1791612558576.jpg',
+              fallbackImage: '/watch_skeleton_tourbillon_1791612558576.jpg',
+            },
+            {
+              id: 'Diver',
+              name: 'Diver 300M',
+              desc: 'Helium Escape & Luminescence',
+              count: '3 Models',
+              image: '/assets/images/watch_diver_submariner_1791612540699.jpg',
+              fallbackImage: '/watch_diver_submariner_1791612540699.jpg',
+            },
+            {
+              id: 'Dress',
+              name: 'Ultra-Thin Dress',
+              desc: 'Sub-8mm Elegance',
+              count: '3 Models',
+              image: '/assets/images/watch_dress_minimalist_1791612572332.jpg',
+              fallbackImage: '/watch_dress_minimalist_1791612572332.jpg',
+            },
+            {
+              id: 'Heritage',
+              name: 'Heritage Classics',
+              desc: 'Revival of 1892 Pockets',
+              count: '3 Models',
+              image: '/assets/images/craftsmanship_watchmaker_1791612587562.jpg',
+              fallbackImage: '/craftsmanship_watchmaker_1791612587562.jpg',
+            },
+          ].map((cat, idx) => (
             <div
               key={cat.id}
-              onClick={() => onNavigate('collections')}
-              className="p-5 rounded-xl bg-white border border-slate-200 hover:border-[#9A7B38] transition-all cursor-pointer group text-center space-y-2 flex flex-col justify-between shadow-sm"
+              onClick={() => {
+                if (onSelectCategory) {
+                  onSelectCategory(cat.id);
+                }
+                onNavigate('collections');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className={`rounded-2xl bg-white border border-slate-200 overflow-hidden flex flex-col justify-between group hover:border-[#9A7B38] hover:shadow-[0_12px_32px_rgba(197,160,89,0.18)] transition-all duration-300 cursor-pointer shadow-sm ${
+                idx === 4 ? 'col-span-2 sm:col-span-1' : ''
+              }`}
             >
-              <div>
-                <span className="text-[10px] font-mono text-[#9A7B38] uppercase tracking-wider font-bold">{cat.count}</span>
-                <h3 className="font-cinzel text-sm sm:text-base font-bold text-slate-900 mt-1 group-hover:text-[#9A7B38] transition-colors">
-                  {cat.name}
-                </h3>
-                <p className="text-[11px] text-slate-600 mt-1 font-light">{cat.desc}</p>
+              {/* Category Image */}
+              <div className="relative aspect-[4/3] w-full overflow-hidden bg-slate-950">
+                <img
+                  src={cat.image}
+                  alt={cat.name}
+                  onError={(e) => {
+                    if (cat.fallbackImage) {
+                      (e.target as HTMLImageElement).src = cat.fallbackImage;
+                    } else {
+                      handleImageFallback(e);
+                    }
+                  }}
+                  className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
+                  referrerPolicy="no-referrer"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent pointer-events-none" />
+                
+                {/* Model Count Badge */}
+                <div className="absolute top-2.5 right-2.5 bg-black/75 backdrop-blur-md border border-white/20 text-[#C5A059] text-[9px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-full font-semibold shadow-sm">
+                  {cat.count}
+                </div>
               </div>
-              <div className="pt-3 text-xs text-[#9A7B38] font-semibold flex items-center justify-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                <span>Explore</span>
-                <ChevronRight className="w-3 h-3" />
+
+              {/* Category Details */}
+              <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between text-center space-y-2">
+                <div>
+                  <h3 className="font-cinzel text-sm sm:text-base font-bold text-slate-900 group-hover:text-[#9A7B38] transition-colors">
+                    {cat.name}
+                  </h3>
+                  <p className="text-[11px] sm:text-xs text-slate-600 mt-1 font-light leading-snug line-clamp-1">
+                    {cat.desc}
+                  </p>
+                </div>
+
+                <div className="pt-2 text-xs text-[#9A7B38] font-semibold flex items-center justify-center gap-1 group-hover:translate-x-0.5 transition-transform">
+                  <span>Explore</span>
+                  <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                </div>
               </div>
             </div>
           ))}
@@ -394,6 +468,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                 <img
                   src={watch.image}
                   alt={watch.name}
+                  onError={handleImageFallback}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                   referrerPolicy="no-referrer"
                 />
@@ -464,7 +539,13 @@ export const HomePage: React.FC<HomePageProps> = ({
             { title: 'Solid 22k Gold Rotor', desc: 'High-Inertia Oscillating Weight', img: featuredWatches[3]?.image || '/assets/images/craftsmanship_watchmaker_1791612587562.jpg' },
           ].map((item, idx) => (
             <div key={`gallery-${idx}`} className="group relative aspect-[4/5] rounded-xl overflow-hidden border border-slate-200 shadow-sm">
-              <img src={item.img} alt={item.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" referrerPolicy="no-referrer" />
+              <img 
+                src={item.img} 
+                alt={item.title} 
+                onError={handleImageFallback}
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
+                referrerPolicy="no-referrer" 
+              />
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex flex-col justify-end p-6 text-white">
                 <span className="text-[10px] font-mono text-[#C5A059] uppercase tracking-widest">Atelier Series</span>
                 <h3 className="font-cinzel text-base font-bold text-white mt-1">{item.title}</h3>
@@ -541,7 +622,7 @@ export const HomePage: React.FC<HomePageProps> = ({
           {JOURNAL_ARTICLES.map((article) => (
             <div 
               key={article.id} 
-              onClick={() => setSelectedArticle(article)}
+              onClick={() => onNavigate(`article-${article.id}` as PageRoute)}
               className="rounded-2xl bg-white border border-slate-200 overflow-hidden flex flex-col justify-between group hover:border-[#9A7B38] hover:shadow-[0_12px_32px_rgba(197,160,89,0.18)] transition-all duration-300 cursor-pointer shadow-sm"
             >
               {/* Article Picture */}
@@ -628,85 +709,6 @@ export const HomePage: React.FC<HomePageProps> = ({
           </button>
         </div>
       </motion.section>
-
-      {/* Interactive Journal Reader Modal */}
-      {selectedArticle && (
-        <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in"
-          onClick={() => setSelectedArticle(null)}
-        >
-          <div 
-            className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-gold/40 shadow-2xl relative text-slate-900"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Modal Close Button */}
-            <button 
-              onClick={() => setSelectedArticle(null)}
-              className="absolute top-4 right-4 z-20 w-8 h-8 rounded-full bg-black/60 hover:bg-black text-white flex items-center justify-center transition-colors shadow-md"
-              aria-label="Close modal"
-            >
-              <X className="w-4 h-4" />
-            </button>
-
-            {/* Hero Image in Modal */}
-            <div className="relative aspect-[16/9] w-full overflow-hidden bg-slate-900">
-              <img 
-                src={selectedArticle.image} 
-                alt={selectedArticle.title}
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  if (selectedArticle.fallbackImage) {
-                    (e.target as HTMLImageElement).src = selectedArticle.fallbackImage;
-                  }
-                }}
-                referrerPolicy="no-referrer"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
-              <div className="absolute bottom-4 left-4 right-4 text-white">
-                <span className="text-[10px] font-mono uppercase tracking-widest text-[#C5A059] bg-black/60 px-2.5 py-0.5 rounded border border-gold/30">
-                  {selectedArticle.category}
-                </span>
-                <h2 className="font-cinzel text-xl sm:text-2xl font-bold text-white mt-2 leading-tight">
-                  {selectedArticle.title}
-                </h2>
-              </div>
-            </div>
-
-            {/* Modal Body */}
-            <div className="p-6 sm:p-8 space-y-4">
-              <div className="flex items-center justify-between text-xs font-mono text-slate-500 border-b border-slate-100 pb-3">
-                <span className="text-[#9A7B38] font-semibold">{selectedArticle.date}</span>
-                <span className="flex items-center gap-1.5">
-                  <Clock className="w-3.5 h-3.5 text-slate-400" />
-                  <span>{selectedArticle.read}</span>
-                </span>
-              </div>
-
-              <p className="text-sm text-slate-800 leading-relaxed font-normal italic border-l-2 border-[#9A7B38] pl-3 bg-amber-50/50 py-2 rounded-r">
-                &quot;{selectedArticle.excerpt}&quot;
-              </p>
-
-              <p className="text-sm text-slate-700 leading-relaxed font-light">
-                {selectedArticle.fullText}
-              </p>
-
-              <div className="pt-4 flex items-center justify-between border-t border-slate-100">
-                <span className="text-xs text-slate-500 font-mono">Aurelia Horological Archives</span>
-                <button 
-                  onClick={() => {
-                    setSelectedArticle(null);
-                    onNavigate('heritage');
-                  }}
-                  className="text-xs font-semibold uppercase tracking-wider text-[#9A7B38] hover:text-slate-900 transition-colors flex items-center gap-1"
-                >
-                  <span>Explore Heritage Archives</span>
-                  <ChevronRight className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

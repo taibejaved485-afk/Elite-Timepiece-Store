@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, Trash2, Plus, Minus, ArrowRight, ShieldCheck, Tag } from 'lucide-react';
 import { CartItem, CurrencyCode } from '../types/watch';
 import { formatPrice } from '../utils/currency';
+import { handleImageFallback } from '../utils/imageFallback';
 
 interface CartDrawerProps {
   isOpen: boolean;
@@ -97,6 +98,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                   <img
                     src={item.watch.image}
                     alt={item.watch.name}
+                    onError={handleImageFallback}
                     className="w-20 h-20 object-cover rounded bg-[#161922] border border-white/[0.08] shrink-0"
                     referrerPolicy="no-referrer"
                   />

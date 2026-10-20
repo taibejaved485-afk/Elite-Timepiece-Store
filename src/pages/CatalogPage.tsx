@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Search, SlidersHorizontal, Heart, ShoppingBag, Eye, X, Check, RotateCcw, Sparkles } from 'lucide-react';
 import { Watch, CurrencyCode } from '../types/watch';
 import { formatPrice } from '../utils/currency';
+import { handleImageFallback } from '../utils/imageFallback';
 
 interface CatalogPageProps {
   watches: Watch[];
@@ -14,6 +15,7 @@ interface CatalogPageProps {
   comparisonList: Watch[];
   onToggleCompare: (watch: Watch) => void;
   onOpenCompare: () => void;
+  initialCategory?: string;
 }
 
 export const CatalogPage: React.FC<CatalogPageProps> = ({
@@ -26,8 +28,15 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
   comparisonList,
   onToggleCompare,
   onOpenCompare,
+  initialCategory,
 }) => {
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [selectedCategory, setSelectedCategory] = useState<string>(() => initialCategory || 'all');
+
+  React.useEffect(() => {
+    if (initialCategory) {
+      setSelectedCategory(initialCategory);
+    }
+  }, [initialCategory]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedMaterial, setSelectedMaterial] = useState<string>('all');
   const [priceRange, setPriceRange] = useState<[number, number]>([10000, 100000]);
@@ -406,6 +415,7 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
                   <img
                     src={watch.image}
                     alt={watch.name}
+                    onError={handleImageFallback}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                     referrerPolicy="no-referrer"
                   />

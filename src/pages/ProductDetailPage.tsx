@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, Clock, Shield, Compass, Sparkles, Heart, ShoppingBag, Share2, Check, Printer } from 'lucide-react';
 import { Watch, CurrencyCode, PageRoute } from '../types/watch';
 import { formatPrice } from '../utils/currency';
+import { handleImageFallback } from '../utils/imageFallback';
 
 interface ProductDetailPageProps {
   watch: Watch;
@@ -92,6 +93,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
               transition={{ duration: 0.4 }}
               src={selectedImage}
               alt={watch.name}
+              onError={handleImageFallback}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
               referrerPolicy="no-referrer"
             />
@@ -125,7 +127,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                       : 'border-slate-200 opacity-75 hover:opacity-100'
                   }`}
                 >
-                  <img src={img} alt="thumbnail" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                  <img src={img} alt="thumbnail" onError={handleImageFallback} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                 </button>
               ))}
             </div>
@@ -329,7 +331,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                 className="bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden group hover:border-[#9A7B38] hover:shadow-xl transition-all cursor-pointer flex flex-col justify-between"
               >
                 <div className="aspect-[4/3] bg-slate-950 overflow-hidden relative">
-                  <img src={item.image} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" referrerPolicy="no-referrer" />
+                  <img src={item.image} alt={item.name} onError={handleImageFallback} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" referrerPolicy="no-referrer" />
                 </div>
                 <div className="p-6 space-y-2">
                   <div className="flex justify-between text-xs text-slate-500">
