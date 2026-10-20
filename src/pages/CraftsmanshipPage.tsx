@@ -137,7 +137,7 @@ export const CraftsmanshipPage: React.FC<CraftsmanshipPageProps> = ({ onNavigate
       {/* Workshop Editorial Image Banner */}
       <div className="relative rounded-xl overflow-hidden border border-white/[0.1] shadow-2xl">
         <img
-          src="./assets/images/craftsmanship_watchmaker_1791612587562.jpg"
+          src="/assets/images/craftsmanship_watchmaker_1791612587562.jpg"
           alt="Master horologist regulating mechanical escapement in Le Brassus atelier"
           className="w-full h-[400px] object-cover"
           referrerPolicy="no-referrer"
