@@ -3,12 +3,12 @@ import { motion } from 'framer-motion';
 
 interface LuxuryWatchPreloaderProps {
   onComplete?: () => void;
-  minDuration?: number; // 2200ms default smooth mechanical winding
+  minDuration?: number; // 2000ms (2 seconds) smooth mechanical winding
 }
 
 export const LuxuryWatchPreloader: React.FC<LuxuryWatchPreloaderProps> = ({
   onComplete,
-  minDuration = 2200,
+  minDuration = 2000,
 }) => {
   const [progress, setProgress] = useState(0);
   const [isFinishing, setIsFinishing] = useState(false);

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, Trash2, Plus, Minus, ArrowRight, ShieldCheck, Tag } from 'lucide-react';
 import { CartItem, CurrencyCode } from '../types/watch';
 import { formatPrice } from '../utils/currency';
+import { AnimatedPrice } from './AnimatedPrice';
 import { handleImageFallback } from '../utils/imageFallback';
 
 interface CartDrawerProps {
@@ -154,7 +155,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
                       {/* Price */}
                       <span className="text-sm font-mono font-medium text-white tabular-nums">
-                        {formatPrice(price * item.quantity, currency)}
+                        <AnimatedPrice amountUSD={price * item.quantity} currency={currency} replayOnHover={true} />
                       </span>
                     </div>
                   </div>
@@ -215,7 +216,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               <div className="pt-2 border-t border-white/[0.06] flex justify-between text-base font-semibold text-white">
                 <span className="font-cinzel">Total</span>
                 <span className="font-mono tabular-nums text-[#C5A059]">
-                  {formatPrice(finalTotalUSD, currency)}
+                  <AnimatedPrice amountUSD={finalTotalUSD} currency={currency} />
                 </span>
               </div>
             </div>

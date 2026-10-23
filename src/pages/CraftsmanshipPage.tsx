@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Compass, ShieldCheck, Zap, Volume2, VolumeX, Play, Pause, Award, ArrowRight, Sparkles } from 'lucide-react';
+import { Compass, ShieldCheck, Zap, Volume2, VolumeX, Award, ArrowRight } from 'lucide-react';
 import { PageRoute } from '../types/watch';
 
 interface ComponentDetail {
@@ -120,39 +120,39 @@ export const CraftsmanshipPage: React.FC<CraftsmanshipPageProps> = ({ onNavigate
   };
 
   return (
-    <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 py-12 space-y-20">
+    <div className="w-full min-h-screen bg-white text-slate-900 px-4 sm:px-8 lg:px-12 xl:px-16 py-12 space-y-20">
       {/* Editorial Header */}
       <div className="text-center max-w-3xl mx-auto space-y-4">
-        <div className="text-xs uppercase tracking-[0.25em] text-[#C5A059] font-medium">
+        <div className="text-xs uppercase tracking-[0.25em] text-[#9A7B38] font-bold">
           Haute Horlogerie Manufacturing
         </div>
-        <h1 className="font-cinzel text-3xl sm:text-5xl font-bold text-white tracking-tight">
+        <h1 className="font-cinzel text-3xl sm:text-5xl font-bold text-slate-900 tracking-tight">
           The Soul of Mechanical Calibres
         </h1>
-        <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-light">
+        <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-light">
           A purely mechanical watch is a living organism governed by microscopic inertia, friction, and balance. In our Le Brassus manufacture, master horologists spend lifetimes calibrating gear trains that measure time without a single circuit or battery.
         </p>
       </div>
 
       {/* Workshop Editorial Image Banner */}
-      <div className="relative rounded-xl overflow-hidden border border-white/[0.1] shadow-2xl">
+      <div className="relative rounded-2xl overflow-hidden border border-slate-200 shadow-xl">
         <img
           src="/assets/images/craftsmanship_watchmaker_1791612587562.jpg"
           alt="Master horologist regulating mechanical escapement in Le Brassus atelier"
           className="w-full h-[400px] object-cover"
           referrerPolicy="no-referrer"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent pointer-events-none" />
         <div className="absolute bottom-6 left-6 right-6 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div>
-            <span className="text-[11px] font-mono text-[#C5A059] uppercase tracking-widest">
+            <span className="text-[11px] font-mono text-[#C5A059] uppercase tracking-widest font-semibold">
               Atelier Le Brassus · Canton of Vaud
             </span>
             <h3 className="font-cinzel text-xl sm:text-2xl font-bold text-white mt-1">
               Hand-Regulation to -1/+2 Seconds per Day
             </h3>
           </div>
-          <div className="text-xs font-mono text-slate-300 bg-black/60 backdrop-blur-md px-4 py-2 rounded border border-white/[0.1]">
+          <div className="text-xs font-mono text-slate-200 bg-black/70 backdrop-blur-md px-4 py-2 rounded-lg border border-white/20">
             COSC Precision Standard: Surpassed by 200%
           </div>
         </div>
@@ -160,48 +160,48 @@ export const CraftsmanshipPage: React.FC<CraftsmanshipPageProps> = ({ onNavigate
 
       {/* Interactive Calibre Explorer */}
       <div className="space-y-8">
-        <div className="border-b border-white/[0.08] pb-4 flex flex-col sm:flex-row sm:items-end justify-between gap-2">
+        <div className="border-b border-slate-200 pb-4 flex flex-col sm:flex-row sm:items-end justify-between gap-2">
           <div>
-            <span className="text-xs uppercase tracking-[0.2em] text-[#C5A059] font-medium">
+            <span className="text-xs uppercase tracking-[0.2em] text-[#9A7B38] font-bold">
               Interactive Anatomy
             </span>
-            <h2 className="font-cinzel text-2xl sm:text-3xl font-bold text-white mt-1">
+            <h2 className="font-cinzel text-2xl sm:text-3xl font-bold text-slate-900 mt-1">
               Mechanical Movement Architecture
             </h2>
           </div>
-          <span className="text-xs text-slate-400">
+          <span className="text-xs text-slate-500 font-light">
             Select an organ to inspect its micro-mechanical specifications
           </span>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Component Tabs Left */}
-          <div className="lg:col-span-5 space-y-2">
+          <div className="lg:col-span-5 space-y-2.5">
             {COMPONENTS.map((comp) => {
               const isSelected = selectedComp.id === comp.id;
               return (
                 <button
                   key={comp.id}
                   onClick={() => setSelectedComp(comp)}
-                  className={`w-full text-left p-4 rounded-lg border transition-all flex items-center justify-between ${
+                  className={`w-full text-left p-4 rounded-xl border transition-all flex items-center justify-between cursor-pointer ${
                     isSelected
-                      ? 'bg-[#181D29] border-[#C5A059] shadow-[0_2px_12px_rgba(197,160,89,0.15)]'
-                      : 'bg-white/[0.02] border-white/[0.06] hover:bg-white/[0.05] hover:border-white/[0.12]'
+                      ? 'bg-[#9A7B38]/10 border-[#9A7B38] shadow-sm ring-1 ring-[#9A7B38]/30'
+                      : 'bg-slate-50 border-slate-200 hover:bg-slate-100 hover:border-[#9A7B38]/50 shadow-2xs'
                   }`}
                 >
                   <div>
                     <h4
-                      className={`text-sm font-semibold tracking-wide ${
-                        isSelected ? 'text-[#C5A059]' : 'text-white'
+                      className={`text-sm font-bold tracking-wide transition-colors ${
+                        isSelected ? 'text-[#9A7B38]' : 'text-slate-900'
                       }`}
                     >
                       {comp.name}
                     </h4>
-                    <p className="text-xs text-slate-400 mt-0.5">{comp.subtitle}</p>
+                    <p className="text-xs text-slate-500 mt-0.5 font-light">{comp.subtitle}</p>
                   </div>
                   <span
-                    className={`text-xs font-mono ${
-                      isSelected ? 'text-[#C5A059]' : 'text-slate-400'
+                    className={`text-xs font-mono font-bold ${
+                      isSelected ? 'text-[#9A7B38]' : 'text-slate-400'
                     }`}
                   >
                     →
@@ -212,56 +212,56 @@ export const CraftsmanshipPage: React.FC<CraftsmanshipPageProps> = ({ onNavigate
           </div>
 
           {/* Component Detail Right */}
-          <div className="lg:col-span-7 bg-[#12151D] border border-white/[0.08] rounded-xl p-6 sm:p-8 space-y-6">
-            <div className="flex items-center justify-between border-b border-white/[0.06] pb-4">
+          <div className="lg:col-span-7 bg-slate-50 border border-slate-200 rounded-2xl p-6 sm:p-8 space-y-6 shadow-sm">
+            <div className="flex items-center justify-between border-b border-slate-200 pb-4">
               <div>
-                <span className="text-[10px] font-mono uppercase text-[#C5A059] tracking-widest">
+                <span className="text-[10px] font-mono uppercase text-[#9A7B38] font-bold tracking-widest">
                   {selectedComp.origin}
                 </span>
-                <h3 className="font-cinzel text-2xl font-bold text-white mt-1">
+                <h3 className="font-cinzel text-2xl font-bold text-slate-900 mt-1">
                   {selectedComp.name}
                 </h3>
               </div>
-              <div className="w-10 h-10 rounded-full bg-[#C5A059]/10 border border-[#C5A059]/30 flex items-center justify-center text-[#C5A059]">
+              <div className="w-10 h-10 rounded-full bg-[#9A7B38]/15 border border-[#9A7B38]/30 flex items-center justify-center text-[#9A7B38] shadow-2xs">
                 <Compass className="w-5 h-5" />
               </div>
             </div>
 
-            <p className="text-sm text-slate-300 leading-relaxed font-light">
+            <p className="text-sm text-slate-700 leading-relaxed font-light">
               {selectedComp.description}
             </p>
 
-            <div className="p-4 rounded-lg bg-black/40 border border-white/[0.06] space-y-1">
-              <span className="text-[11px] uppercase tracking-wider text-slate-400 font-medium">
+            <div className="p-4 rounded-xl bg-white border border-slate-200 space-y-1 shadow-2xs">
+              <span className="text-[11px] uppercase tracking-wider text-slate-500 font-semibold">
                 Atelier Specification
               </span>
-              <p className="text-xs font-mono text-[#C5A059]">{selectedComp.specs}</p>
+              <p className="text-xs font-mono text-[#9A7B38] font-bold">{selectedComp.specs}</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* Escapement Ticking Frequency Acoustic Lab */}
-      <div className="p-8 sm:p-12 rounded-xl bg-gradient-to-b from-[#121622] to-[#0D1017] border border-white/[0.08] space-y-8">
+      <div className="p-8 sm:p-12 rounded-2xl bg-slate-50 border border-slate-200 space-y-8 shadow-sm">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <span className="text-xs uppercase tracking-[0.2em] text-[#C5A059] font-medium">
+            <span className="text-xs uppercase tracking-[0.2em] text-[#9A7B38] font-bold">
               Horological Acoustic Laboratory
             </span>
-            <h3 className="font-cinzel text-2xl font-bold text-white mt-1">
+            <h3 className="font-cinzel text-2xl sm:text-3xl font-bold text-slate-900 mt-1">
               Escapement Oscillation & Beat Rate
             </h3>
-            <p className="text-xs text-slate-400 mt-1 max-w-xl">
+            <p className="text-xs text-slate-600 mt-1 max-w-xl font-light">
               Listen to the acoustic heartbeat of mechanical calibres across different vibrations per hour (vph). The higher the frequency, the smoother the sweeping second hand.
             </p>
           </div>
 
           <button
             onClick={toggleSound}
-            className={`px-5 py-3 rounded-lg text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-all self-start md:self-auto ${
+            className={`px-5 py-3 rounded-full text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-all self-start md:self-auto cursor-pointer ${
               isPlayingSound
-                ? 'bg-red-500/20 text-red-300 border border-red-500/50'
-                : 'bg-[#C5A059] text-black hover:bg-[#D4B36E] shadow'
+                ? 'bg-red-50 text-red-600 border border-red-300 shadow-sm'
+                : 'bg-gradient-to-r from-[#C5A059] via-[#E2C775] to-[#B89243] hover:from-[#D4B36E] hover:to-[#C5A059] text-black shadow-md font-bold active:scale-95'
             }`}
           >
             {isPlayingSound ? (
@@ -291,35 +291,35 @@ export const CraftsmanshipPage: React.FC<CraftsmanshipPageProps> = ({ onNavigate
               <button
                 key={item.vph}
                 onClick={() => setActiveFrequency(item.vph)}
-                className={`p-4 rounded-lg text-left border transition-all ${
+                className={`p-4 rounded-xl text-left border transition-all cursor-pointer ${
                   isSelected
-                    ? 'bg-[#C5A059]/15 border-[#C5A059] text-white shadow-md'
-                    : 'bg-white/[0.02] border-white/[0.06] text-slate-400 hover:text-white hover:bg-white/[0.04]'
+                    ? 'bg-[#9A7B38]/10 border-[#9A7B38] text-slate-900 shadow-sm ring-1 ring-[#9A7B38]/30'
+                    : 'bg-white border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-100 shadow-2xs'
                 }`}
               >
                 <div className="flex justify-between items-baseline">
-                  <span className="font-cinzel text-sm font-bold text-white">{item.title}</span>
-                  <span className="font-mono text-xs text-[#C5A059]">{item.hz}</span>
+                  <span className="font-cinzel text-sm font-bold text-slate-900">{item.title}</span>
+                  <span className="font-mono text-xs text-[#9A7B38] font-bold">{item.hz}</span>
                 </div>
-                <p className="text-[11px] text-slate-400 mt-1 leading-normal">{item.desc}</p>
+                <p className="text-[11px] text-slate-500 mt-1 leading-normal font-light">{item.desc}</p>
               </button>
             );
           })}
         </div>
 
         {/* Live Second Hand Sweeping Simulation */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-8 py-6 border-t border-white/[0.06]">
-          <div className="relative w-28 h-28 rounded-full border-2 border-[#C5A059]/40 bg-black/50 flex items-center justify-center shadow-inner">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-8 py-6 border-t border-slate-200">
+          <div className="relative w-28 h-28 rounded-full border-2 border-[#9A7B38]/40 bg-white flex items-center justify-center shadow-md">
             {/* Center pinion */}
-            <div className="w-3 h-3 rounded-full bg-[#C5A059] z-20" />
+            <div className="w-3 h-3 rounded-full bg-[#9A7B38] z-20 shadow-xs" />
             {/* Hour markers */}
-            <div className="absolute top-1 text-[8px] font-mono text-slate-400">12</div>
-            <div className="absolute bottom-1 text-[8px] font-mono text-slate-400">6</div>
-            <div className="absolute left-1.5 text-[8px] font-mono text-slate-400">9</div>
-            <div className="absolute right-1.5 text-[8px] font-mono text-slate-400">3</div>
+            <div className="absolute top-1.5 text-[8px] font-mono text-slate-400 font-bold">12</div>
+            <div className="absolute bottom-1.5 text-[8px] font-mono text-slate-400 font-bold">6</div>
+            <div className="absolute left-2 text-[8px] font-mono text-slate-400 font-bold">9</div>
+            <div className="absolute right-2 text-[8px] font-mono text-slate-400 font-bold">3</div>
             {/* Sweeping second hand */}
             <div
-              className="absolute w-[1.5px] h-11 bg-[#C5A059] origin-bottom -translate-y-5 rounded-full"
+              className="absolute w-[1.5px] h-11 bg-[#9A7B38] origin-bottom -translate-y-5 rounded-full"
               style={{
                 animation: `spin ${60 / (activeFrequency / 3600)}s linear infinite`,
               }}
@@ -327,11 +327,13 @@ export const CraftsmanshipPage: React.FC<CraftsmanshipPageProps> = ({ onNavigate
           </div>
 
           <div className="text-center sm:text-left space-y-1">
-            <div className="text-xs uppercase tracking-wider text-slate-400">Simulated Sweeping Cadence</div>
-            <div className="font-mono text-lg font-semibold text-white">
+            <div className="text-xs uppercase tracking-wider text-slate-500 font-semibold font-mono">
+              Simulated Sweeping Cadence
+            </div>
+            <div className="font-mono text-lg font-bold text-slate-900">
               {activeFrequency.toLocaleString()} Vibrations / Hour ({(activeFrequency / 3600).toFixed(1)} ticks per second)
             </div>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-slate-500 font-light">
               {isPlayingSound ? 'Acoustic audio ticks active.' : 'Click "Play Escapement Beat" above to hear audio synthesis.'}
             </p>
           </div>
@@ -340,30 +342,30 @@ export const CraftsmanshipPage: React.FC<CraftsmanshipPageProps> = ({ onNavigate
 
       {/* The 5-Point Quality Accreditations */}
       <div className="space-y-6">
-        <h3 className="font-cinzel text-xl font-bold text-white tracking-wide text-center">
+        <h3 className="font-cinzel text-xl sm:text-2xl font-bold text-slate-900 tracking-wide text-center">
           Manufacture Rigor & Certifications
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="p-6 rounded-lg bg-[#11141B] border border-white/[0.06] space-y-2">
-            <Award className="w-6 h-6 text-[#C5A059]" />
-            <h4 className="text-sm font-semibold text-white font-cinzel">Poinçon de Genève</h4>
-            <p className="text-xs text-slate-400 leading-relaxed">
+          <div className="p-6 rounded-2xl bg-slate-50 border border-slate-200 space-y-2 shadow-sm hover:border-[#9A7B38]/40 transition-colors">
+            <Award className="w-6 h-6 text-[#9A7B38]" />
+            <h4 className="text-sm font-bold text-slate-900 font-cinzel">Poinçon de Genève</h4>
+            <p className="text-xs text-slate-600 leading-relaxed font-light">
               Guarantees the historical origin, finishing perfection, and chronometric regularity of Genevan watchmaking.
             </p>
           </div>
 
-          <div className="p-6 rounded-lg bg-[#11141B] border border-white/[0.06] space-y-2">
-            <ShieldCheck className="w-6 h-6 text-[#C5A059]" />
-            <h4 className="text-sm font-semibold text-white font-cinzel">COSC Master Chronometer</h4>
-            <p className="text-xs text-slate-400 leading-relaxed">
+          <div className="p-6 rounded-2xl bg-slate-50 border border-slate-200 space-y-2 shadow-sm hover:border-[#9A7B38]/40 transition-colors">
+            <ShieldCheck className="w-6 h-6 text-[#9A7B38]" />
+            <h4 className="text-sm font-bold text-slate-900 font-cinzel">COSC Master Chronometer</h4>
+            <p className="text-xs text-slate-600 leading-relaxed font-light">
               Tested over 15 consecutive days in multiple orientations and temperature extremes with strict deviation tolerances.
             </p>
           </div>
 
-          <div className="p-6 rounded-lg bg-[#11141B] border border-white/[0.06] space-y-2">
-            <Zap className="w-6 h-6 text-[#C5A059]" />
-            <h4 className="text-sm font-semibold text-white font-cinzel">15,000 Gauss Anti-Magnetic</h4>
-            <p className="text-xs text-slate-400 leading-relaxed">
+          <div className="p-6 rounded-2xl bg-slate-50 border border-slate-200 space-y-2 shadow-sm hover:border-[#9A7B38]/40 transition-colors">
+            <Zap className="w-6 h-6 text-[#9A7B38]" />
+            <h4 className="text-sm font-bold text-slate-900 font-cinzel">15,000 Gauss Anti-Magnetic</h4>
+            <p className="text-xs text-slate-600 leading-relaxed font-light">
               Silicon escapement components impervious to modern magnetic fields from laptops and smartphones.
             </p>
           </div>
@@ -372,9 +374,9 @@ export const CraftsmanshipPage: React.FC<CraftsmanshipPageProps> = ({ onNavigate
 
       {/* Cross-Page Discovery CTA */}
       {onNavigate && (
-        <div className="p-8 sm:p-12 rounded-2xl bg-gradient-to-r from-[#0C101A] via-[#090D14] to-black border border-gold/30 flex flex-col md:flex-row items-center justify-between gap-6 shadow-2xl">
+        <div className="p-8 sm:p-12 rounded-2xl bg-gradient-to-r from-slate-900 via-slate-800 to-black text-white border border-[#C5A059]/40 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
           <div className="space-y-2 text-center md:text-left">
-            <span className="text-[10px] uppercase tracking-[0.25em] text-[#C5A059] font-mono">
+            <span className="text-[10px] uppercase tracking-[0.25em] text-[#C5A059] font-mono font-semibold">
               Haute Horlogerie in Motion
             </span>
             <h3 className="font-cinzel text-xl sm:text-2xl font-bold text-white">
@@ -388,14 +390,14 @@ export const CraftsmanshipPage: React.FC<CraftsmanshipPageProps> = ({ onNavigate
           <div className="flex flex-wrap items-center gap-3 shrink-0">
             <button
               onClick={() => onNavigate('collections')}
-              className="px-6 py-3 rounded-full text-xs font-bold uppercase tracking-wider text-black bg-gradient-to-r from-[#C5A059] via-[#E2C775] to-[#B89243] hover:from-[#D4B36E] hover:to-[#C5A059] transition-all active:scale-95 shadow-[0_0_15px_rgba(197,160,89,0.3)] flex items-center gap-1.5"
+              className="px-6 py-3 rounded-full text-xs font-bold uppercase tracking-wider text-black bg-gradient-to-r from-[#C5A059] via-[#E2C775] to-[#B89243] hover:from-[#D4B36E] hover:to-[#C5A059] transition-all active:scale-95 shadow-[0_0_15px_rgba(197,160,89,0.3)] flex items-center gap-1.5 cursor-pointer"
             >
               <span>Explore Timepieces</span>
               <ArrowRight className="w-3.5 h-3.5 text-black" />
             </button>
             <button
               onClick={() => onNavigate('bespoke')}
-              className="px-6 py-3 rounded-full text-xs font-semibold uppercase tracking-wider text-white bg-white/5 hover:bg-white/10 border border-gold/30 hover:border-gold transition-all"
+              className="px-6 py-3 rounded-full text-xs font-semibold uppercase tracking-wider text-white bg-white/10 hover:bg-white/20 border border-white/20 hover:border-gold transition-all cursor-pointer"
             >
               <span>Bespoke Studio</span>
             </button>

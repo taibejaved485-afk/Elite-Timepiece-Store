@@ -8,6 +8,7 @@ import { CartDrawer } from './components/CartDrawer';
 import { WishlistDrawer } from './components/WishlistDrawer';
 import { CheckoutModal } from './components/CheckoutModal';
 import { SearchModal } from './components/SearchModal';
+import { TrackOrderModal } from './components/TrackOrderModal';
 
 import { CompareModal } from './components/CompareModal';
 import { LoadingSpinner } from './components/LoadingSpinner';
@@ -112,6 +113,12 @@ export default function App() {
   const [isWishlistOpen, setIsWishlistOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isTrackOrderOpen, setIsTrackOrderOpen] = useState(false);
+  const [trackingOrderNumber, setTrackingOrderNumber] = useState<string | undefined>(undefined);
+  const handleOpenTrackOrder = (orderNum?: string) => {
+    setTrackingOrderNumber(orderNum);
+    setIsTrackOrderOpen(true);
+  };
   const handleOpenProduct = (watch: Watch) => {
     handleNavigate(`product-${watch.id}`);
   };
@@ -227,7 +234,7 @@ export default function App() {
         {isLoading && (
           <LuxuryWatchPreloader
             onComplete={() => setIsLoading(false)}
-            minDuration={2400}
+            minDuration={2000}
           />
         )}
       </AnimatePresence>
@@ -246,18 +253,18 @@ export default function App() {
         onSelectCurrency={setCurrency}
       />
 
-      {/* Subpage Breadcrumbs & Horological Navigation Ribbon */}
+      {/* Subpage Breadcrumbs & Horological Navigation Ribbon in Clean Luxury White */}
       {currentPage !== 'home' && (
-        <nav aria-label="Breadcrumb navigation" className="w-full bg-[#030509]/95 backdrop-blur-md border-b border-gold/20 py-2 sm:py-2.5 px-3 sm:px-8 lg:px-16 xl:px-24 flex items-center justify-between text-xs relative z-20 shadow-sm">
+        <nav aria-label="Breadcrumb navigation" className="w-full bg-[#FAF9F5] backdrop-blur-md border-b border-slate-200 py-2 sm:py-2.5 px-3 sm:px-8 lg:px-16 xl:px-24 flex items-center justify-between text-xs relative z-20 shadow-2xs">
           <div className="flex items-center gap-2 overflow-x-auto scrollbar-none whitespace-nowrap">
             <button 
               onClick={() => handleNavigate('home')} 
-              className="text-slate-400 hover:text-gold transition-colors flex items-center gap-1 font-cinzel uppercase tracking-wider text-[11px]"
+              className="text-slate-500 hover:text-[#9A7B38] transition-colors flex items-center gap-1 font-cinzel uppercase tracking-wider text-[11px] cursor-pointer"
             >
               <span>Maison Aurelia</span>
             </button>
-            <span className="text-gold/40">/</span>
-            <span className="text-[#C5A059] font-semibold uppercase tracking-wider text-[11px] font-cinzel">
+            <span className="text-slate-300">/</span>
+            <span className="text-[#9A7B38] font-bold uppercase tracking-wider text-[11px] font-cinzel">
               {currentPage === 'collections' && 'Timepiece Collections'}
               {currentPage === 'craftsmanship' && 'Haute Calibres & Craftsmanship'}
               {currentPage === 'bespoke' && 'Bespoke Atelier Studio'}
@@ -272,19 +279,19 @@ export default function App() {
             </span>
           </div>
 
-          <div className="hidden md:flex items-center gap-4 text-[11px] font-mono text-slate-400">
+          <div className="hidden md:flex items-center gap-4 text-[11px] font-mono text-slate-500">
             <span className="flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-white">Le Brassus Atelier Online</span>
+              <span className="text-slate-800 font-semibold">Le Brassus Atelier Online</span>
             </span>
-            <span className="text-gold/30">·</span>
-            <span className="text-gold/90 font-medium">100% In-House Mechanical Calibres</span>
+            <span className="text-slate-300">·</span>
+            <span className="text-[#9A7B38] font-semibold">100% In-House Mechanical Calibres</span>
           </div>
         </nav>
       )}
 
       {/* Main Page Content rendered by active route with smooth page transition */}
-      <main className="flex-1 w-full overflow-hidden">
+      <main className="flex-1 w-full overflow-hidden bg-white">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentPage}
@@ -382,7 +389,11 @@ export default function App() {
       </main>
 
       {/* Refined Luxury Footer */}
-      <Footer onNavigate={handleNavigate} onReplayPreloader={() => setIsLoading(true)} />
+      <Footer
+        onNavigate={handleNavigate}
+        onReplayPreloader={() => setIsLoading(true)}
+        onOpenTrackOrder={() => handleOpenTrackOrder()}
+      />
 
       {/* Drawers & Modals */}
       <CartDrawer
@@ -421,12 +432,23 @@ export default function App() {
         items={cart}
         currency={currency}
         onClearCart={handleClearCart}
+        onOpenTrackOrder={handleOpenTrackOrder}
       />
 
       <SearchModal
         isOpen={isSearchOpen}
         onClose={() => setIsSearchOpen(false)}
         onNavigate={handleNavigate}
+      />
+
+      <TrackOrderModal
+        isOpen={isTrackOrderOpen}
+        onClose={() => {
+          setIsTrackOrderOpen(false);
+          setTrackingOrderNumber(undefined);
+        }}
+        onNavigate={handleNavigate}
+        initialOrderNumber={trackingOrderNumber}
       />
 
       {isCompareOpen && (

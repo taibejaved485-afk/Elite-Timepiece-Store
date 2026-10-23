@@ -3,6 +3,7 @@ import { motion, Variants } from 'framer-motion';
 import { ArrowRight, Sparkles, Award, Shield, Compass, ChevronRight, Eye, Clock, Calendar, Bookmark, Heart, MapPin, Users, Building, History, BookOpen } from 'lucide-react';
 import { Watch, PageRoute, CurrencyCode } from '../types/watch';
 import { formatPrice } from '../utils/currency';
+import { AnimatedPrice } from '../components/AnimatedPrice';
 import { BrandStory } from '../components/BrandStory';
 import { CollectorMarqueeSection } from '../components/CollectorMarqueeSection';
 import { handleImageFallback } from '../utils/imageFallback';
@@ -258,7 +259,7 @@ export const HomePage: React.FC<HomePageProps> = ({
 
                 <div className="pt-4 border-t border-slate-100 flex items-center justify-between gap-2">
                   <span className="font-mono text-sm sm:text-base font-bold text-slate-900 tabular-nums">
-                    {formatPrice(watch.priceUSD, currency)}
+                    <AnimatedPrice amountUSD={watch.priceUSD} currency={currency} replayOnHover={true} />
                   </span>
                   <button
                     onClick={() => onAddToCart(watch)}
@@ -354,14 +355,8 @@ export const HomePage: React.FC<HomePageProps> = ({
                 <img
                   src={cat.image}
                   alt={cat.name}
-                  onError={(e) => {
-                    if (cat.fallbackImage) {
-                      (e.target as HTMLImageElement).src = cat.fallbackImage;
-                    } else {
-                      handleImageFallback(e);
-                    }
-                  }}
-                  className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
+                  onError={handleImageFallback}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                   referrerPolicy="no-referrer"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent pointer-events-none" />
@@ -496,7 +491,7 @@ export const HomePage: React.FC<HomePageProps> = ({
 
                 <div className="pt-4 border-t border-slate-100 flex items-center justify-between gap-2">
                   <span className="font-mono text-sm sm:text-base font-bold text-slate-900 tabular-nums">
-                    {formatPrice(watch.priceUSD, currency)}
+                    <AnimatedPrice amountUSD={watch.priceUSD} currency={currency} replayOnHover={true} />
                   </span>
                   <button
                     onClick={() => onAddToCart(watch)}

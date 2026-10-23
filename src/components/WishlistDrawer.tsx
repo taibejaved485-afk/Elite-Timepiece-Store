@@ -2,6 +2,7 @@ import React from 'react';
 import { X, Trash2, ShoppingBag, ArrowRight } from 'lucide-react';
 import { Watch, CurrencyCode } from '../types/watch';
 import { formatPrice } from '../utils/currency';
+import { AnimatedPrice } from './AnimatedPrice';
 
 interface WishlistDrawerProps {
   isOpen: boolean;
@@ -95,7 +96,7 @@ export const WishlistDrawer: React.FC<WishlistDrawerProps> = ({
                       {watch.reference}
                     </p>
                     <p className="text-xs font-mono font-medium text-white tabular-nums mt-1">
-                      {formatPrice(watch.priceUSD, currency)}
+                      <AnimatedPrice amountUSD={watch.priceUSD} currency={currency} replayOnHover={true} />
                     </p>
                   </div>
 

@@ -2,6 +2,7 @@ import React from 'react';
 import { X, Check } from 'lucide-react';
 import { Watch, CurrencyCode } from '../types/watch';
 import { formatPrice } from '../utils/currency';
+import { AnimatedPrice } from './AnimatedPrice';
 
 interface CompareModalProps {
   watches: Watch[];
@@ -54,7 +55,9 @@ export const CompareModal: React.FC<CompareModalProps> = ({
                 />
                 <h3 className="text-xs sm:text-base font-semibold text-white truncate">{watch.name}</h3>
                 <p className="text-[10px] sm:text-[11px] text-[#C5A059] font-mono">{watch.reference}</p>
-                <p className="text-sm sm:text-lg text-white mt-1 font-mono font-bold">{formatPrice(watch.priceUSD, currency)}</p>
+                <p className="text-sm sm:text-lg text-white mt-1 font-mono font-bold">
+                  <AnimatedPrice amountUSD={watch.priceUSD} currency={currency} replayOnHover={true} />
+                </p>
                 <button
                   onClick={() => onToggleCompare(watch)}
                   className="mt-2 text-[11px] text-red-400/80 hover:text-red-400 flex items-center gap-1 font-mono"

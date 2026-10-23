@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { Watch, CurrencyCode } from '../types/watch';
 import { formatPrice } from '../utils/currency';
+import { AnimatedPrice } from '../components/AnimatedPrice';
 
 interface AdminPageProps {
   watches: Watch[];
@@ -477,7 +478,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                   <div>
                     <span className="text-[9px] uppercase tracking-wider text-slate-400 block">Valuation</span>
                     <span className="font-mono text-lg font-bold text-white tabular-nums">
-                      {formatPrice(watch.priceUSD, currency)}
+                      <AnimatedPrice amountUSD={watch.priceUSD} currency={currency} replayOnHover={true} />
                     </span>
                   </div>
 

@@ -40,6 +40,7 @@ export interface CartItem {
   quantity: number;
   selectedStrap?: string;
   customEngraving?: string;
+  bespokeEngraving?: string;
   bespokeCase?: string;
   bespokeDial?: string;
   bespokePrice?: number;

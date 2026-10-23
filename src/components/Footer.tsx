@@ -5,9 +5,14 @@ import { Check, X } from 'lucide-react';
 interface FooterProps {
   onNavigate: (page: PageRoute) => void;
   onReplayPreloader?: () => void;
+  onOpenTrackOrder?: () => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onNavigate, onReplayPreloader }) => {
+export const Footer: React.FC<FooterProps> = ({
+  onNavigate,
+  onReplayPreloader,
+  onOpenTrackOrder,
+}) => {
   // Newsletter form state
   const [formData, setFormData] = useState({
     firstName: '',
@@ -232,10 +237,11 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onReplayPreloader })
               </li>
               <li>
                 <button
-                  onClick={() => handleNav('concierge')}
-                  className="hover:text-[#9A7B38] hover:font-medium transition-colors text-left"
+                  onClick={onOpenTrackOrder ? onOpenTrackOrder : () => handleNav('concierge')}
+                  className="hover:text-[#9A7B38] hover:font-medium transition-colors text-left flex items-center gap-1.5"
                 >
-                  Track Armored Delivery
+                  <span>Track Armored Delivery</span>
+                  <span className="px-1.5 py-0.5 bg-gold/15 text-[#9A7B38] rounded text-[10px] font-mono font-semibold">Live</span>
                 </button>
               </li>
               <li>
@@ -395,6 +401,18 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onReplayPreloader })
             >
               Provenance Registry
             </button>
+            {onOpenTrackOrder && (
+              <>
+                <span>·</span>
+                <button
+                  onClick={onOpenTrackOrder}
+                  className="hover:text-[#9A7B38] text-slate-700 font-semibold transition-colors cursor-pointer"
+                  title="Track Your Armored Timepiece Consignment"
+                >
+                  Track Order
+                </button>
+              </>
+            )}
             {onReplayPreloader && (
               <>
                 <span>·</span>

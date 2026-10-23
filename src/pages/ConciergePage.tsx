@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { WATCHES } from '../data/watches';
 import { getShippingStatus } from '../utils/shipping';
+import { findOrderByQuery } from '../utils/orderStorage';
 import { ConciergeFAQ } from '../components/ConciergeFAQ';
 import { PageRoute } from '../types/watch';
 
@@ -111,6 +112,31 @@ export const ConciergePage: React.FC<ConciergePageProps> = ({ onNavigate }) => {
     setOrderStatusLoading(true);
 
     try {
+      const stored = findOrderByQuery(cleanNum);
+      if (stored) {
+        setOrderStatusResult({
+          orderId: stored.orderNumber,
+          email: stored.email,
+          clientName: stored.clientName,
+          destination: stored.destination,
+          carrier: stored.carrier,
+          vaultTransitId: stored.airwayBill,
+          estimatedDelivery: stored.estimatedDelivery,
+          statusBadge: `${stored.status} · Armored Security Escort`,
+          currentStage: Math.min(stored.progressStep - 1, stored.steps.length - 1),
+          stages: stored.steps.map((s) => ({
+            title: s.title,
+            location: s.location,
+            timestamp: s.timestamp,
+            completed: s.completed,
+            current: s.current,
+          })),
+          timepieces: stored.items.map((i) => i.name),
+        });
+        setOrderStatusLoading(false);
+        return;
+      }
+
       const status = await getShippingStatus(cleanNum);
       
       setOrderStatusResult({
@@ -123,9 +149,9 @@ export const ConciergePage: React.FC<ConciergePageProps> = ({ onNavigate }) => {
         estimatedDelivery: 'Within 48 Hours',
         statusBadge: status.statusBadge,
         currentStage: status.currentStage,
-        stages: status.stages.map((s, i) => ({
+        stages: status.stages.map((s) => ({
           title: s.title,
-          location: 'Atelier',
+          location: 'Atelier Le Brassus',
           timestamp: 'Active',
           completed: s.completed,
           current: s.current,

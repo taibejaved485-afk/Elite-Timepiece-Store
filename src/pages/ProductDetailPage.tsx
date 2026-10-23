@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, Clock, Shield, Compass, Sparkles, Heart, ShoppingBag, Share2, Check, Printer } from 'lucide-react';
 import { Watch, CurrencyCode, PageRoute } from '../types/watch';
 import { formatPrice } from '../utils/currency';
+import { AnimatedPrice } from '../components/AnimatedPrice';
 import { handleImageFallback } from '../utils/imageFallback';
 
 interface ProductDetailPageProps {
@@ -176,7 +177,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
 
             <div className="pt-2 flex items-baseline gap-4">
               <span className="font-mono text-3xl sm:text-4xl font-bold text-slate-900 tabular-nums">
-                {formatPrice(watch.priceUSD, currency)}
+                <AnimatedPrice amountUSD={watch.priceUSD} currency={currency} duration={1500} replayOnHover={true} />
               </span>
               <span className="text-xs text-slate-500">
                 Includes taxes & insured armored courier delivery
@@ -336,7 +337,9 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                 <div className="p-6 space-y-2">
                   <div className="flex justify-between text-xs text-slate-500">
                     <span className="font-mono text-[#9A7B38] font-semibold">{item.reference}</span>
-                    <span className="font-mono font-bold text-slate-900">{formatPrice(item.priceUSD, currency)}</span>
+                    <span className="font-mono font-bold text-slate-900">
+                      <AnimatedPrice amountUSD={item.priceUSD} currency={currency} replayOnHover={true} />
+                    </span>
                   </div>
                   <h4 className="font-cinzel text-base font-bold text-slate-900 group-hover:text-[#9A7B38] transition-colors">{item.name}</h4>
                   <p className="text-xs text-slate-600 line-clamp-1">{item.tagline}</p>
