@@ -81,17 +81,17 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onNav
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[10000] flex items-start justify-center pt-20 px-4 bg-black/80 backdrop-blur-md"
+          className="fixed inset-0 z-[10000] flex items-start justify-center pt-6 sm:pt-20 px-3 sm:px-4 bg-black/80 backdrop-blur-md"
           onClick={onClose}
         >
           <motion.div
             initial={{ opacity: 0, y: -20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -20, scale: 0.95 }}
-            className="w-full max-w-lg bg-[#0A0D14] border border-gold/30 rounded-3xl shadow-2xl p-6 overflow-hidden"
+            className="w-full max-w-lg max-h-[88dvh] flex flex-col bg-[#0A0D14] border border-gold/30 rounded-2xl sm:rounded-3xl shadow-2xl p-4 sm:p-6 overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="relative mb-6">
+            <div className="relative mb-4 sm:mb-6 shrink-0">
               <Search className="w-5 h-5 text-gold absolute left-4 top-1/2 -translate-y-1/2" />
               <input
                 type="text"

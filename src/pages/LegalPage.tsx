@@ -114,14 +114,14 @@ export const LegalPage: React.FC<LegalPageProps> = ({ route, onNavigate }) => {
         </div>
 
         {/* Content Body */}
-        <div className="bg-slate-50 border border-slate-200 rounded-2xl p-8 sm:p-12 space-y-8 shadow-sm">
+        <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 sm:p-12 space-y-6 sm:space-y-8 shadow-sm">
           {config.content.map((item, idx) => (
-            <div key={idx} className="space-y-3 pb-6 border-b border-slate-200 last:border-none last:pb-0">
-              <h3 className="font-cinzel text-lg sm:text-xl font-bold text-slate-900 flex items-center gap-2.5">
-                <CheckCircle2 className="w-5 h-5 text-[#9A7B38] shrink-0" />
+            <div key={idx} className="space-y-2 sm:space-y-3 pb-6 border-b border-slate-200 last:border-none last:pb-0">
+              <h3 className="font-cinzel text-base sm:text-xl font-bold text-slate-900 flex items-center gap-2 sm:gap-2.5">
+                <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-[#9A7B38] shrink-0" />
                 <span>{item.heading}</span>
               </h3>
-              <p className="text-sm sm:text-base text-slate-700 leading-relaxed font-light pl-7">
+              <p className="text-xs sm:text-base text-slate-700 leading-relaxed font-light sm:pl-7">
                 {item.text}
               </p>
             </div>

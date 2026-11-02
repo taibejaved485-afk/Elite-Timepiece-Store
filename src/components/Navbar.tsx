@@ -109,16 +109,16 @@ export const Navbar: React.FC<NavbarProps> = ({
             : 'bg-white/95 backdrop-blur-md border-slate-100 py-4 shadow-2xs'
         }`}
       >
-        <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-20 flex items-center justify-between gap-4">
+        <div className="w-full px-3 sm:px-6 lg:px-12 xl:px-20 flex items-center justify-between gap-2 sm:gap-4">
           
           {/* Left Zone: Refined Brand Logo & Wordmark */}
           <button
             onClick={() => handleNavClick('home')}
-            className="group flex items-center gap-3 text-left focus:outline-none shrink-0 cursor-pointer"
+            className="group flex items-center gap-2 sm:gap-3 text-left focus:outline-none shrink-0 cursor-pointer min-w-0"
             aria-label="Aurelia Horology Home"
           >
             {/* Minimalist Watch Balance Crest */}
-            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#FAF8F5] to-[#F1ECE1] border border-[#9A7B38]/30 flex items-center justify-center p-1.5 shadow-2xs group-hover:border-[#9A7B38] group-hover:bg-[#FAF6EC] transition-all duration-300">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gradient-to-br from-[#FAF8F5] to-[#F1ECE1] border border-[#9A7B38]/30 flex items-center justify-center p-1.5 shadow-2xs group-hover:border-[#9A7B38] group-hover:bg-[#FAF6EC] transition-all duration-300 shrink-0">
               <svg
                 viewBox="0 0 40 40"
                 className="w-full h-full text-[#9A7B38] transition-transform duration-500 group-hover:scale-105"
@@ -135,11 +135,11 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
 
             {/* Haute Horlogerie Typography */}
-            <div className="flex flex-col">
-              <span className="font-serif text-lg sm:text-xl tracking-[0.24em] font-bold text-slate-900 group-hover:text-[#9A7B38] transition-colors duration-200">
+            <div className="flex flex-col min-w-0">
+              <span className="font-serif text-base sm:text-xl tracking-[0.2em] sm:tracking-[0.24em] font-bold text-slate-900 group-hover:text-[#9A7B38] transition-colors duration-200">
                 AURELIA
               </span>
-              <span className="text-[8px] tracking-[0.34em] uppercase text-[#9A7B38] font-semibold -mt-0.5">
+              <span className="text-[7px] sm:text-[8px] tracking-[0.26em] sm:tracking-[0.34em] uppercase text-[#9A7B38] font-semibold -mt-0.5">
                 GENÈVE · 1892
               </span>
             </div>
@@ -170,26 +170,26 @@ export const Navbar: React.FC<NavbarProps> = ({
           </nav>
 
           {/* Right Zone: Clean Action Buttons (Search, Currency, Wishlist, Bag, Menu) */}
-          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
             
             {/* Search Trigger */}
             <button
               onClick={onOpenSearch}
-              className="w-9 h-9 rounded-full border border-slate-200/80 hover:border-[#9A7B38]/60 text-slate-700 hover:text-[#9A7B38] flex items-center justify-center transition-colors bg-white hover:bg-[#FAF8F3] active:scale-95 cursor-pointer shadow-2xs"
+              className="w-8 h-8 sm:w-9 sm:h-9 rounded-full border border-slate-200/80 hover:border-[#9A7B38]/60 text-slate-700 hover:text-[#9A7B38] flex items-center justify-center transition-colors bg-white hover:bg-[#FAF8F3] active:scale-95 cursor-pointer shadow-2xs shrink-0"
               aria-label="Search Collection"
               title="Search Timepieces"
             >
-              <Search className="w-4 h-4 stroke-[2]" />
+              <Search className="w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-[2]" />
             </button>
 
-            {/* Currency Selector Pill */}
-            <div className="relative">
+            {/* Currency Selector Pill (Desktop & Tablet only; fully available in mobile drawer) */}
+            <div className="relative hidden md:block">
               <button
                 onClick={() => setCurrencyDropdownOpen(!currencyDropdownOpen)}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-slate-200/80 bg-white hover:border-[#9A7B38]/60 hover:bg-[#FAF8F3] text-xs font-mono text-slate-800 transition-colors shadow-2xs active:scale-95 cursor-pointer"
                 title="Select Valuation Currency"
               >
-                <Globe className="hidden sm:block w-3.5 h-3.5 text-[#9A7B38]" />
+                <Globe className="w-3.5 h-3.5 text-[#9A7B38]" />
                 <span className="font-bold text-slate-900">{currentCurrency}</span>
                 <ChevronDown className="w-3 h-3 text-slate-400 transition-transform duration-200" />
               </button>
@@ -230,7 +230,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               )}
             </div>
 
-            {/* Wishlist Button */}
+            {/* Wishlist Button (Hidden on tiny screens; accessible in mobile menu drawer) */}
             <button
               onClick={onOpenWishlist}
               className="hidden sm:flex relative w-9 h-9 rounded-full border border-slate-200/80 bg-white hover:border-[#9A7B38]/60 hover:bg-[#FAF8F3] text-slate-700 hover:text-[#9A7B38] items-center justify-center transition-colors shadow-2xs active:scale-95 shrink-0 cursor-pointer"
@@ -245,10 +245,10 @@ export const Navbar: React.FC<NavbarProps> = ({
               )}
             </button>
 
-            {/* Atelier Bag (Cart) Button - Sophisticated Luxury Slate/Black Pill */}
+            {/* Atelier Bag (Cart) Button */}
             <button
               onClick={onOpenCart}
-              className="group relative rounded-full px-3.5 sm:px-4 py-1.5 sm:py-2 text-xs font-semibold tracking-wider uppercase text-white bg-slate-900 hover:bg-black transition-all shadow-xs flex items-center gap-2 active:scale-95 shrink-0 cursor-pointer"
+              className="group relative rounded-full px-2.5 sm:px-4 py-1.5 sm:py-2 text-xs font-semibold tracking-wider uppercase text-white bg-slate-900 hover:bg-black transition-all shadow-xs flex items-center gap-1.5 sm:gap-2 active:scale-95 shrink-0 cursor-pointer"
               aria-label="View Allocation Bag"
             >
               <ShoppingBag className="w-3.5 h-3.5 text-white stroke-[2.2]" />
@@ -261,7 +261,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Mobile Menu Hamburger Toggle */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden w-9 h-9 rounded-full border border-slate-200/80 hover:border-slate-300 flex items-center justify-center text-slate-800 bg-white hover:bg-slate-50 focus:outline-none active:scale-95 shrink-0 shadow-2xs cursor-pointer"
+              className="lg:hidden w-8 h-8 sm:w-9 sm:h-9 rounded-full border border-slate-200/80 hover:border-slate-300 flex items-center justify-center text-slate-800 bg-white hover:bg-slate-50 focus:outline-none active:scale-95 shrink-0 shadow-2xs cursor-pointer"
               aria-label="Toggle navigation menu"
             >
               {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
@@ -272,15 +272,15 @@ export const Navbar: React.FC<NavbarProps> = ({
 
       {/* Mobile Navigation Drawer - Simple, Clean & Professional */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 top-[60px] z-50 lg:hidden flex flex-col justify-start">
+        <div className="fixed inset-x-0 top-14 sm:top-16 bottom-0 z-50 lg:hidden flex flex-col justify-start">
           {/* Backdrop overlay */}
           <div
-            className="fixed inset-0 bg-slate-950/30 backdrop-blur-xs"
+            className="fixed inset-0 bg-slate-950/40 backdrop-blur-xs"
             onClick={() => setMobileMenuOpen(false)}
           />
 
           {/* Drawer Panel */}
-          <div className="relative z-10 bg-white border-b border-slate-200 px-6 py-6 shadow-2xl max-h-[calc(100vh-70px)] overflow-y-auto space-y-6 animate-in slide-in-from-top-2 duration-200">
+          <div className="relative z-10 bg-white border-b border-slate-200 px-5 sm:px-6 py-5 shadow-2xl max-h-[calc(100dvh-4rem)] overflow-y-auto space-y-5 animate-in slide-in-from-top-2 duration-200">
             
             {/* Quick Search Trigger inside Drawer */}
             <button

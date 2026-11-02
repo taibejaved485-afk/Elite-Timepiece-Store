@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, Variants } from 'framer-motion';
-import { ArrowRight, Sparkles, Award, Shield, Compass, ChevronRight, Eye, Clock, Calendar, Bookmark, Heart, MapPin, Users, Building, History, BookOpen } from 'lucide-react';
+import { ArrowRight, Sparkles, Award, Shield, Compass, ChevronRight, Eye, Clock, Calendar, Bookmark, Heart, MapPin, Users, Building, History, BookOpen, HelpCircle, Wrench, ShieldCheck, Truck } from 'lucide-react';
 import { Watch, PageRoute, CurrencyCode } from '../types/watch';
 import { formatPrice } from '../utils/currency';
 import { AnimatedPrice } from '../components/AnimatedPrice';
@@ -685,8 +685,8 @@ export const HomePage: React.FC<HomePageProps> = ({
         viewport={{ once: true, margin: "-100px" }}
         className="w-full px-3 sm:px-8 lg:px-12 xl:px-16 py-12 bg-white"
       >
-        <div className="p-6 sm:p-10 rounded-2xl bg-slate-900 text-white border border-slate-800 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
-          <div className="flex items-center gap-4">
+        <div className="p-6 sm:p-10 rounded-2xl bg-slate-900 text-white border border-slate-800 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-6 shadow-xl">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
             <div className="w-12 h-12 rounded-full bg-gold/20 border border-gold/50 flex items-center justify-center text-gold shrink-0">
               <History className="w-6 h-6" />
             </div>
@@ -698,7 +698,7 @@ export const HomePage: React.FC<HomePageProps> = ({
           </div>
           <button
             onClick={() => onNavigate('collections')}
-            className="rounded-full px-6 py-3 text-xs font-bold uppercase tracking-wider text-black bg-gradient-to-r from-[#C5A059] via-[#E2C775] to-[#B89243] hover:from-[#D4B36E] hover:to-[#C5A059] transition-all active:scale-95 shrink-0"
+            className="w-full md:w-auto rounded-full px-6 py-3 text-xs font-bold uppercase tracking-wider text-black bg-gradient-to-r from-[#C5A059] via-[#E2C775] to-[#B89243] hover:from-[#D4B36E] hover:to-[#C5A059] transition-all active:scale-95 shrink-0 text-center"
           >
             Review Session History
           </button>

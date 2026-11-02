@@ -2102,34 +2102,34 @@ export const AdminPage: React.FC<AdminPageProps> = ({
 
         {/* Main Content Layout: Vertical Navigation Sidebar + Workspace */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          {/* Left Vertical Navigation Menu */}
-          <aside className="lg:col-span-3 xl:col-span-2 space-y-4 lg:sticky lg:top-24">
-            <div className="bg-white rounded-xl border border-slate-200 shadow-xs p-3 space-y-3">
-              <div className="px-2 py-1 flex items-center justify-between">
+          {/* Left Vertical Navigation Menu (Responsive Tabs on Mobile) */}
+          <aside className="lg:col-span-3 xl:col-span-2 space-y-4 lg:sticky lg:top-24 w-full">
+            <div className="bg-white rounded-xl border border-slate-200 shadow-xs p-2.5 sm:p-3 space-y-2 lg:space-y-3">
+              <div className="px-2 py-0.5 sm:py-1 flex items-center justify-between">
                 <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
                   Menu Modules
                 </span>
                 <span className="text-[10px] text-slate-500 font-medium">v1.2</span>
               </div>
 
-              {/* Navigation Items */}
-              <nav className="flex flex-col gap-1" aria-label="Admin Navigation Modules">
+              {/* Navigation Items: Horizontal on mobile, vertical on desktop */}
+              <nav className="flex flex-row lg:flex-col overflow-x-auto lg:overflow-visible gap-1.5 lg:gap-1 pb-1 lg:pb-0 scrollbar-none -mx-1 px-1" aria-label="Admin Navigation Modules">
                 {/* 1. Timepieces */}
                 <button
                   type="button"
                   onClick={() => setActiveTab('products')}
-                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg transition-colors cursor-pointer text-left text-xs ${
+                  className={`shrink-0 lg:w-full flex items-center justify-between gap-2.5 px-3 py-2 sm:py-2.5 rounded-lg transition-colors cursor-pointer text-left text-xs whitespace-nowrap ${
                     activeTab === 'products'
                       ? 'bg-slate-900 text-white font-medium shadow-xs'
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50 font-normal'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50 font-normal bg-slate-50 lg:bg-transparent'
                   }`}
                 >
-                  <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="flex items-center gap-2 min-w-0">
                     <Package className="w-4 h-4 shrink-0" />
-                    <span className="truncate">Timepieces Catalog</span>
+                    <span>Timepieces Catalog</span>
                   </div>
-                  <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-md ${
-                    activeTab === 'products' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600'
+                  <span className={`text-[11px] font-semibold px-1.5 py-0.2 rounded-md ${
+                    activeTab === 'products' ? 'bg-white/20 text-white' : 'bg-slate-200/80 text-slate-600'
                   }`}>
                     {watches.length}
                   </span>
@@ -2142,18 +2142,18 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                     setActiveTab('orders');
                     refreshOrders();
                   }}
-                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg transition-colors cursor-pointer text-left text-xs ${
+                  className={`shrink-0 lg:w-full flex items-center justify-between gap-2.5 px-3 py-2 sm:py-2.5 rounded-lg transition-colors cursor-pointer text-left text-xs whitespace-nowrap ${
                     activeTab === 'orders'
                       ? 'bg-slate-900 text-white font-medium shadow-xs'
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50 font-normal'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50 font-normal bg-slate-50 lg:bg-transparent'
                   }`}
                 >
-                  <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="flex items-center gap-2 min-w-0">
                     <ShoppingBag className="w-4 h-4 shrink-0" />
-                    <span className="truncate">Consignment Orders</span>
+                    <span>Orders</span>
                   </div>
-                  <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-md ${
-                    activeTab === 'orders' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600'
+                  <span className={`text-[11px] font-semibold px-1.5 py-0.2 rounded-md ${
+                    activeTab === 'orders' ? 'bg-white/20 text-white' : 'bg-slate-200/80 text-slate-600'
                   }`}>
                     {orders.length}
                   </span>
@@ -2163,18 +2163,18 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                 <button
                   type="button"
                   onClick={() => setActiveTab('settings')}
-                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg transition-colors cursor-pointer text-left text-xs ${
+                  className={`shrink-0 lg:w-full flex items-center justify-between gap-2.5 px-3 py-2 sm:py-2.5 rounded-lg transition-colors cursor-pointer text-left text-xs whitespace-nowrap ${
                     activeTab === 'settings'
                       ? 'bg-slate-900 text-white font-medium shadow-xs'
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50 font-normal'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50 font-normal bg-slate-50 lg:bg-transparent'
                   }`}
                 >
-                  <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="flex items-center gap-2 min-w-0">
                     <SlidersHorizontal className="w-4 h-4 shrink-0" />
-                    <span className="truncate">Site & Concessions</span>
+                    <span>Settings</span>
                   </div>
-                  <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-md ${
-                    activeTab === 'settings' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600'
+                  <span className={`text-[11px] font-semibold px-1.5 py-0.2 rounded-md ${
+                    activeTab === 'settings' ? 'bg-white/20 text-white' : 'bg-slate-200/80 text-slate-600'
                   }`}>
                     {promoCodes.length}
                   </span>
@@ -2187,15 +2187,15 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                     setActiveTab('analytics');
                     refreshAuditLogs();
                   }}
-                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg transition-colors cursor-pointer text-left text-xs ${
+                  className={`shrink-0 lg:w-full flex items-center justify-between gap-2.5 px-3 py-2 sm:py-2.5 rounded-lg transition-colors cursor-pointer text-left text-xs whitespace-nowrap ${
                     activeTab === 'analytics'
                       ? 'bg-slate-900 text-white font-medium shadow-xs'
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50 font-normal'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50 font-normal bg-slate-50 lg:bg-transparent'
                   }`}
                 >
-                  <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="flex items-center gap-2 min-w-0">
                     <BarChart3 className="w-4 h-4 shrink-0" />
-                    <span className="truncate">Sales & Analytics</span>
+                    <span>Analytics</span>
                   </div>
                 </button>
 
@@ -2206,26 +2206,26 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                     setActiveTab('audit');
                     refreshAuditLogs();
                   }}
-                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg transition-colors cursor-pointer text-left text-xs ${
+                  className={`shrink-0 lg:w-full flex items-center justify-between gap-2.5 px-3 py-2 sm:py-2.5 rounded-lg transition-colors cursor-pointer text-left text-xs whitespace-nowrap ${
                     activeTab === 'audit'
                       ? 'bg-slate-900 text-white font-medium shadow-xs'
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50 font-normal'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50 font-normal bg-slate-50 lg:bg-transparent'
                   }`}
                 >
-                  <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="flex items-center gap-2 min-w-0">
                     <History className="w-4 h-4 shrink-0" />
-                    <span className="truncate">Activity Log</span>
+                    <span>Activity Log</span>
                   </div>
-                  <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-md ${
-                    activeTab === 'audit' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600'
+                  <span className={`text-[11px] font-semibold px-1.5 py-0.2 rounded-md ${
+                    activeTab === 'audit' ? 'bg-white/20 text-white' : 'bg-slate-200/80 text-slate-600'
                   }`}>
                     {auditLogs.length}
                   </span>
                 </button>
               </nav>
 
-              {/* Sidebar Action Button */}
-              <div className="pt-2 border-t border-slate-100 space-y-2">
+              {/* Sidebar Action Button (Desktop only, as header already has Add button) */}
+              <div className="hidden lg:block pt-2 border-t border-slate-100 space-y-2">
                 <button
                   type="button"
                   onClick={handleOpenAdd}

@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Search, SlidersHorizontal, Heart, ShoppingBag, Eye, X, Check, RotateCcw, Sparkles } from 'lucide-react';
+import { Search, SlidersHorizontal, Heart, ShoppingBag, Eye, X, Check, RotateCcw, Sparkles, ChevronDown } from 'lucide-react';
 import { Watch, CurrencyCode } from '../types/watch';
 import { formatPrice } from '../utils/currency';
 import { AnimatedPrice } from '../components/AnimatedPrice';
@@ -43,6 +43,7 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
   const [selectedMaterial, setSelectedMaterial] = useState<string>('all');
   const [priceRange, setPriceRange] = useState<[number, number]>([10000, 100000]);
   const [activeTier, setActiveTier] = useState<string>('all');
+  const [showCustomPrice, setShowCustomPrice] = useState(false);
   const [sortBy, setSortBy] = useState<'featured' | 'price-asc' | 'price-desc'>('featured');
   const [addedItemMap, setAddedItemMap] = useState<Record<string, boolean>>({});
 
@@ -137,249 +138,279 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
   };
 
   return (
-    <div className="w-full min-h-screen bg-white text-slate-900 px-3 sm:px-8 lg:px-16 xl:px-24 py-8 sm:py-16 space-y-8 sm:space-y-12">
-      {/* Page Title & Editorial Header */}
-      <div className="space-y-2 sm:space-y-3 text-center sm:text-left border-b border-slate-200 pb-6 sm:pb-8">
-        <div className="text-[10px] sm:text-xs uppercase tracking-[0.25em] text-[#9A7B38] font-bold">
-          Manufacture Horizon · 2026 Collections
-        </div>
-        <h1 className="font-cinzel text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 tracking-tight">
-          Haute Horlogerie Catalog
-        </h1>
-        <p className="text-xs sm:text-sm text-slate-600 max-w-2xl leading-relaxed font-light">
-          Explore our certified Swiss timepieces, from flying tourbillons with gravity compensation to extreme-depth automatic diving chronometers.
-        </p>
-      </div>
-
-      {/* Filter and Control Bar */}
-      <div className="space-y-4 sm:space-y-5">
-        {/* Top Control Bar: Search & Category Tabs */}
-        <div className="flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between">
-          {/* Category Tabs (Segmented controls) */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 scrollbar-none w-full md:w-auto -mx-1 px-1">
-            {categories.map((cat) => (
+    <div className="w-full min-h-screen bg-white text-slate-900 px-3 sm:px-8 lg:px-16 xl:px-24 py-8 sm:py-12 space-y-6">
+      {/* Category Navigation & Summary Stats */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-3">
+        <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1 scrollbar-none">
+          {categories.map((cat) => {
+            const isActive = selectedCategory === cat.id;
+            return (
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.id)}
-                className={`flex items-center gap-2 px-3.5 sm:px-4 py-1.5 sm:py-2 text-[10px] sm:text-xs font-semibold tracking-wider uppercase rounded-full transition-all whitespace-nowrap shrink-0 ${
-                  selectedCategory === cat.id
-                    ? 'bg-gradient-to-r from-[#C5A059] via-[#E2C775] to-[#B89243] text-black font-bold shadow-md'
-                    : 'bg-slate-100 text-slate-600 hover:text-slate-900 hover:bg-slate-200 border border-slate-200/90'
+                className={`px-4 py-2 text-xs font-semibold tracking-wider uppercase rounded-lg transition-all whitespace-nowrap cursor-pointer ${
+                  isActive
+                    ? 'bg-slate-900 text-[#C5A059] shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                 }`}
               >
-                {cat.image && (
-                  <img
-                    src={cat.image}
-                    alt=""
-                    onError={handleImageFallback}
-                    className="w-4 h-4 rounded-full object-cover border border-black/20 shrink-0"
-                  />
-                )}
-                <span>{cat.label}</span>
+                {cat.label}
               </button>
-            ))}
-          </div>
-
-          {/* Search Box */}
-          <div className="relative w-full md:w-80 group">
-            <Search className="w-4 h-4 text-[#9A7B38] absolute left-3.5 top-1/2 -translate-y-1/2 transition-colors" />
-            <input
-              type="text"
-              placeholder="Search by name, collection, reference..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-9 py-2.5 text-xs bg-white border border-slate-200 hover:border-[#9A7B38]/60 focus:border-[#9A7B38] rounded-full text-slate-900 placeholder-slate-400 shadow-sm focus:outline-none transition-all duration-300"
-            />
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition-colors p-0.5 rounded-full"
-                aria-label="Clear search"
-              >
-                <X className="w-3.5 h-3.5" />
-              </button>
-            )}
-          </div>
+            );
+          })}
         </div>
 
-        {/* Secondary Sub-filters: Material & Sorting */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-3.5 sm:p-4 rounded-2xl bg-slate-50 border border-slate-200 text-xs shadow-2xs">
-          <div className="flex flex-wrap items-center gap-1.5 sm:gap-3">
-            <span className="text-slate-500 font-medium text-[10px] sm:text-xs">Case Material:</span>
-            <div className="flex flex-wrap items-center gap-1 sm:gap-1.5">
-              {materials.map((mat) => (
-                <button
-                  key={mat.id}
-                  onClick={() => setSelectedMaterial(mat.id)}
-                  className={`px-3 py-1.5 rounded-lg text-[11px] sm:text-xs transition-colors ${
-                    selectedMaterial === mat.id
-                      ? 'bg-[#9A7B38]/15 text-[#9A7B38] font-bold border border-[#9A7B38]/30 shadow-2xs'
-                      : 'text-slate-600 hover:text-slate-900 bg-white border border-slate-200/80 hover:bg-slate-100'
-                  }`}
-                >
-                  {mat.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between sm:justify-end gap-2 pt-2 sm:pt-0 border-t border-slate-200/60 sm:border-0">
-            <span className="text-slate-500 text-[11px] sm:text-xs">Sort By:</span>
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as any)}
-              className="bg-white border border-slate-200 text-slate-800 px-3 py-1.5 rounded-xl text-xs focus:outline-none focus:border-[#9A7B38] shadow-2xs"
+        <div className="flex items-center gap-3 shrink-0 text-xs self-start sm:self-center">
+          {comparisonList.length > 0 && (
+            <button
+              onClick={onOpenCompare}
+              className="px-3 py-1.5 rounded-lg bg-[#9A7B38]/10 text-[#9A7B38] hover:bg-[#9A7B38]/20 font-semibold flex items-center gap-1.5 transition-colors border border-[#9A7B38]/30 cursor-pointer"
             >
-              <option value="featured">Maison Selection</option>
-              <option value="price-asc">Price: Low to High</option>
-              <option value="price-desc">Price: High to Low</option>
-            </select>
-          </div>
-        </div>
-
-        {/* Interactive Range Slider and Price Tier Refinement */}
-        <div className="p-5 sm:p-6 rounded-2xl bg-slate-50 border border-slate-200 text-xs space-y-4 shadow-sm">
-          {/* Header Row */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-3">
-            <div className="flex items-center gap-2 text-slate-800">
-              <SlidersHorizontal className="w-3.5 h-3.5 text-[#9A7B38]" />
-              <span className="font-semibold uppercase tracking-wider text-[11px] font-cinzel text-slate-900">
-                Valuation Range
-              </span>
-              <span className="text-slate-300">·</span>
-              <span className="font-mono text-[#9A7B38] font-bold tabular-nums">
-                {formatPrice(priceRange[0], currency)} — {formatPrice(priceRange[1], currency)}
-              </span>
-            </div>
-
-            {(priceRange[0] !== 10000 || priceRange[1] !== 100000) && (
-              <button
-                onClick={handleResetPrice}
-                className="text-[11px] text-[#9A7B38] hover:text-slate-900 transition-colors flex items-center gap-1 self-start sm:self-auto font-medium"
-                title="Reset price range"
-              >
-                <RotateCcw className="w-3 h-3" />
-                <span>Reset Valuation</span>
-              </button>
-            )}
-          </div>
-
-          {/* Dual Range Sliders Container */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 pt-1">
-            {/* Minimum Slider */}
-            <div className="space-y-1.5">
-              <div className="flex justify-between text-[11px] text-slate-600">
-                <span>Minimum Valuation</span>
-                <span className="font-mono text-slate-900 tabular-nums font-bold">
-                  {formatPrice(priceRange[0], currency)}
-                </span>
-              </div>
-              <input
-                type="range"
-                min={10000}
-                max={90000}
-                step={2500}
-                value={priceRange[0]}
-                onChange={(e) => handleMinPriceChange(Number(e.target.value))}
-                className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-[#9A7B38] focus:outline-none"
-                aria-label="Minimum price filter"
-              />
-              <div className="flex justify-between text-[10px] text-slate-400 font-mono">
-                <span>{formatPrice(10000, currency)}</span>
-                <span>{formatPrice(90000, currency)}</span>
-              </div>
-            </div>
-
-            {/* Maximum Slider */}
-            <div className="space-y-1.5">
-              <div className="flex justify-between text-[11px] text-slate-600">
-                <span>Maximum Valuation</span>
-                <span className="font-mono text-slate-900 tabular-nums font-bold">
-                  {formatPrice(priceRange[1], currency)}
-                </span>
-              </div>
-              <input
-                type="range"
-                min={20000}
-                max={100000}
-                step={2500}
-                value={priceRange[1]}
-                onChange={(e) => handleMaxPriceChange(Number(e.target.value))}
-                className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-[#9A7B38] focus:outline-none"
-                aria-label="Maximum price filter"
-              />
-              <div className="flex justify-between text-[10px] text-slate-400 font-mono">
-                <span>{formatPrice(20000, currency)}</span>
-                <span>{formatPrice(100000, currency)}+</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Quick-Select Tier Presets */}
-          <div className="pt-3 border-t border-slate-200 flex flex-wrap items-center justify-between gap-3">
-            <div className="flex flex-wrap items-center gap-1.5">
-              <span className="text-slate-500 text-[11px] mr-1">Quick Tiers:</span>
-              {[
-                { id: 'all', label: 'All Valuations' },
-                { id: 'under-25k', label: `Under ${formatPrice(25000, currency)}` },
-                { id: '25k-50k', label: `${formatPrice(25000, currency)} – ${formatPrice(50000, currency)}` },
-                { id: 'over-50k', label: `Over ${formatPrice(50000, currency)}` },
-              ].map((tier) => {
-                const isSelected = activeTier === tier.id;
-                return (
-                  <button
-                    key={tier.id}
-                    onClick={() => handleSelectTier(tier.id)}
-                    className={`px-3 py-1 rounded-lg text-xs transition-colors whitespace-nowrap font-mono tabular-nums ${
-                      isSelected
-                        ? 'bg-[#9A7B38]/15 text-[#9A7B38] border border-[#9A7B38]/40 font-bold shadow-2xs'
-                        : 'text-slate-600 hover:text-slate-900 bg-white border border-slate-200 hover:bg-slate-100'
-                    }`}
-                  >
-                    {tier.label}
-                  </button>
-                );
-              })}
-            </div>
-
-            <div className="text-[11px] text-slate-500 font-mono">
-              <span className="text-[#9A7B38] font-bold">{filteredWatches.length}</span> pieces match
-            </div>
-          </div>
+              <SlidersHorizontal className="w-3.5 h-3.5" />
+              <span>Compare ({comparisonList.length})</span>
+            </button>
+          )}
+          <span className="text-slate-500 font-mono">
+            Showing <span className="font-bold text-slate-900">{filteredWatches.length}</span> of {watches.length} timepieces
+          </span>
         </div>
       </div>
 
-      {/* Results Count & Reset Controls */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-slate-600">
-        <span>
-          Showing <span className="text-slate-900 font-bold font-mono">{filteredWatches.length}</span> of{' '}
-          <span className="text-slate-900 font-bold font-mono">{watches.length}</span> luxury timepieces
-        </span>
-        {(selectedCategory !== 'all' || selectedMaterial !== 'all' || priceRange[0] !== 10000 || priceRange[1] !== 100000 || searchQuery || comparisonList.length > 0) && (
-          <div className="flex flex-wrap items-center gap-3 sm:gap-4 w-full sm:w-auto justify-between sm:justify-end">
-            {comparisonList.length > 0 && (
-              <button
-                onClick={onOpenCompare}
-                className="text-[#9A7B38] hover:text-slate-900 font-semibold flex items-center gap-1.5 transition-colors"
+      {/* Streamlined Professional Filter Toolbar */}
+      <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 sm:p-3.5 shadow-2xs space-y-3">
+        <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3 text-xs">
+          {/* Left: Search & Quick Selects */}
+          <div className="flex flex-1 flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+            {/* Search Box */}
+            <div className="relative flex-1 sm:max-w-xs group">
+              <Search className="w-3.5 h-3.5 text-[#9A7B38] absolute left-3 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                placeholder="Search reference, calibre, name..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-9 pr-8 py-2 text-xs bg-white border border-slate-200 focus:border-[#9A7B38] rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none transition-all shadow-2xs"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 p-0.5 rounded-full cursor-pointer"
+                  aria-label="Clear search"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              )}
+            </div>
+
+            {/* Material Dropdown */}
+            <div className="relative">
+              <select
+                value={selectedMaterial}
+                onChange={(e) => setSelectedMaterial(e.target.value)}
+                className="w-full sm:w-auto bg-white border border-slate-200 hover:border-slate-300 text-slate-800 px-3 py-2 rounded-lg text-xs focus:outline-none focus:border-[#9A7B38] shadow-2xs cursor-pointer appearance-none pr-8"
               >
-                <SlidersHorizontal className="w-4 h-4" />
-                <span>Compare ({comparisonList.length})</span>
-              </button>
-            )}
-            {(selectedCategory !== 'all' || selectedMaterial !== 'all' || priceRange[0] !== 10000 || priceRange[1] !== 100000 || searchQuery) && (
-              <button
-                onClick={() => {
-                  setSelectedCategory('all');
-                  setSelectedMaterial('all');
-                  handleResetPrice();
-                  setSearchQuery('');
+                {materials.map((mat) => (
+                  <option key={mat.id} value={mat.id}>
+                    {mat.id === 'all' ? 'All Metals' : mat.label}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown className="w-3 h-3 text-slate-400 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+            </div>
+
+            {/* Valuation Tier Dropdown */}
+            <div className="relative">
+              <select
+                value={activeTier}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  if (val === 'custom') {
+                    setShowCustomPrice(true);
+                    setActiveTier('custom');
+                  } else {
+                    handleSelectTier(val);
+                  }
                 }}
-                className="text-slate-500 hover:text-[#9A7B38] flex items-center gap-1 font-mono transition-colors"
+                className="w-full sm:w-auto bg-white border border-slate-200 hover:border-slate-300 text-slate-800 px-3 py-2 rounded-lg text-xs focus:outline-none focus:border-[#9A7B38] shadow-2xs cursor-pointer appearance-none pr-8 font-mono tabular-nums"
+              >
+                <option value="all">All Valuations</option>
+                <option value="under-25k">Under {formatPrice(25000, currency)}</option>
+                <option value="25k-50k">{formatPrice(25000, currency)} – {formatPrice(50000, currency)}</option>
+                <option value="over-50k">Over {formatPrice(50000, currency)}</option>
+                <option value="custom">Custom Range...</option>
+              </select>
+              <ChevronDown className="w-3 h-3 text-slate-400 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+            </div>
+
+            {/* Toggle Detailed Price Slider */}
+            <button
+              type="button"
+              onClick={() => setShowCustomPrice(!showCustomPrice)}
+              className={`px-3 py-2 rounded-lg border text-xs font-medium transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs shrink-0 ${
+                showCustomPrice || activeTier === 'custom'
+                  ? 'bg-[#9A7B38]/15 border-[#9A7B38]/40 text-[#9A7B38] font-semibold'
+                  : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
+              }`}
+              title="Toggle Custom Valuation Range Slider"
+            >
+              <SlidersHorizontal className="w-3.5 h-3.5" />
+              <span>Range Slider</span>
+            </button>
+          </div>
+
+          {/* Right: Sort By Dropdown */}
+          <div className="flex items-center justify-end gap-2 pt-2 lg:pt-0 border-t border-slate-200/60 lg:border-0 shrink-0">
+            <span className="text-slate-500 text-[11px]">Sort By:</span>
+            <div className="relative">
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as any)}
+                className="bg-white border border-slate-200 text-slate-800 px-3 py-2 rounded-lg text-xs focus:outline-none focus:border-[#9A7B38] shadow-2xs cursor-pointer appearance-none pr-8"
+              >
+                <option value="featured">Maison Selection</option>
+                <option value="price-asc">Price: Low to High</option>
+                <option value="price-desc">Price: High to Low</option>
+              </select>
+              <ChevronDown className="w-3 h-3 text-slate-400 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+            </div>
+          </div>
+        </div>
+
+        {/* Collapsible Valuation Range Slider (Only shown when toggled) */}
+        {showCustomPrice && (
+          <div className="pt-3 border-t border-slate-200 space-y-3">
+            <div className="flex items-center justify-between text-xs">
+              <div className="flex items-center gap-2">
+                <span className="font-semibold text-slate-800">Custom Valuation Range:</span>
+                <span className="font-mono text-[#9A7B38] font-bold tabular-nums">
+                  {formatPrice(priceRange[0], currency)} — {formatPrice(priceRange[1], currency)}
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={handleResetPrice}
+                className="text-[11px] text-[#9A7B38] hover:text-slate-900 transition-colors flex items-center gap-1 font-medium cursor-pointer"
               >
                 <RotateCcw className="w-3 h-3" />
-                <span>Clear Filters</span>
+                <span>Reset Range</span>
               </button>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-1">
+                <div className="flex justify-between text-[11px] text-slate-600 font-mono">
+                  <span>Min: {formatPrice(priceRange[0], currency)}</span>
+                  <span className="text-slate-400">{formatPrice(10000, currency)} min</span>
+                </div>
+                <input
+                  type="range"
+                  min={10000}
+                  max={90000}
+                  step={2500}
+                  value={priceRange[0]}
+                  onChange={(e) => handleMinPriceChange(Number(e.target.value))}
+                  className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-[#9A7B38]"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <div className="flex justify-between text-[11px] text-slate-600 font-mono">
+                  <span>Max: {formatPrice(priceRange[1], currency)}</span>
+                  <span className="text-slate-400">{formatPrice(100000, currency)}+ max</span>
+                </div>
+                <input
+                  type="range"
+                  min={20000}
+                  max={100000}
+                  step={2500}
+                  value={priceRange[1]}
+                  onChange={(e) => handleMaxPriceChange(Number(e.target.value))}
+                  className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-[#9A7B38]"
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Active Filter Chips Row */}
+        {(selectedCategory !== 'all' || selectedMaterial !== 'all' || activeTier !== 'all' || searchQuery) && (
+          <div className="pt-2 border-t border-slate-200/60 flex flex-wrap items-center gap-1.5 text-xs">
+            <span className="text-slate-400 text-[11px] mr-1">Active:</span>
+
+            {selectedCategory !== 'all' && (
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-white border border-slate-200 text-slate-800 text-[11px]">
+                <span>{categories.find((c) => c.id === selectedCategory)?.label}</span>
+                <button
+                  type="button"
+                  onClick={() => setSelectedCategory('all')}
+                  className="text-slate-400 hover:text-slate-700 cursor-pointer ml-0.5"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </span>
             )}
+
+            {selectedMaterial !== 'all' && (
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-white border border-slate-200 text-slate-800 text-[11px]">
+                <span>{materials.find((m) => m.id === selectedMaterial)?.label}</span>
+                <button
+                  type="button"
+                  onClick={() => setSelectedMaterial('all')}
+                  className="text-slate-400 hover:text-slate-700 cursor-pointer ml-0.5"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </span>
+            )}
+
+            {activeTier !== 'all' && (
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-white border border-slate-200 text-slate-800 text-[11px] font-mono">
+                <span>
+                  {activeTier === 'custom'
+                    ? `${formatPrice(priceRange[0], currency)} - ${formatPrice(priceRange[1], currency)}`
+                    : activeTier === 'under-25k'
+                    ? `< ${formatPrice(25000, currency)}`
+                    : activeTier === '25k-50k'
+                    ? `${formatPrice(25000, currency)} - ${formatPrice(50000, currency)}`
+                    : `> ${formatPrice(50000, currency)}`}
+                </span>
+                <button
+                  type="button"
+                  onClick={handleResetPrice}
+                  className="text-slate-400 hover:text-slate-700 cursor-pointer ml-0.5"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </span>
+            )}
+
+            {searchQuery && (
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-white border border-slate-200 text-slate-800 text-[11px]">
+                <span>&ldquo;{searchQuery}&rdquo;</span>
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery('')}
+                  className="text-slate-400 hover:text-slate-700 cursor-pointer ml-0.5"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </span>
+            )}
+
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedCategory('all');
+                setSelectedMaterial('all');
+                handleResetPrice();
+                setSearchQuery('');
+                setShowCustomPrice(false);
+              }}
+              className="text-[#9A7B38] hover:text-slate-900 font-medium text-[11px] ml-2 flex items-center gap-1 cursor-pointer"
+            >
+              <RotateCcw className="w-2.5 h-2.5" />
+              <span>Clear All</span>
+            </button>
           </div>
         )}
       </div>
@@ -482,92 +513,39 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
                       <span>Examine</span>
                     </div>
 
-                    {/* Desktop Quick View & Subtle Quick Shop Hover Tooltip */}
-                    <div className="hidden sm:flex absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all duration-300 flex-col justify-between p-3 pointer-events-auto">
-                      {/* Top action badge */}
-                      <div className="flex justify-center pt-2">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onOpenQuickView(watch);
-                          }}
-                          className="px-4 py-1.5 text-[11px] font-bold uppercase tracking-wider bg-black/85 text-white rounded-full hover:bg-gradient-to-r hover:from-[#C5A059] hover:via-[#E2C775] hover:to-[#B89243] hover:text-black border border-gold/40 hover:border-gold transition-all duration-300 shadow-xl flex items-center gap-1.5 active:scale-95"
-                        >
-                          <Eye className="w-3.5 h-3.5" />
-                          <span>Examine Timepiece</span>
-                        </button>
-                      </div>
-
-                      {/* Subtle Luxury 'Quick Shop' Tooltip Box */}
-                      <div className="w-full p-2.5 rounded-xl bg-[#070A10]/95 backdrop-blur-md border border-gold/40 shadow-[0_10px_25px_rgba(0,0,0,0.85)] text-left flex flex-col gap-1.5 transform translate-y-1 group-hover:translate-y-0 transition-transform duration-300">
-                        <div className="flex items-center justify-between text-[9px] font-mono uppercase tracking-wider text-gold">
-                          <span className="flex items-center gap-1 font-bold">
-                            <Sparkles className="w-2.5 h-2.5 text-gold" />
-                            <span>Quick Shop Specifications</span>
-                          </span>
-                          <span className="text-white/60 font-semibold">{watch.specs.caseDiameter}</span>
-                        </div>
-                        
-                        <div className="text-[11px] text-slate-200 leading-tight">
-                          <span className="text-white font-medium block truncate">
-                            <span className="text-gold/80 font-mono text-[9px] uppercase mr-1">Movement:</span>
-                            {watch.specs.calibre}
-                          </span>
-                          <span className="text-slate-300 block text-[10px] truncate mt-0.5">
-                            <span className="text-gold/80 font-mono text-[9px] uppercase mr-1">Material:</span>
-                            {watch.specs.caseMaterial} · {watch.specs.powerReserve}
-                          </span>
-                        </div>
-
-                        <div className="pt-1.5 flex items-center gap-1.5 border-t border-white/[0.1]">
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleAddToCart(watch);
-                            }}
-                            className="flex-1 py-1 px-2.5 rounded-lg bg-gradient-to-r from-[#C5A059] via-[#E2C775] to-[#B89243] hover:from-[#D4B36E] hover:to-[#C5A059] text-black text-[10px] font-bold uppercase tracking-wider transition-all text-center active:scale-95 shadow-sm"
-                          >
-                            Quick Add to Bag
-                          </button>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              onOpenQuickView(watch);
-                            }}
-                            className="py-1 px-2 rounded-lg bg-white/10 hover:bg-white/20 text-white text-[10px] font-medium transition-colors"
-                            title="Full Specifications"
-                          >
-                            Details
-                          </button>
-                        </div>
-                      </div>
+                    {/* Desktop Quick View on Hover */}
+                    <div className="hidden sm:flex absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 items-center justify-center pointer-events-auto">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onOpenQuickView(watch);
+                        }}
+                        className="px-4 py-2 text-xs font-semibold uppercase tracking-wider bg-black/85 hover:bg-black text-white hover:text-[#C5A059] rounded-full border border-white/20 hover:border-[#C5A059] backdrop-blur-md transition-all duration-200 shadow-xl flex items-center gap-1.5 active:scale-95 cursor-pointer"
+                      >
+                        <Eye className="w-3.5 h-3.5" />
+                        <span>Quick View</span>
+                      </button>
                     </div>
                   </div>
 
                   {/* Content */}
-                  <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between space-y-4">
+                  <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3">
                     <div>
-                      <div className="flex justify-between items-center text-[10px] sm:text-[11px]">
-                        <span className="font-mono text-[#9A7B38] font-bold">{watch.reference}</span>
-                        <span className="text-slate-500 font-mono">{watch.specs.caseDiameter}</span>
+                      <div className="flex justify-between items-center text-[10px] sm:text-[11px] font-mono">
+                        <span className="text-[#9A7B38] font-bold">{watch.reference}</span>
+                        <span className="text-slate-400">{watch.specs.caseDiameter}</span>
                       </div>
 
                       <h3
                         onClick={() => onOpenQuickView(watch)}
-                        className="font-cinzel text-base sm:text-lg font-bold text-slate-900 mt-1.5 group-hover:text-[#9A7B38] transition-colors cursor-pointer leading-snug"
+                        className="font-cinzel text-base font-bold text-slate-900 mt-1 group-hover:text-[#9A7B38] transition-colors cursor-pointer leading-snug"
                       >
                         {watch.name}
                       </h3>
 
-                      <p className="text-xs text-slate-600 mt-1 line-clamp-2 leading-relaxed font-light">
+                      <p className="text-xs text-slate-500 mt-1 line-clamp-2 leading-relaxed font-light">
                         {watch.tagline}
                       </p>
-
-                      <div className="mt-3 flex items-center gap-2 text-[10px] sm:text-[11px] text-slate-500 font-mono">
-                        <span>{watch.specs.calibre}</span>
-                        <span>·</span>
-                        <span>{watch.specs.powerReserve}</span>
-                      </div>
                     </div>
 
                     {/* Price and Cart Action */}

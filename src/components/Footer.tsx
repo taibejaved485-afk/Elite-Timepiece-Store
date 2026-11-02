@@ -1,12 +1,52 @@
 import React, { useState } from 'react';
 import { PageRoute } from '../types/watch';
-import { Check, X } from 'lucide-react';
+import { Check, X, Clock, Shield, Globe, HelpCircle, ArrowUpRight, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface FooterProps {
   onNavigate: (page: PageRoute) => void;
   onReplayPreloader?: () => void;
   onOpenTrackOrder?: () => void;
 }
+
+interface FooterFAQItem {
+  id: string;
+  question: string;
+  topic: string;
+  icon: React.ElementType;
+  badge: string;
+  answer: string;
+  keyHighlight: string;
+}
+
+const FOOTER_FAQ_ITEMS: FooterFAQItem[] = [
+  {
+    id: 'servicing',
+    question: 'How frequently does an Aurelia mechanical calibre require servicing?',
+    topic: 'Watch Servicing & Care',
+    icon: Clock,
+    badge: '3-5 Year Interval',
+    answer: 'We recommend a complete manufacture overhaul every 3 to 5 years at an authorized Swiss service center. In our Le Brassus atelier, master horologists completely dismantle each calibre, ultrasonically cleanse all components, renew worn escapement components with genuine manufacture parts, apply proprietary synthetic micro-lubricants, and recalibrate precision to COSC chronometer tolerances (-4/+6 seconds per day).',
+    keyHighlight: 'Includes complete ultrasonic bath, fresh water-resistance seals, and rate recalibration.'
+  },
+  {
+    id: 'warranty',
+    question: 'What protections are covered under the 5-Year International Warranty?',
+    topic: 'International Warranty',
+    icon: Shield,
+    badge: '5-Year Guarantee',
+    answer: 'Every Aurelia timepiece carries an irrevocable 5-year international master warranty against mechanical flaws and chronometric drift. All timepieces are cryptographically registered in the official Geneva Seal archive and include complimentary demagnetization, rate regulation, gasket refresh, and insured transportation to and from our Swiss atelier.',
+    keyHighlight: 'Covers all mechanical movements, Geneva Seal archival registration, and global service.'
+  },
+  {
+    id: 'shipping',
+    question: 'How does international armored courier shipping and transit insurance operate?',
+    topic: 'International Shipping & Transit',
+    icon: Globe,
+    badge: 'Worldwide Insured',
+    answer: 'All outbound timepieces from our Le Brassus vault travel exclusively via dedicated high-security armored logistics (Ferrari Group / Malca-Amit). Every consignment is 100% insured underwritten by Lloyd’s of London for its full replacement value, featuring Delivered Duty Paid (DDP) customs pre-clearance and biometric photo ID signature handoff.',
+    keyHighlight: '100% insured by Lloyd’s of London, discrete unbranded packaging, and white-glove handoff.'
+  }
+];
 
 export const Footer: React.FC<FooterProps> = ({
   onNavigate,
@@ -23,7 +63,26 @@ export const Footer: React.FC<FooterProps> = ({
   const [subscribed, setSubscribed] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Left-to-right mobile FAQ scroll & index state
+  const faqScrollRef = React.useRef<HTMLDivElement>(null);
+  const [activeFaqIndex, setActiveFaqIndex] = useState(0);
 
+  const scrollFaq = (direction: 'left' | 'right') => {
+    if (!faqScrollRef.current) return;
+    const scrollAmount = faqScrollRef.current.clientWidth * 0.85;
+    faqScrollRef.current.scrollBy({
+      left: direction === 'left' ? -scrollAmount : scrollAmount,
+      behavior: 'smooth'
+    });
+  };
+
+  const handleFaqScroll = () => {
+    if (!faqScrollRef.current) return;
+    const { scrollLeft, clientWidth } = faqScrollRef.current;
+    if (clientWidth === 0) return;
+    const index = Math.round(scrollLeft / (clientWidth * 0.82));
+    setActiveFaqIndex(Math.min(Math.max(index, 0), FOOTER_FAQ_ITEMS.length - 1));
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,11 +103,138 @@ export const Footer: React.FC<FooterProps> = ({
   };
 
   return (
-    <footer className="w-full bg-white text-slate-800 border-t border-slate-200 font-sans">
-      {/* Full-width container across all desktop and ultrawide viewports */}
-      <div className="w-full px-5 sm:px-10 md:px-14 lg:px-16 xl:px-24 2xl:px-32 pt-16 pb-12">
-        {/* Main 4-Column Grid with generous spacing */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-10 xl:gap-16 2xl:gap-24 items-start">
+    <footer id="footer-section" className="w-full bg-white text-slate-800 border-t border-slate-200 font-sans">
+      {/* Frequently Asked Questions Section inside Footer */}
+      <section 
+        id="footer-faq" 
+        aria-label="Frequently Asked Questions"
+        className="w-full border-b border-slate-200 bg-[#FAF9F5]"
+      >
+        <div className="w-full px-4 sm:px-8 md:px-12 lg:px-16 xl:px-24 2xl:px-32 py-10 sm:py-16">
+          {/* Header Row: Left-to-Right orientation */}
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-6 sm:pb-8 border-b border-slate-200/80">
+            <div>
+              <div className="flex items-center gap-2 text-[10px] sm:text-xs font-mono uppercase tracking-[0.25em] text-[#9A7B38] font-bold">
+                <HelpCircle className="w-3.5 h-3.5 text-[#9A7B38]" />
+                <span>Haute Horlogerie Client Advisory</span>
+              </div>
+              <h3 className="font-serif text-2xl sm:text-3xl font-bold text-slate-900 mt-1 tracking-tight">
+                Frequently Asked Questions
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-600 mt-1 font-light max-w-xl">
+                Authoritative guidance on manufacture calibre care, international warranty protection, and insured global delivery.
+              </p>
+            </div>
+
+            <div className="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto pt-2 sm:pt-0">
+              {/* Mobile Left-to-Right Navigation Arrows & Indicator Dots */}
+              <div className="flex md:hidden items-center gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => scrollFaq('left')}
+                  disabled={activeFaqIndex === 0}
+                  aria-label="Previous question"
+                  className="w-8 h-8 rounded-lg border border-slate-200 bg-white flex items-center justify-center text-slate-600 hover:text-slate-900 disabled:opacity-30 disabled:pointer-events-none transition-all cursor-pointer shadow-2xs"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
+                <div className="flex items-center gap-1 px-1">
+                  {FOOTER_FAQ_ITEMS.map((_, i) => (
+                    <span
+                      key={i}
+                      className={`h-1.5 rounded-full transition-all duration-300 ${
+                        activeFaqIndex === i ? 'w-4 bg-[#9A7B38]' : 'w-1.5 bg-slate-300'
+                      }`}
+                    />
+                  ))}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => scrollFaq('right')}
+                  disabled={activeFaqIndex === FOOTER_FAQ_ITEMS.length - 1}
+                  aria-label="Next question"
+                  className="w-8 h-8 rounded-lg border border-slate-200 bg-white flex items-center justify-center text-slate-600 hover:text-slate-900 disabled:opacity-30 disabled:pointer-events-none transition-all cursor-pointer shadow-2xs"
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
+
+              <button
+                onClick={() => handleNav('concierge')}
+                className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-[#9A7B38] hover:text-slate-900 transition-colors cursor-pointer shrink-0"
+              >
+                <span>Salon Concierge Support</span>
+                <ArrowUpRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+
+          {/* Left-to-Right Cards: Horizontal Swipeable on Mobile, 3-Column Grid on Desktop */}
+          <div 
+            ref={faqScrollRef}
+            onScroll={handleFaqScroll}
+            className="flex md:grid md:grid-cols-3 gap-4 sm:gap-6 pt-6 sm:pt-8 overflow-x-auto md:overflow-visible scrollbar-none snap-x snap-mandatory -mx-4 px-4 sm:mx-0 sm:px-0"
+          >
+            {FOOTER_FAQ_ITEMS.map((item) => {
+              const Icon = item.icon;
+              return (
+                <div
+                  key={item.id}
+                  className="w-[84vw] sm:w-[320px] md:w-auto shrink-0 snap-center md:shrink bg-white rounded-xl border border-slate-200 p-5 sm:p-6 shadow-xs hover:border-[#9A7B38]/60 transition-all flex flex-col justify-between group"
+                >
+                  <div className="space-y-3.5">
+                    {/* Header with Minimalist Luxury Icon, Topic & Question in Left-to-Right Layout */}
+                    <div className="flex items-start gap-3">
+                      {/* Elegant Minimalist Luxury Icon */}
+                      <div className="w-9 h-9 rounded-lg bg-[#FAF7F0] border border-[#E9DEC6] text-[#9A7B38] flex items-center justify-center shrink-0 shadow-2xs group-hover:scale-105 group-hover:bg-[#C5A059] group-hover:text-black group-hover:border-[#C5A059] transition-all duration-300">
+                        <Icon className="w-4 h-4 stroke-[2.2]" />
+                      </div>
+                      
+                      <div className="space-y-1 flex-1 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="text-[10px] font-mono uppercase tracking-wider text-[#9A7B38] font-bold">
+                            {item.topic}
+                          </span>
+                          <span className="text-[9px] font-mono text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded whitespace-nowrap">
+                            {item.badge}
+                          </span>
+                        </div>
+                        <h4 className="font-serif text-sm sm:text-[15px] font-bold text-slate-900 group-hover:text-[#9A7B38] transition-colors leading-snug">
+                          {item.question}
+                        </h4>
+                      </div>
+                    </div>
+
+                    {/* Answer text - Left to right full width without restrictive left indentation */}
+                    <p className="text-xs sm:text-[13px] text-slate-600 font-light leading-relaxed pt-1">
+                      {item.answer}
+                    </p>
+                  </div>
+
+                  {/* Key Takeaway Tag */}
+                  <div className="mt-4 pt-3 border-t border-slate-100 flex items-start gap-2 text-[11px] text-slate-500">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#9A7B38] mt-1.5 shrink-0" />
+                    <span className="font-light italic">{item.keyHighlight}</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Mobile Swipe Left-to-Right Indicator Bar at the bottom */}
+          <div className="flex md:hidden items-center justify-between pt-4 text-[11px] text-slate-500">
+            <span className="font-mono text-[10px] uppercase tracking-wider text-[#9A7B38]">
+              Card {activeFaqIndex + 1} of {FOOTER_FAQ_ITEMS.length}
+            </span>
+            <span className="text-slate-400 text-[10px]">Swipe left to right →</span>
+          </div>
+        </div>
+      </section>
+
+      {/* Responsive container across all viewports */}
+      <div className="w-full px-4 sm:px-8 md:px-12 lg:px-16 xl:px-24 2xl:px-32 pt-12 sm:pt-16 pb-12">
+        {/* Main 4-Column Grid with responsive spacing */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 sm:gap-10 lg:gap-10 xl:gap-16 2xl:gap-24 items-start">
           
           {/* Column 1: Brand Logo, Description, Socials, App Badges (Span 4) */}
           <div className="lg:col-span-4 space-y-6">
@@ -293,7 +479,7 @@ export const Footer: React.FC<FooterProps> = ({
             ) : (
               <form onSubmit={handleSubmit} className="space-y-3">
                 {/* Row 1: First Name & Last Name */}
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className="block text-[13px] font-medium text-slate-700 mb-1">
                       First Name<span className="text-slate-700">*</span>
@@ -321,7 +507,7 @@ export const Footer: React.FC<FooterProps> = ({
                 </div>
 
                 {/* Row 2: Email Address & Phone Number */}
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className="block text-[13px] font-medium text-slate-700 mb-1">
                       Email Address<span className="text-slate-700">*</span>
@@ -365,38 +551,13 @@ export const Footer: React.FC<FooterProps> = ({
           </div>
         </div>
         
-        {/* FAQ Section */}
-        <div className="mt-16 pt-12 border-t border-slate-200">
-          <h3 className="text-xl font-bold text-slate-900 mb-8 tracking-tight">Frequently Asked Questions</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-10">
-            <div className="space-y-2">
-              <h4 className="font-semibold text-slate-900">Watch Servicing</h4>
-              <p className="text-sm text-slate-600 leading-relaxed">
-                We recommend servicing your Aurelia timepiece every 3-5 years at an authorized service center to ensure optimal mechanical precision and water resistance.
-              </p>
-            </div>
-            <div className="space-y-2">
-              <h4 className="font-semibold text-slate-900">International Warranty</h4>
-              <p className="text-sm text-slate-600 leading-relaxed">
-                All Aurelia timepieces are covered by a comprehensive 5-year international master warranty against manufacturing defects, effective from the date of purchase.
-              </p>
-            </div>
-            <div className="space-y-2">
-              <h4 className="font-semibold text-slate-900">International Shipping</h4>
-              <p className="text-sm text-slate-600 leading-relaxed">
-                We provide fully insured, armored international shipping for all timepieces, with real-time tracking updates provided until the delivery is securely confirmed.
-              </p>
-            </div>
-          </div>
-        </div>
-
         {/* Full-width Divider Line */}
-        <hr className="border-slate-200 mt-14 mb-8" />
+        <hr className="border-slate-200 mt-10 sm:mt-14 mb-6 sm:mb-8" />
 
         {/* Centered Copyright Note with Quick Legal Links */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 text-center sm:text-left">
           <p>© 2026 Aurelia Horology. All Rights Reserved. Swiss Manufacture Vallée de Joux.</p>
-          <div className="flex items-center gap-6">
+          <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-4 gap-y-2">
             <button
               onClick={() => {
                 onNavigate('privacy');

@@ -139,20 +139,20 @@ export const CraftsmanshipPage: React.FC<CraftsmanshipPageProps> = ({ onNavigate
         <img
           src="/assets/images/craftsmanship_watchmaker_1791612587562.jpg"
           alt="Master horologist regulating mechanical escapement in Le Brassus atelier"
-          className="w-full h-[400px] object-cover"
+          className="w-full h-64 sm:h-[400px] object-cover"
           referrerPolicy="no-referrer"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent pointer-events-none" />
-        <div className="absolute bottom-6 left-6 right-6 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div className="absolute bottom-4 sm:bottom-6 left-4 sm:left-6 right-4 sm:right-6 flex flex-col sm:flex-row sm:items-end justify-between gap-3 sm:gap-4">
           <div>
-            <span className="text-[11px] font-mono text-[#C5A059] uppercase tracking-widest font-semibold">
+            <span className="text-[10px] sm:text-[11px] font-mono text-[#C5A059] uppercase tracking-widest font-semibold">
               Atelier Le Brassus · Canton of Vaud
             </span>
-            <h3 className="font-cinzel text-xl sm:text-2xl font-bold text-white mt-1">
+            <h3 className="font-cinzel text-lg sm:text-2xl font-bold text-white mt-0.5 sm:mt-1">
               Hand-Regulation to -1/+2 Seconds per Day
             </h3>
           </div>
-          <div className="text-xs font-mono text-slate-200 bg-black/70 backdrop-blur-md px-4 py-2 rounded-lg border border-white/20">
+          <div className="text-[11px] sm:text-xs font-mono text-slate-200 bg-black/70 backdrop-blur-md px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg border border-white/20 self-start sm:self-auto">
             COSC Precision Standard: Surpassed by 200%
           </div>
         </div>

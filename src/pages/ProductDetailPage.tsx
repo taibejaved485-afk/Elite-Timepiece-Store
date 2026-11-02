@@ -51,9 +51,9 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 py-8 sm:py-16 px-4 sm:px-8 lg:px-16 xl:px-24">
+    <div className="min-h-screen bg-white text-slate-900 py-6 sm:py-16 px-3 sm:px-8 lg:px-16 xl:px-24">
       {/* Top Back & Navigation Bar */}
-      <div className="w-full mb-8 flex items-center justify-between border-b border-slate-200 pb-4">
+      <div className="w-full mb-6 sm:mb-8 flex items-center justify-between border-b border-slate-200 pb-4">
         <button
           onClick={() => onNavigate('collections')}
           className="group flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-[#9A7B38] hover:text-slate-900 transition-colors"
@@ -83,9 +83,9 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
       </div>
 
       {/* Main Product Hero Layout */}
-      <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+      <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
         {/* Left Column: Gallery (7 Cols) */}
-        <div className="lg:col-span-7 space-y-6">
+        <div className="lg:col-span-7 space-y-5 sm:space-y-6">
           <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-slate-950 border border-slate-200 shadow-2xl group">
             <motion.img
               key={selectedImage}
@@ -99,13 +99,13 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
               referrerPolicy="no-referrer"
             />
             {watch.isLimitedEdition && (
-              <div className="absolute top-4 left-4 bg-black/80 backdrop-blur-md border border-[#C5A059]/40 px-3 py-1 rounded text-[11px] font-mono text-[#C5A059] uppercase tracking-widest shadow-lg">
+              <div className="absolute top-3 left-3 sm:top-4 sm:left-4 bg-black/80 backdrop-blur-md border border-[#C5A059]/40 px-2.5 sm:px-3 py-1 rounded text-[10px] sm:text-[11px] font-mono text-[#C5A059] uppercase tracking-widest shadow-lg">
                 Limited Run of {watch.editionLimit} Pcs
               </div>
             )}
             <button
               onClick={() => onToggleWishlist(watch)}
-              className={`absolute top-4 right-4 p-3 rounded-full backdrop-blur-md transition-all shadow-lg ${
+              className={`absolute top-3 right-3 sm:top-4 sm:right-4 p-2.5 sm:p-3 rounded-full backdrop-blur-md transition-all shadow-lg ${
                 isWishlisted
                   ? 'bg-[#C5A059] text-white'
                   : 'bg-black/60 text-white/80 hover:text-white hover:bg-black/80'
@@ -117,12 +117,12 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
 
           {/* Thumbnails */}
           {watch.gallery && watch.gallery.length > 1 && (
-            <div className="flex gap-4 overflow-x-auto pb-2">
+            <div className="flex gap-3 sm:gap-4 overflow-x-auto pb-2 scrollbar-none">
               {watch.gallery.map((img, idx) => (
                 <button
                   key={idx}
                   onClick={() => setSelectedImage(img)}
-                  className={`relative w-24 h-20 rounded-xl border-2 overflow-hidden transition-all shrink-0 ${
+                  className={`relative w-20 h-16 sm:w-24 sm:h-20 rounded-xl border-2 overflow-hidden transition-all shrink-0 ${
                     selectedImage === img
                       ? 'border-[#9A7B38] ring-2 ring-[#9A7B38]/30 shadow-md scale-105'
                       : 'border-slate-200 opacity-75 hover:opacity-100'
@@ -135,28 +135,28 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
           )}
 
           {/* Trust Guarantees */}
-          <div className="grid grid-cols-3 gap-4 pt-4 border-t border-slate-200 text-center text-xs text-slate-600">
-            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 shadow-sm">
-              <Clock className="w-5 h-5 mx-auto text-[#9A7B38] mb-1.5" />
-              <span className="font-semibold block text-slate-900">{watch.specs.powerReserve}</span>
-              <span className="text-[10px] text-slate-500">Power Reserve</span>
+          <div className="grid grid-cols-3 gap-2 sm:gap-4 pt-3 sm:pt-4 border-t border-slate-200 text-center text-xs text-slate-600">
+            <div className="p-2.5 sm:p-4 rounded-xl bg-slate-50 border border-slate-200 shadow-sm">
+              <Clock className="w-4 h-4 sm:w-5 sm:h-5 mx-auto text-[#9A7B38] mb-1 sm:mb-1.5" />
+              <span className="font-semibold block text-slate-900 text-[11px] sm:text-xs truncate">{watch.specs.powerReserve}</span>
+              <span className="text-[9px] sm:text-[10px] text-slate-500 block truncate">Power Reserve</span>
             </div>
-            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 shadow-sm">
-              <Shield className="w-5 h-5 mx-auto text-[#9A7B38] mb-1.5" />
-              <span className="font-semibold block text-slate-900">5-Year Warranty</span>
-              <span className="text-[10px] text-slate-500">COSC Certified</span>
+            <div className="p-2.5 sm:p-4 rounded-xl bg-slate-50 border border-slate-200 shadow-sm">
+              <Shield className="w-4 h-4 sm:w-5 sm:h-5 mx-auto text-[#9A7B38] mb-1 sm:mb-1.5" />
+              <span className="font-semibold block text-slate-900 text-[11px] sm:text-xs truncate">5-Year Warranty</span>
+              <span className="text-[9px] sm:text-[10px] text-slate-500 block truncate">COSC Certified</span>
             </div>
-            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 shadow-sm">
-              <Compass className="w-5 h-5 mx-auto text-[#9A7B38] mb-1.5" />
-              <span className="font-semibold block text-slate-900">{watch.specs.waterResistance}</span>
-              <span className="text-[10px] text-slate-500">Water Resistance</span>
+            <div className="p-2.5 sm:p-4 rounded-xl bg-slate-50 border border-slate-200 shadow-sm">
+              <Compass className="w-4 h-4 sm:w-5 sm:h-5 mx-auto text-[#9A7B38] mb-1 sm:mb-1.5" />
+              <span className="font-semibold block text-slate-900 text-[11px] sm:text-xs truncate">{watch.specs.waterResistance}</span>
+              <span className="text-[9px] sm:text-[10px] text-slate-500 block truncate">Water Resistance</span>
             </div>
           </div>
         </div>
 
         {/* Right Column: Details, Pricing, Checkout & Tabs (5 Cols) */}
-        <div className="lg:col-span-5 space-y-8">
-          <div className="space-y-3">
+        <div className="lg:col-span-5 space-y-6 sm:space-y-8">
+          <div className="space-y-2 sm:space-y-3">
             <div className="flex items-center gap-2">
               <span className="text-xs font-mono font-semibold tracking-wider text-[#9A7B38] uppercase">
                 {watch.reference}
@@ -167,25 +167,25 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
               </span>
             </div>
 
-            <h1 className="font-cinzel text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight">
+            <h1 className="font-cinzel text-2xl sm:text-4xl font-bold text-slate-900 tracking-tight">
               {watch.name}
             </h1>
 
-            <p className="text-sm text-[#9A7B38] font-medium tracking-wide">
+            <p className="text-xs sm:text-sm text-[#9A7B38] font-medium tracking-wide">
               {watch.tagline}
             </p>
 
-            <div className="pt-2 flex items-baseline gap-4">
-              <span className="font-mono text-3xl sm:text-4xl font-bold text-slate-900 tabular-nums">
+            <div className="pt-2 flex flex-wrap items-baseline gap-2 sm:gap-4">
+              <span className="font-mono text-2xl sm:text-4xl font-bold text-slate-900 tabular-nums">
                 <AnimatedPrice amountUSD={watch.priceUSD} currency={currency} duration={1500} replayOnHover={true} />
               </span>
               <span className="text-xs text-slate-500">
-                Includes taxes & insured armored courier delivery
+                Includes taxes & insured courier
               </span>
             </div>
           </div>
 
-          <p className="text-sm text-slate-600 leading-relaxed font-light">
+          <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-light">
             {watch.description}
           </p>
 
@@ -194,7 +194,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
             <label className="text-xs font-bold uppercase tracking-wider text-slate-900 block">
               Strap Configuration: <span className="text-[#9A7B38] font-normal">{selectedStrap}</span>
             </label>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {['Alligator Leather - Noir', 'Tuscan Suede - Cognac', 'Grade 5 Titanium Bracelet', 'Oystersteel 904L Link'].map((strap) => (
                 <button
                   key={strap}
@@ -212,9 +212,9 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
           </div>
 
           {/* Quantity & Add to Cart Action */}
-          <div className="space-y-4 pt-4 border-t border-slate-200">
-            <div className="flex items-center gap-4">
-              <div className="flex items-center border border-slate-300 rounded-xl bg-slate-50 overflow-hidden">
+          <div className="space-y-3 pt-4 border-t border-slate-200">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
+              <div className="flex items-center justify-between sm:justify-start border border-slate-300 rounded-xl bg-slate-50 overflow-hidden">
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
                   className="px-4 py-3 text-slate-600 hover:bg-slate-200 transition-colors text-sm font-bold"
@@ -232,16 +232,16 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
 
               <button
                 onClick={handleAdd}
-                className="flex-1 py-4 px-6 rounded-xl font-bold uppercase tracking-wider text-black bg-gradient-to-r from-[#C5A059] via-[#E2C775] to-[#B89243] hover:from-[#D4B36E] hover:to-[#C5A059] shadow-xl hover:shadow-[0_0_25px_rgba(197,160,89,0.4)] transition-all flex items-center justify-center gap-2 active:scale-95"
+                className="flex-1 py-3.5 sm:py-4 px-6 rounded-xl font-bold uppercase tracking-wider text-black bg-gradient-to-r from-[#C5A059] via-[#E2C775] to-[#B89243] hover:from-[#D4B36E] hover:to-[#C5A059] shadow-xl hover:shadow-[0_0_25px_rgba(197,160,89,0.4)] transition-all flex items-center justify-center gap-2 active:scale-95"
               >
                 {addedAnimation ? (
                   <>
-                    <Check className="w-5 h-5 text-black" />
+                    <Check className="w-4 h-4 sm:w-5 sm:h-5 text-black" />
                     <span>Secured to Cart</span>
                   </>
                 ) : (
                   <>
-                    <ShoppingBag className="w-5 h-5 text-black" />
+                    <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5 text-black" />
                     <span>Acquire Timepiece</span>
                   </>
                 )}
@@ -250,8 +250,8 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
           </div>
 
           {/* Technical Tabs (Specs, Movement, Story) */}
-          <div className="pt-6 border-t border-slate-200 space-y-4">
-            <div className="flex border-b border-slate-200">
+          <div className="pt-4 sm:pt-6 border-t border-slate-200 space-y-4">
+            <div className="flex border-b border-slate-200 overflow-x-auto scrollbar-none whitespace-nowrap -mx-1 px-1">
               {[
                 { id: 'specs', label: 'Technical Specifications' },
                 { id: 'movement', label: 'Manufacture Movement' },
@@ -260,7 +260,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as any)}
-                  className={`pb-3 px-4 text-xs font-bold uppercase tracking-wider transition-colors relative ${
+                  className={`pb-3 px-3 sm:px-4 text-xs font-bold uppercase tracking-wider transition-colors relative shrink-0 ${
                     activeTab === tab.id
                       ? 'text-[#9A7B38] border-b-2 border-[#9A7B38]'
                       : 'text-slate-400 hover:text-slate-700'
@@ -271,9 +271,9 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
               ))}
             </div>
 
-            <div className="text-xs text-slate-700 bg-slate-50 p-5 rounded-xl border border-slate-200 space-y-3 leading-relaxed">
+            <div className="text-xs text-slate-700 bg-slate-50 p-4 sm:p-5 rounded-xl border border-slate-200 space-y-3 leading-relaxed">
               {activeTab === 'specs' && (
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
                   <div><span className="text-slate-400 font-mono">Case Diameter:</span> <strong className="text-slate-900">{watch.specs.caseDiameter}</strong></div>
                   <div><span className="text-slate-400 font-mono">Case Thickness:</span> <strong className="text-slate-900">{watch.specs.caseThickness}</strong></div>
                   <div><span className="text-slate-400 font-mono">Case Material:</span> <strong className="text-slate-900">{watch.specs.caseMaterial}</strong></div>
