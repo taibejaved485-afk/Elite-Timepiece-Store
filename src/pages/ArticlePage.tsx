@@ -126,7 +126,7 @@ export const ArticlePage: React.FC<ArticlePageProps> = ({ articleId, onNavigate 
   return (
     <div className="min-h-screen bg-white text-slate-900 py-8 sm:py-16 px-4 sm:px-8 lg:px-16 xl:px-24">
       {/* Top Navigation & Action Bar */}
-      <div className="max-w-4xl mx-auto mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-5">
+      <div className="w-full px-4 sm:px-8 lg:px-16 mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-5">
         <button
           onClick={() => {
             onNavigate('home');
@@ -167,7 +167,7 @@ export const ArticlePage: React.FC<ArticlePageProps> = ({ articleId, onNavigate 
       </div>
 
       {/* Main Editorial Article */}
-      <article className="max-w-4xl mx-auto space-y-10">
+      <article className="w-full px-4 sm:px-8 lg:px-16 space-y-10">
         {/* Header Metadata */}
         <div className="space-y-4 text-left">
           <div className="flex items-center gap-2 flex-wrap text-xs font-mono">

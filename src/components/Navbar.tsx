@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { ShoppingBag, Heart, Menu, X, ChevronDown, Globe, Search } from 'lucide-react';
+import { ShoppingBag, Heart, Menu, X, ChevronDown, Globe, Search, Phone, MessageSquare } from 'lucide-react';
 import { PageRoute, CurrencyCode } from '../types/watch';
 import { CURRENCY_CONFIG } from '../utils/currency';
+import { SiteSettings, getSiteSettings } from '../utils/siteSettings';
 
 interface NavbarProps {
   currentPage: PageRoute;
@@ -39,13 +40,22 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [currencyDropdownOpen, setCurrencyDropdownOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [siteSettings, setSiteSettings] = useState<SiteSettings>(getSiteSettings);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      setIsScrolled(window.scrollY > 15);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const handleSettingsUpdate = () => {
+      setSiteSettings(getSiteSettings());
+    };
+    window.addEventListener('aurelia_settings_changed', handleSettingsUpdate);
+    return () => window.removeEventListener('aurelia_settings_changed', handleSettingsUpdate);
   }, []);
 
   // Prevent background scroll when mobile drawer is open
@@ -63,114 +73,134 @@ export const Navbar: React.FC<NavbarProps> = ({
   const handleNavClick = (page: PageRoute) => {
     onNavigate(page);
     setMobileMenuOpen(false);
+    setCurrencyDropdownOpen(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full transition-all duration-300">
-      {/* Main Luxury Header Bar in Pure White Theme */}
+    <header className="sticky top-0 z-50 w-full font-sans">
+      {/* Top Dynamic Announcement Bar (Controllable via Admin Settings) */}
+      {siteSettings.announcement.enabled && (
+        <div className="w-full bg-[#111319] text-[#F3EAD3] py-1.5 px-4 text-[11px] font-normal border-b border-[#9A7B38]/25 flex items-center justify-center">
+          <div className="flex items-center gap-2 overflow-hidden text-center truncate tracking-wide">
+            {siteSettings.announcement.badge && (
+              <span className="hidden xs:inline-block px-1.5 py-0.2 rounded text-[9px] font-semibold tracking-widest uppercase bg-[#9A7B38] text-black">
+                {siteSettings.announcement.badge}
+              </span>
+            )}
+            <span className="truncate text-slate-200">{siteSettings.announcement.text}</span>
+            {siteSettings.announcement.linkText && (
+              <a
+                href={siteSettings.announcement.linkUrl}
+                className="text-[#E2C775] hover:text-white font-medium underline underline-offset-2 ml-1 cursor-pointer shrink-0 transition-colors"
+              >
+                {siteSettings.announcement.linkText}
+              </a>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Main Luxury Header Bar - Clean, Minimalist & Professional */}
       <div
         className={`w-full transition-all duration-300 border-b ${
           isScrolled
-            ? 'bg-white/98 backdrop-blur-2xl border-slate-200/90 shadow-[0_4px_20px_rgba(0,0,0,0.06)] py-2 sm:py-2.5'
-            : 'bg-white/95 backdrop-blur-xl border-slate-200 py-2.5 sm:py-3.5 shadow-2xs'
+            ? 'bg-white/98 backdrop-blur-xl border-slate-200/80 shadow-[0_4px_20px_rgba(0,0,0,0.04)] py-3'
+            : 'bg-white/95 backdrop-blur-md border-slate-100 py-4 shadow-2xs'
         }`}
       >
-        <div className="w-full px-3 sm:px-6 lg:px-12 xl:px-20 flex items-center justify-between gap-2 sm:gap-4 lg:gap-8">
+        <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-20 flex items-center justify-between gap-4">
           
-          {/* Zone 1: Brand Logo & Wordmark */}
+          {/* Left Zone: Refined Brand Logo & Wordmark */}
           <button
             onClick={() => handleNavClick('home')}
-            className="group flex items-center gap-2 sm:gap-3 text-left focus:outline-none shrink-0 cursor-pointer"
+            className="group flex items-center gap-3 text-left focus:outline-none shrink-0 cursor-pointer"
             aria-label="Aurelia Horology Home"
           >
-            {/* Custom SVG Escapement Crest */}
-            <div className="relative w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-[#C5A059]/25 via-[#C5A059]/10 to-transparent border border-[#C5A059]/50 flex items-center justify-center p-1 sm:p-1.5 shadow-sm group-hover:border-[#9A7B38] group-hover:shadow-[0_0_15px_rgba(197,160,89,0.35)] transition-all duration-500 shrink-0">
+            {/* Minimalist Watch Balance Crest */}
+            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#FAF8F5] to-[#F1ECE1] border border-[#9A7B38]/30 flex items-center justify-center p-1.5 shadow-2xs group-hover:border-[#9A7B38] group-hover:bg-[#FAF6EC] transition-all duration-300">
               <svg
                 viewBox="0 0 40 40"
-                className="w-full h-full text-[#9A7B38] transition-transform duration-700 group-hover:rotate-45"
+                className="w-full h-full text-[#9A7B38] transition-transform duration-500 group-hover:scale-105"
                 fill="none"
                 stroke="currentColor"
               >
                 <circle cx="20" cy="20" r="16" strokeWidth="1" strokeDasharray="1.5 2" opacity="0.6" />
                 <circle cx="20" cy="20" r="13" strokeWidth="1.2" />
-                <circle cx="20" cy="20" r="4.5" fill="currentColor" fillOpacity="0.25" strokeWidth="1" />
+                <circle cx="20" cy="20" r="4.5" fill="currentColor" fillOpacity="0.2" strokeWidth="1" />
                 <path d="M20 4V8M20 32V36M4 20H8M32 20H36" strokeWidth="1.2" strokeLinecap="round" />
-                <path d="M8.7 8.7L11.5 11.5M28.5 28.5L31.3 31.3M8.7 31.3L11.5 28.5M28.5 11.5L31.3 8.7" strokeWidth="0.8" opacity="0.7" />
+                <path d="M8.7 8.7L11.5 11.5M28.5 28.5L31.3 31.3M8.7 31.3L11.5 28.5M28.5 11.5L31.3 8.7" strokeWidth="0.8" opacity="0.6" />
                 <polygon points="17,14 20,10 23,14 26,12 25,18 15,18 14,12" fill="currentColor" opacity="0.9" />
               </svg>
             </div>
 
-            {/* Typography */}
+            {/* Haute Horlogerie Typography */}
             <div className="flex flex-col">
-              <span className="font-cinzel text-base sm:text-xl tracking-[0.2em] sm:tracking-[0.25em] font-bold text-slate-900 group-hover:text-[#9A7B38] transition-colors duration-300">
+              <span className="font-serif text-lg sm:text-xl tracking-[0.24em] font-bold text-slate-900 group-hover:text-[#9A7B38] transition-colors duration-200">
                 AURELIA
               </span>
-              <span className="hidden md:block text-[7.5px] tracking-[0.4em] uppercase text-[#9A7B38] font-bold -mt-0.5">
-                HAUTE HORLOGERIE · 1892
+              <span className="text-[8px] tracking-[0.34em] uppercase text-[#9A7B38] font-semibold -mt-0.5">
+                GENÈVE · 1892
               </span>
             </div>
           </button>
 
-          {/* Zone 2: Navigation Links (Desktop only) */}
-          <nav className="hidden lg:flex items-center gap-6 xl:gap-8 text-xs tracking-[0.2em] uppercase font-bold">
+          {/* Center Zone: Professional Navigation Links (Desktop) */}
+          <nav className="hidden lg:flex items-center gap-7 xl:gap-9 text-[12px] tracking-[0.16em] uppercase font-semibold">
             {NAV_LINKS.map((link) => {
               const isActive = currentPage === link.page;
               return (
                 <button
                   key={link.page}
                   onClick={() => handleNavClick(link.page)}
-                  className={`relative py-1.5 transition-all duration-200 whitespace-nowrap focus:outline-none group cursor-pointer font-bold ${
+                  className={`relative py-1.5 transition-colors duration-150 whitespace-nowrap focus:outline-none cursor-pointer ${
                     isActive
-                      ? 'text-[#9A7B38] font-extrabold'
-                      : 'text-slate-800 hover:text-black'
+                      ? 'text-slate-950 font-bold'
+                      : 'text-slate-600 hover:text-slate-950'
                   }`}
                 >
-                  <span className="group-hover:tracking-[0.23em] transition-all duration-200">
-                    {link.label}
-                  </span>
-
-                  {/* Clean Hover Underline */}
-                  <span className={`absolute -bottom-2 left-1/2 -translate-x-1/2 h-[2.5px] bg-[#9A7B38] rounded-full transition-all duration-300 ${
-                    isActive ? 'w-6' : 'w-0 group-hover:w-4'
-                  }`} />
+                  <span>{link.label}</span>
+                  {/* Subtle Elegant Gold Indicator */}
+                  {isActive && (
+                    <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-4 h-[2px] bg-[#9A7B38] rounded-full" />
+                  )}
                 </button>
               );
             })}
           </nav>
 
-          {/* Zone 3: Actions (Search, Currency, Wishlist, Allocation Bag, Mobile Toggle) */}
-          <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+          {/* Right Zone: Clean Action Buttons (Search, Currency, Wishlist, Bag, Menu) */}
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             
-            {/* Search Button */}
+            {/* Search Trigger */}
             <button
               onClick={onOpenSearch}
-              className="w-8 h-8 sm:w-9 sm:h-9 rounded-full border border-slate-200 hover:border-[#9A7B38] text-slate-700 hover:text-[#9A7B38] flex items-center justify-center transition-all bg-slate-50 hover:bg-[#9A7B38]/10 active:scale-95 shadow-2xs cursor-pointer"
+              className="w-9 h-9 rounded-full border border-slate-200/80 hover:border-[#9A7B38]/60 text-slate-700 hover:text-[#9A7B38] flex items-center justify-center transition-colors bg-white hover:bg-[#FAF8F3] active:scale-95 cursor-pointer shadow-2xs"
               aria-label="Search Collection"
-              title="Search Collection"
+              title="Search Timepieces"
             >
-              <Search className="w-4 h-4 text-[#9A7B38]" />
+              <Search className="w-4 h-4 stroke-[2]" />
             </button>
 
             {/* Currency Selector Pill */}
             <div className="relative">
               <button
                 onClick={() => setCurrencyDropdownOpen(!currencyDropdownOpen)}
-                className="flex items-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-full border border-slate-200 bg-slate-50 hover:border-[#9A7B38] hover:bg-slate-100 text-[10px] sm:text-xs font-mono tracking-wider text-slate-800 transition-all shadow-2xs active:scale-95 cursor-pointer"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-slate-200/80 bg-white hover:border-[#9A7B38]/60 hover:bg-[#FAF8F3] text-xs font-mono text-slate-800 transition-colors shadow-2xs active:scale-95 cursor-pointer"
                 title="Select Valuation Currency"
               >
-                <Globe className="hidden xs:block w-3 h-3 text-[#9A7B38]" />
-                <span className="text-[#9A7B38] font-bold">{currentCurrency}</span>
-                <ChevronDown className="w-3 h-3 text-slate-500 transition-transform duration-300" />
+                <Globe className="hidden sm:block w-3.5 h-3.5 text-[#9A7B38]" />
+                <span className="font-bold text-slate-900">{currentCurrency}</span>
+                <ChevronDown className="w-3 h-3 text-slate-400 transition-transform duration-200" />
               </button>
 
               {currencyDropdownOpen && (
                 <div
-                  className="absolute right-0 mt-2 w-48 bg-white border border-slate-200 rounded-2xl shadow-xl py-2 z-50 animate-in fade-in zoom-in-95 duration-200"
+                  className="absolute right-0 mt-2 w-44 bg-white border border-slate-200 rounded-2xl shadow-xl py-2 z-50 animate-in fade-in zoom-in-95 duration-150"
                   onMouseLeave={() => setCurrencyDropdownOpen(false)}
                 >
-                  <div className="px-3.5 py-1.5 border-b border-slate-100 text-[9px] uppercase font-mono tracking-[0.2em] text-[#9A7B38] font-bold">
-                    Valuation Currency
+                  <div className="px-3.5 py-1 border-b border-slate-100 text-[9px] uppercase font-mono tracking-widest text-slate-400 font-semibold">
+                    Select Currency
                   </div>
                   {SUPPORTED_CURRENCIES.map((curr) => {
                     const isSelected = currentCurrency === curr;
@@ -184,15 +214,15 @@ export const Navbar: React.FC<NavbarProps> = ({
                         }}
                         className={`w-full text-left px-3.5 py-2 text-xs font-mono flex items-center justify-between transition-colors cursor-pointer ${
                           isSelected
-                            ? 'bg-[#9A7B38]/10 text-[#9A7B38] font-bold border-l-2 border-[#9A7B38]'
-                            : 'text-slate-700 hover:text-slate-900 hover:bg-slate-50'
+                            ? 'bg-[#9A7B38]/10 text-[#9A7B38] font-bold'
+                            : 'text-slate-700 hover:text-slate-950 hover:bg-slate-50'
                         }`}
                       >
                         <span className="flex items-center gap-2">
                           <span className="font-bold">{curr}</span>
                           <span className="text-[10px] text-slate-400 font-sans">({meta?.symbol})</span>
                         </span>
-                        {isSelected && <span className="w-1.5 h-1.5 rotate-45 bg-[#9A7B38]" />}
+                        {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-[#9A7B38]" />}
                       </button>
                     );
                   })}
@@ -203,27 +233,27 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Wishlist Button */}
             <button
               onClick={onOpenWishlist}
-              className="hidden xs:flex relative p-2 sm:p-2.5 rounded-full border border-slate-200 bg-slate-50 hover:border-[#9A7B38] hover:bg-[#9A7B38]/10 text-[#9A7B38] transition-all shadow-2xs active:scale-95 shrink-0 cursor-pointer"
+              className="hidden sm:flex relative w-9 h-9 rounded-full border border-slate-200/80 bg-white hover:border-[#9A7B38]/60 hover:bg-[#FAF8F3] text-slate-700 hover:text-[#9A7B38] items-center justify-center transition-colors shadow-2xs active:scale-95 shrink-0 cursor-pointer"
               aria-label="View Wishlist"
               title="View Wishlist"
             >
-              <Heart className="w-4 h-4 fill-[#9A7B38]/20 text-[#9A7B38]" />
+              <Heart className="w-4 h-4 stroke-[2]" />
               {wishlistCount > 0 && (
-                <span className="absolute -top-1 -right-1 font-mono text-[9px] font-bold bg-[#9A7B38] text-white w-4 h-4 rounded-full flex items-center justify-center shadow-md">
+                <span className="absolute -top-1 -right-1 font-mono text-[9px] font-bold bg-[#9A7B38] text-white w-4 h-4 rounded-full flex items-center justify-center shadow-xs">
                   {wishlistCount}
                 </span>
               )}
             </button>
 
-            {/* Allocation Bag Button */}
+            {/* Atelier Bag (Cart) Button - Sophisticated Luxury Slate/Black Pill */}
             <button
               onClick={onOpenCart}
-              className="group relative overflow-hidden rounded-full px-2.5 sm:px-4 py-1.5 sm:py-2 text-[10px] sm:text-xs font-bold tracking-[0.12em] sm:tracking-[0.16em] uppercase text-black bg-gradient-to-r from-[#C5A059] via-[#E2C775] to-[#B89243] hover:from-[#D4B36E] hover:to-[#C5A059] shadow-sm hover:shadow-md flex items-center gap-1 sm:gap-1.5 active:scale-95 shrink-0 cursor-pointer transition-all"
+              className="group relative rounded-full px-3.5 sm:px-4 py-1.5 sm:py-2 text-xs font-semibold tracking-wider uppercase text-white bg-slate-900 hover:bg-black transition-all shadow-xs flex items-center gap-2 active:scale-95 shrink-0 cursor-pointer"
               aria-label="View Allocation Bag"
             >
-              <ShoppingBag className="w-3.5 h-3.5 text-black stroke-[2.5]" />
-              <span className="hidden md:inline">Bag</span>
-              <span className="font-mono text-[9px] sm:text-[10px] font-bold bg-black text-[#C5A059] px-1.5 py-0.2 rounded-full min-w-[16px] text-center shadow-inner">
+              <ShoppingBag className="w-3.5 h-3.5 text-white stroke-[2.2]" />
+              <span className="hidden sm:inline text-[11px] tracking-widest">Bag</span>
+              <span className="font-mono text-[10px] font-bold bg-[#C5A059] text-slate-950 px-1.5 py-0.2 rounded-full min-w-[18px] text-center">
                 {cartCount}
               </span>
             </button>
@@ -231,7 +261,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Mobile Menu Hamburger Toggle */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden w-8 h-8 sm:w-9 sm:h-9 rounded-full border border-slate-200 hover:border-[#9A7B38] flex items-center justify-center text-slate-800 bg-slate-50 focus:outline-none active:scale-95 shrink-0 shadow-2xs cursor-pointer"
+              className="lg:hidden w-9 h-9 rounded-full border border-slate-200/80 hover:border-slate-300 flex items-center justify-center text-slate-800 bg-white hover:bg-slate-50 focus:outline-none active:scale-95 shrink-0 shadow-2xs cursor-pointer"
               aria-label="Toggle navigation menu"
             >
               {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
@@ -240,44 +270,44 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
       </div>
 
-      {/* Mobile Navigation Drawer in Clean White */}
+      {/* Mobile Navigation Drawer - Simple, Clean & Professional */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 top-[50px] sm:top-[60px] z-50 lg:hidden flex flex-col justify-start">
+        <div className="fixed inset-0 top-[60px] z-50 lg:hidden flex flex-col justify-start">
           {/* Backdrop overlay */}
           <div
-            className="fixed inset-0 bg-black/40 backdrop-blur-xs"
+            className="fixed inset-0 bg-slate-950/30 backdrop-blur-xs"
             onClick={() => setMobileMenuOpen(false)}
           />
 
           {/* Drawer Panel */}
-          <div className="relative z-10 bg-white border-b border-slate-200 px-5 py-6 shadow-2xl max-h-[calc(100vh-65px)] overflow-y-auto space-y-5 animate-in slide-in-from-top-2 duration-300">
+          <div className="relative z-10 bg-white border-b border-slate-200 px-6 py-6 shadow-2xl max-h-[calc(100vh-70px)] overflow-y-auto space-y-6 animate-in slide-in-from-top-2 duration-200">
             
-            {/* Quick Search Action inside Drawer */}
+            {/* Quick Search Trigger inside Drawer */}
             <button
               onClick={() => {
                 setMobileMenuOpen(false);
                 onOpenSearch();
               }}
-              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-700 hover:text-slate-900 hover:border-[#9A7B38] text-xs transition-all text-left group cursor-pointer"
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200/80 text-slate-600 hover:text-slate-950 text-xs transition-colors text-left cursor-pointer"
             >
-              <Search className="w-4 h-4 text-[#9A7B38] group-hover:scale-110 transition-transform" />
-              <span className="font-sans">Search timepieces, calibres, collections...</span>
+              <Search className="w-4 h-4 text-[#9A7B38]" />
+              <span>Search timepieces, calibres, collections...</span>
             </button>
 
-            {/* Quick Action Cards: Bag & Wishlist */}
-            <div className="grid grid-cols-2 gap-3 pb-2">
+            {/* Mobile Quick Action Buttons: Bag & Wishlist */}
+            <div className="grid grid-cols-2 gap-3">
               <button
                 onClick={() => {
                   setMobileMenuOpen(false);
                   onOpenCart();
                 }}
-                className="flex items-center justify-between p-3 rounded-xl bg-[#9A7B38]/10 border border-[#9A7B38]/30 text-[#9A7B38] text-xs font-bold shadow-2xs cursor-pointer"
+                className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-900 text-white text-xs font-semibold shadow-xs cursor-pointer"
               >
                 <div className="flex items-center gap-2">
-                  <ShoppingBag className="w-4 h-4" />
+                  <ShoppingBag className="w-4 h-4 text-[#C5A059]" />
                   <span>Atelier Bag</span>
                 </div>
-                <span className="font-mono bg-[#9A7B38] text-black text-[10px] px-2 py-0.5 rounded-full font-bold">
+                <span className="font-mono bg-[#C5A059] text-slate-950 text-[10px] px-2 py-0.5 rounded-full font-bold">
                   {cartCount}
                 </span>
               </button>
@@ -287,7 +317,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   setMobileMenuOpen(false);
                   onOpenWishlist();
                 }}
-                className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 text-xs font-bold shadow-2xs cursor-pointer hover:border-[#9A7B38]"
+                className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-slate-800 text-xs font-semibold shadow-2xs cursor-pointer hover:border-[#9A7B38]"
               >
                 <div className="flex items-center gap-2">
                   <Heart className="w-4 h-4 text-[#9A7B38]" />
@@ -300,24 +330,24 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
 
             {/* Navigation Links */}
-            <nav className="flex flex-col gap-1.5">
+            <nav className="flex flex-col divide-y divide-slate-100">
               {NAV_LINKS.map((link) => {
                 const isActive = currentPage === link.page;
                 return (
                   <button
                     key={link.page}
                     onClick={() => handleNavClick(link.page)}
-                    className={`text-left text-xs tracking-[0.2em] uppercase py-3.5 px-4 rounded-xl transition-all flex items-center justify-between font-bold cursor-pointer ${
+                    className={`text-left text-xs tracking-[0.16em] uppercase py-3.5 flex items-center justify-between font-semibold cursor-pointer transition-colors ${
                       isActive
-                        ? 'text-[#9A7B38] bg-[#9A7B38]/10 border-l-4 border-[#9A7B38] shadow-2xs font-extrabold'
-                        : 'text-slate-800 hover:text-black hover:bg-slate-50'
+                        ? 'text-[#9A7B38] font-bold'
+                        : 'text-slate-800 hover:text-slate-950'
                     }`}
                   >
                     <span>{link.label}</span>
                     {isActive ? (
-                      <span className="w-1.5 h-1.5 rotate-45 bg-[#9A7B38]" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#9A7B38]" />
                     ) : (
-                      <span className="text-slate-400 text-xs">→</span>
+                      <span className="text-slate-300 text-sm">›</span>
                     )}
                   </button>
                 );
@@ -325,11 +355,11 @@ export const Navbar: React.FC<NavbarProps> = ({
             </nav>
 
             {/* Currency Selector Grid */}
-            <div className="pt-4 border-t border-slate-200 space-y-2.5">
-              <div className="text-[10px] uppercase font-mono tracking-wider text-[#9A7B38] font-bold">
+            <div className="pt-4 border-t border-slate-100 space-y-2">
+              <div className="text-[10px] uppercase font-mono tracking-wider text-slate-400 font-semibold">
                 Valuation Currency
               </div>
-              <div className="grid grid-cols-5 gap-1.5">
+              <div className="grid grid-cols-5 gap-2">
                 {SUPPORTED_CURRENCIES.map((curr) => {
                   const isSelected = currentCurrency === curr;
                   return (
@@ -341,7 +371,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       }}
                       className={`py-2 px-1 rounded-xl text-xs font-mono transition-colors text-center font-bold cursor-pointer ${
                         isSelected
-                          ? 'bg-[#9A7B38] text-white shadow-sm'
+                          ? 'bg-slate-900 text-white shadow-xs'
                           : 'bg-slate-50 text-slate-700 hover:text-slate-900 border border-slate-200'
                       }`}
                     >
@@ -352,21 +382,23 @@ export const Navbar: React.FC<NavbarProps> = ({
               </div>
             </div>
 
-            {/* Direct Atelier Hotline & WhatsApp Links */}
+            {/* Concierge Assistance */}
             <div className="pt-2 flex items-center gap-2 text-xs">
               <a
                 href="tel:+41228190192"
-                className="flex-1 py-2.5 text-center rounded-xl bg-slate-50 border border-slate-200 text-slate-700 hover:text-slate-900 hover:border-[#9A7B38] text-[11px] font-mono transition-colors"
+                className="flex-1 py-2.5 text-center rounded-xl bg-slate-50 border border-slate-200 text-slate-700 hover:text-slate-900 text-[11px] font-medium transition-colors flex items-center justify-center gap-1.5"
               >
-                📞 Call Atelier
+                <Phone className="w-3.5 h-3.5 text-[#9A7B38]" />
+                <span>Call Atelier</span>
               </a>
               <a
                 href="https://wa.me/41228190192"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-1 py-2.5 text-center rounded-xl bg-emerald-50 border border-emerald-300 text-emerald-800 hover:bg-emerald-100 text-[11px] font-mono transition-colors"
+                className="flex-1 py-2.5 text-center rounded-xl bg-slate-50 border border-slate-200 text-slate-700 hover:text-slate-900 text-[11px] font-medium transition-colors flex items-center justify-center gap-1.5"
               >
-                💬 WhatsApp
+                <MessageSquare className="w-3.5 h-3.5 text-emerald-600" />
+                <span>Concierge Chat</span>
               </a>
             </div>
 

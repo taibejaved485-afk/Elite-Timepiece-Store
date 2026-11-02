@@ -86,6 +86,9 @@ export default function App() {
     if (window.confirm('Reset catalog back to initial factory Swiss watches? Any custom added watches will be cleared.')) {
       setWatches(WATCHES);
       localStorage.removeItem('aurelia_watches_catalog_v3');
+      import('./utils/auditLogger').then(({ logAdminAction }) => {
+        logAdminAction('Catalog Reset', 'product', 'Reset timepiece catalog to initial factory Swiss references', 'admin');
+      });
     }
   };
 
@@ -253,8 +256,8 @@ export default function App() {
         onSelectCurrency={setCurrency}
       />
 
-      {/* Subpage Breadcrumbs & Horological Navigation Ribbon in Clean Luxury White */}
-      {currentPage !== 'home' && (
+      {/* Subpage Breadcrumbs & Horological Navigation Ribbon in Clean Luxury White - Hidden in Admin */}
+      {currentPage !== 'home' && currentPage !== 'admin' && (
         <nav aria-label="Breadcrumb navigation" className="w-full bg-[#FAF9F5] backdrop-blur-md border-b border-slate-200 py-2 sm:py-2.5 px-3 sm:px-8 lg:px-16 xl:px-24 flex items-center justify-between text-xs relative z-20 shadow-2xs">
           <div className="flex items-center gap-2 overflow-x-auto scrollbar-none whitespace-nowrap">
             <button 
@@ -270,7 +273,6 @@ export default function App() {
               {currentPage === 'bespoke' && 'Bespoke Atelier Studio'}
               {currentPage === 'heritage' && 'Manufacture Heritage (1892)'}
               {currentPage === 'concierge' && 'Contact Us & Private Concierge'}
-              {currentPage === 'admin' && 'Atelier Management Portal'}
               {currentPage === 'privacy' && 'Privacy Policy'}
               {currentPage === 'terms' && 'Terms of Service'}
               {currentPage === 'provenance' && 'Digital Provenance Registry'}
@@ -388,12 +390,14 @@ export default function App() {
         </AnimatePresence>
       </main>
 
-      {/* Refined Luxury Footer */}
-      <Footer
-        onNavigate={handleNavigate}
-        onReplayPreloader={() => setIsLoading(true)}
-        onOpenTrackOrder={() => handleOpenTrackOrder()}
-      />
+      {/* Refined Luxury Footer - Hidden when in Dedicated Admin Portal */}
+      {currentPage !== 'admin' && (
+        <Footer
+          onNavigate={handleNavigate}
+          onReplayPreloader={() => setIsLoading(true)}
+          onOpenTrackOrder={() => handleOpenTrackOrder()}
+        />
+      )}
 
       {/* Drawers & Modals */}
       <CartDrawer

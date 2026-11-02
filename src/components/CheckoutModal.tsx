@@ -18,6 +18,7 @@ import { formatPrice } from '../utils/currency';
 import { AnimatedPrice } from './AnimatedPrice';
 import { createNewOrder, PlacedOrder } from '../utils/orderStorage';
 import { handleImageFallback } from '../utils/imageFallback';
+import { validatePromoCode } from '../utils/promoStorage';
 
 interface CheckoutModalProps {
   isOpen: boolean;
@@ -51,6 +52,11 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   const [placedOrder, setPlacedOrder] = useState<PlacedOrder | null>(null);
   const [copiedOrder, setCopiedOrder] = useState(false);
 
+  // VIP Concession / Promo Code state
+  const [promoInput, setPromoInput] = useState('');
+  const [appliedPromo, setAppliedPromo] = useState<{ code: string; discountUSD: number; message: string } | null>(null);
+  const [promoError, setPromoError] = useState<string | null>(null);
+
   if (!isOpen) return null;
 
   const rawSubtotalUSD = items.reduce((acc, item) => {
@@ -58,12 +64,35 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
     return acc + itemPrice * item.quantity;
   }, 0);
 
+  const finalTotalUSD = Math.max(0, rawSubtotalUSD - (appliedPromo ? appliedPromo.discountUSD : 0));
+
+  const handleApplyPromo = () => {
+    setPromoError(null);
+    if (!promoInput.trim()) return;
+    const res = validatePromoCode(promoInput, rawSubtotalUSD);
+    if (res.valid) {
+      setAppliedPromo({
+        code: promoInput.trim().toUpperCase(),
+        discountUSD: res.discountUSD,
+        message: res.message,
+      });
+      setPromoInput('');
+    } else {
+      setPromoError(res.message);
+    }
+  };
+
+  const handleRemovePromo = () => {
+    setAppliedPromo(null);
+    setPromoError(null);
+  };
+
   const handleSubmitOrder = (e: React.FormEvent) => {
     e.preventDefault();
     if (items.length === 0) return;
 
-    // Create persistent order record in order registry
-    const newOrder = createNewOrder(formData, items, rawSubtotalUSD);
+    // Create persistent order record in order registry with applied concession
+    const newOrder = createNewOrder(formData, items, finalTotalUSD);
     setPlacedOrder(newOrder);
     setStep('confirmation');
     onClearCart();
@@ -162,11 +191,57 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                   </div>
                 ))}
               </div>
+              {/* Concession / Promo Code Input Row */}
+              <div className="pt-2 border-t border-slate-200/60 space-y-1.5">
+                <div className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    value={promoInput}
+                    onChange={(e) => setPromoInput(e.target.value)}
+                    placeholder="VIP Concession Code (e.g. AURELIA10)"
+                    className="flex-1 px-3 py-1.5 rounded-xl border border-slate-200 bg-white text-xs font-mono uppercase text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#9A7B38]"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleApplyPromo}
+                    className="px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-[#9A7B38] text-white text-xs font-bold transition-all cursor-pointer"
+                  >
+                    Apply
+                  </button>
+                </div>
+
+                {appliedPromo && (
+                  <div className="flex items-center justify-between text-xs text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200">
+                    <span className="font-semibold">{appliedPromo.message}</span>
+                    <button
+                      type="button"
+                      onClick={handleRemovePromo}
+                      className="text-xs text-rose-600 hover:underline cursor-pointer"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                )}
+
+                {promoError && (
+                  <div className="text-[11px] text-rose-600 font-medium">
+                    {promoError}
+                  </div>
+                )}
+              </div>
+
               <div className="pt-3 border-t border-slate-200 flex justify-between items-center text-sm font-bold">
                 <span className="text-slate-700 font-cinzel">Total Acquisition Value</span>
-                <span className="font-mono text-[#9A7B38] text-base tabular-nums">
-                  <AnimatedPrice amountUSD={rawSubtotalUSD} currency={currency} />
-                </span>
+                <div className="text-right">
+                  <span className="font-mono text-[#9A7B38] text-base tabular-nums block">
+                    <AnimatedPrice amountUSD={finalTotalUSD} currency={currency} />
+                  </span>
+                  {appliedPromo && (
+                    <span className="text-[10px] text-slate-400 font-mono line-through block">
+                      ${rawSubtotalUSD.toLocaleString()} USD
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
 

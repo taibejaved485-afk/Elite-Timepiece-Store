@@ -438,3 +438,60 @@ export function createNewOrder(
   savePlacedOrder(newOrder);
   return newOrder;
 }
+
+export function updatePlacedOrder(
+  orderNumber: string,
+  updates: Partial<PlacedOrder>
+): PlacedOrder | null {
+  if (typeof window === 'undefined') return null;
+  try {
+    const orders = getPlacedOrders();
+    const idx = orders.findIndex((o) => o.orderNumber === orderNumber);
+    if (idx === -1) return null;
+
+    const current = orders[idx];
+    const updated: PlacedOrder = {
+      ...current,
+      ...updates,
+      // If progress step changed, update the steps completion status
+      steps: updates.progressStep
+        ? current.steps.map((step, sIdx) => ({
+            ...step,
+            completed: sIdx + 1 <= updates.progressStep!,
+            current: sIdx + 1 === updates.progressStep,
+          }))
+        : updates.steps || current.steps,
+    };
+
+    orders[idx] = updated;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(orders));
+    return updated;
+  } catch (err) {
+    console.error('Error updating order', err);
+    return null;
+  }
+}
+
+export function deletePlacedOrder(orderNumber: string): boolean {
+  if (typeof window === 'undefined') return false;
+  try {
+    const orders = getPlacedOrders();
+    const filtered = orders.filter((o) => o.orderNumber !== orderNumber);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered));
+    return true;
+  } catch (err) {
+    console.error('Error deleting order', err);
+    return false;
+  }
+}
+
+export function resetOrdersToDemo(): PlacedOrder[] {
+  if (typeof window === 'undefined') return INITIAL_DEMO_ORDERS;
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(INITIAL_DEMO_ORDERS));
+    localStorage.setItem(LAST_ORDER_KEY, JSON.stringify(INITIAL_DEMO_ORDERS[0]));
+    return INITIAL_DEMO_ORDERS;
+  } catch (err) {
+    return INITIAL_DEMO_ORDERS;
+  }
+}

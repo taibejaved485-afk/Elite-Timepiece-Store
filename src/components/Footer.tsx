@@ -364,6 +364,31 @@ export const Footer: React.FC<FooterProps> = ({
             )}
           </div>
         </div>
+        
+        {/* FAQ Section */}
+        <div className="mt-16 pt-12 border-t border-slate-200">
+          <h3 className="text-xl font-bold text-slate-900 mb-8 tracking-tight">Frequently Asked Questions</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-10">
+            <div className="space-y-2">
+              <h4 className="font-semibold text-slate-900">Watch Servicing</h4>
+              <p className="text-sm text-slate-600 leading-relaxed">
+                We recommend servicing your Aurelia timepiece every 3-5 years at an authorized service center to ensure optimal mechanical precision and water resistance.
+              </p>
+            </div>
+            <div className="space-y-2">
+              <h4 className="font-semibold text-slate-900">International Warranty</h4>
+              <p className="text-sm text-slate-600 leading-relaxed">
+                All Aurelia timepieces are covered by a comprehensive 5-year international master warranty against manufacturing defects, effective from the date of purchase.
+              </p>
+            </div>
+            <div className="space-y-2">
+              <h4 className="font-semibold text-slate-900">International Shipping</h4>
+              <p className="text-sm text-slate-600 leading-relaxed">
+                We provide fully insured, armored international shipping for all timepieces, with real-time tracking updates provided until the delivery is securely confirmed.
+              </p>
+            </div>
+          </div>
+        </div>
 
         {/* Full-width Divider Line */}
         <hr className="border-slate-200 mt-14 mb-8" />
@@ -413,6 +438,17 @@ export const Footer: React.FC<FooterProps> = ({
                 </button>
               </>
             )}
+            <span>·</span>
+            <button
+              onClick={() => {
+                onNavigate('admin');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className="hover:text-[#9A7B38] text-slate-700 font-semibold transition-colors flex items-center gap-1 cursor-pointer"
+              title="Maison Atelier Admin Control Panel"
+            >
+              <span>Atelier Admin</span>
+            </button>
             {onReplayPreloader && (
               <>
                 <span>·</span>

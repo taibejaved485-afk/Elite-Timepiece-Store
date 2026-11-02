@@ -704,6 +704,40 @@ export const HomePage: React.FC<HomePageProps> = ({
           </button>
         </div>
       </motion.section>
+
+      {/* 11. Newsletter Subscription */}
+      <motion.section 
+        variants={sectionVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 py-16 bg-white text-slate-900 border-t border-slate-100"
+      >
+        <div className="flex flex-col md:flex-row items-center justify-between gap-8 p-8 sm:p-12 rounded-2xl bg-slate-50 border border-slate-200 shadow-sm">
+          <div className="space-y-2 text-center md:text-left max-w-xl">
+            <h2 className="font-cinzel text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
+              The Aurelia Chronicle
+            </h2>
+            <p className="text-sm text-slate-600 font-light leading-relaxed">
+              Receive exclusive previews of upcoming releases, horological insights from our manufacture, and invitations to private salon events.
+            </p>
+          </div>
+          
+          <form className="w-full max-w-md flex flex-col sm:flex-row gap-3" onSubmit={(e) => e.preventDefault()}>
+            <input
+              type="email"
+              placeholder="Enter your email address"
+              className="w-full px-5 py-3.5 rounded-full bg-white border border-slate-300 text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/50 transition-all"
+            />
+            <button
+              type="submit"
+              className="rounded-full px-8 py-3.5 text-xs font-bold uppercase tracking-widest text-black bg-gradient-to-r from-[#C5A059] via-[#E2C775] to-[#B89243] hover:from-[#D4B36E] hover:to-[#C5A059] transition-all active:scale-95 shrink-0"
+            >
+              Subscribe
+            </button>
+          </form>
+        </div>
+      </motion.section>
     </div>
   );
 };
