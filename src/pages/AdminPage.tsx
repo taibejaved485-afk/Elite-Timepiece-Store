@@ -4,7 +4,7 @@ import {
   Search, Eye, ArrowLeft, SlidersHorizontal, Image as ImageIcon,
   DollarSign, Package, Award, Clock, AlertTriangle, Layers,
   ShoppingBag, Truck, MapPin, Phone, Mail, Globe, Save,
-  CheckCircle2, XCircle, ArrowUpRight, MessageSquare, ChevronRight,
+  CheckCircle2, XCircle, ArrowUpRight, MessageSquare, ChevronRight, ChevronLeft,
   ExternalLink, Bell, CreditCard, Lock, LogOut, Key, EyeOff, User,
   Copy, Download, Upload, Filter, ArrowUpDown, FileText, CheckSquare,
   Square, Printer, Tag, BarChart3, Activity, Compass, ShieldAlert,
@@ -362,6 +362,17 @@ export const AdminPage: React.FC<AdminPageProps> = ({
   // Tab State
   const [activeTab, setActiveTab] = useState<AdminTab>('products');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const menuNavRef = useRef<HTMLElement>(null);
+
+  const scrollMenuNav = (direction: 'left' | 'right') => {
+    if (menuNavRef.current) {
+      const scrollAmount = 180;
+      menuNavRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth',
+      });
+    }
+  };
 
   // Products Tab State
   const [searchQuery, setSearchQuery] = useState('');
@@ -1812,42 +1823,44 @@ export const AdminPage: React.FC<AdminPageProps> = ({
   // --------------------------------------------------------------------------
   if (!isAuthenticated) {
     return (
-      <div className="relative w-full min-h-screen bg-slate-950 flex items-center justify-center px-4 py-12 font-sans overflow-hidden">
+      <div className="relative w-full min-h-[calc(100dvh-110px)] bg-[#FAF9F5] sm:bg-[#F5F4EE] flex items-start justify-center px-3 sm:px-4 pt-3 sm:pt-6 pb-10 font-sans overflow-hidden">
         {/* Subtle Background Glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-amber-600/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#C5A059]/10 rounded-full blur-3xl pointer-events-none" />
 
         {/* Toast Notification */}
         {toastMessage && (
-          <div className="fixed top-8 right-8 z-50 bg-slate-800 text-white px-4 py-2.5 rounded-xl shadow-lg border border-slate-700 flex items-center gap-2.5 text-xs font-medium animate-in slide-in-from-top duration-300">
+          <div className="fixed top-8 right-8 z-50 bg-slate-900 text-white px-4 py-2.5 rounded-xl shadow-lg border border-slate-700 flex items-center gap-2.5 text-xs font-medium animate-in slide-in-from-top duration-300">
             <Sparkles className="w-4 h-4 text-amber-400 shrink-0" />
             <span>{toastMessage}</span>
           </div>
         )}
 
-        {/* Central Clean Admin Login Card */}
-        <div className="relative w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-7 sm:p-8 space-y-6 shadow-2xl text-slate-100 font-sans">
+        {/* Central Clean Admin Login Card in Luxury White */}
+        <div className="relative w-full max-w-md bg-white border border-slate-200/90 rounded-2xl p-5 sm:p-8 space-y-5 sm:space-y-6 shadow-xl text-slate-800 font-sans">
           {/* Top Bar: Return Link */}
-          <div className="flex items-center justify-between text-xs text-slate-400 pb-1">
+          <div className="flex items-center justify-between text-xs text-slate-500 pb-1">
             <button
               onClick={() => onNavigate('home')}
-              className="text-slate-400 hover:text-white flex items-center gap-1.5 transition-colors cursor-pointer"
+              className="text-slate-600 hover:text-slate-900 flex items-center gap-1.5 transition-colors cursor-pointer font-medium"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>Return to Store</span>
             </button>
-            <span className="text-[11px] font-medium text-slate-500">Aurelia Atelier</span>
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-[#9A7B38]">
+              Aurelia Atelier
+            </span>
           </div>
 
           {/* Icon & Title */}
-          <div className="space-y-2">
-            <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
-              <Shield className="w-5 h-5 text-amber-400" />
+          <div className="space-y-3">
+            <div className="w-11 h-11 rounded-xl bg-[#FAF7F0] border border-[#E9DEC6] flex items-center justify-center text-[#9A7B38] shadow-2xs">
+              <Shield className="w-5 h-5 text-[#9A7B38]" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-white tracking-tight font-sans">
+              <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight font-serif">
                 Admin Portal Sign In
               </h1>
-              <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+              <p className="text-xs text-slate-600 mt-1 leading-relaxed font-light">
                 Enter your credentials to manage timepiece inventory, orders, and store settings.
               </p>
             </div>
@@ -1855,16 +1868,16 @@ export const AdminPage: React.FC<AdminPageProps> = ({
 
           {/* Login Error Alert */}
           {loginError && (
-            <div className="p-3 rounded-lg bg-rose-950/50 border border-rose-800 text-rose-200 text-xs flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0" />
+            <div className="p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2">
+              <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />
               <span>{loginError}</span>
             </div>
           )}
 
           {/* Forgot Password Success Alert */}
           {forgotPasswordSuccess && (
-            <div className="p-3 rounded-lg bg-emerald-950/50 border border-emerald-800 text-emerald-200 text-xs flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+            <div className="p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
               <span>{forgotPasswordSuccess}</span>
             </div>
           )}
@@ -1872,11 +1885,11 @@ export const AdminPage: React.FC<AdminPageProps> = ({
           {/* Login Form */}
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-1.5">
-              <label className="block text-xs font-medium text-slate-300">
+              <label className="block text-xs font-semibold text-slate-700">
                 Username
               </label>
               <div className="relative">
-                <User className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+                <User className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
                   required
@@ -1887,17 +1900,17 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                     setForgotPasswordSuccess(null);
                   }}
                   placeholder="Enter username"
-                  className="w-full pl-9 pr-3.5 py-2 rounded-lg border border-slate-700 bg-slate-950 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-colors"
+                  className="w-full pl-9 pr-3.5 py-2.5 rounded-lg border border-slate-200 bg-slate-50/70 hover:bg-white text-xs text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-[#9A7B38] focus:ring-1 focus:ring-[#9A7B38] transition-all shadow-2xs"
                 />
               </div>
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-xs font-medium text-slate-300">
+              <label className="block text-xs font-semibold text-slate-700">
                 Password
               </label>
               <div className="relative">
-                <Lock className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+                <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   required
@@ -1908,12 +1921,12 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                     setForgotPasswordSuccess(null);
                   }}
                   placeholder="Enter password"
-                  className="w-full pl-9 pr-9 py-2 rounded-lg border border-slate-700 bg-slate-950 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-colors"
+                  className="w-full pl-9 pr-9 py-2.5 rounded-lg border border-slate-200 bg-slate-50/70 hover:bg-white text-xs text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-[#9A7B38] focus:ring-1 focus:ring-[#9A7B38] transition-all shadow-2xs"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 cursor-pointer"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 cursor-pointer"
                   title={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -1922,19 +1935,19 @@ export const AdminPage: React.FC<AdminPageProps> = ({
             </div>
 
             <div className="flex items-center justify-between text-xs pt-0.5">
-              <label className="flex items-center gap-2 text-slate-400 hover:text-slate-300 cursor-pointer select-none">
+              <label className="flex items-center gap-2 text-slate-600 hover:text-slate-900 cursor-pointer select-none">
                 <input
                   type="checkbox"
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
-                  className="w-3.5 h-3.5 accent-amber-500 rounded bg-slate-950 border-slate-700"
+                  className="w-3.5 h-3.5 accent-[#9A7B38] rounded border-slate-300"
                 />
                 <span>Remember session</span>
               </label>
               <button
                 type="button"
                 onClick={handleForgotPassword}
-                className="text-xs text-amber-400 hover:underline cursor-pointer"
+                className="text-xs text-[#9A7B38] hover:text-slate-900 font-semibold hover:underline cursor-pointer"
               >
                 Forgot Password?
               </button>
@@ -1943,13 +1956,13 @@ export const AdminPage: React.FC<AdminPageProps> = ({
             <button
               type="submit"
               disabled={isLoggingIn}
-              className="w-full py-2.5 px-4 rounded-lg text-xs font-semibold text-white bg-amber-600 hover:bg-amber-500 transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-xs disabled:opacity-70 mt-2"
+              className="w-full py-3 px-4 rounded-lg text-xs font-bold uppercase tracking-wider text-slate-950 bg-gradient-to-r from-[#C5A059] via-[#D8B66C] to-[#9A7B38] hover:from-[#B89243] hover:to-[#856525] active:from-[#856525] transition-all shadow-md hover:shadow-lg shadow-[#C5A059]/20 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70 mt-2"
             >
               {isLoggingIn ? (
-                <span className="inline-block w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                <span className="inline-block w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
               ) : (
                 <>
-                  <Key className="w-3.5 h-3.5" />
+                  <Key className="w-3.5 h-3.5 stroke-[2.5]" />
                   <span>Sign In</span>
                 </>
               )}
@@ -1957,17 +1970,17 @@ export const AdminPage: React.FC<AdminPageProps> = ({
           </form>
 
           {/* Discreet Demo Helper */}
-          <div className="pt-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
+          <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
             <div className="font-mono text-[11px]">
               <span>Demo: </span>
-              <span className="text-amber-400">admin</span>
-              <span className="text-slate-600"> / </span>
-              <span className="text-amber-400">admin123</span>
+              <span className="text-[#9A7B38] font-bold">admin</span>
+              <span className="text-slate-400"> / </span>
+              <span className="text-[#9A7B38] font-bold">admin123</span>
             </div>
             <button
               type="button"
               onClick={handleAutofillCreds}
-              className="text-xs font-medium text-amber-400 hover:underline cursor-pointer"
+              className="text-xs font-semibold text-[#9A7B38] hover:text-[#7d6229] hover:underline cursor-pointer"
             >
               Autofill
             </button>
@@ -2001,16 +2014,16 @@ export const AdminPage: React.FC<AdminPageProps> = ({
 
       {/* Top Professional Navigation Bar */}
       <header className="w-full bg-white border-b border-slate-200 sticky top-0 z-30 shadow-2xs">
-        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 h-16 flex items-center justify-between gap-4">
+        <div className="w-full px-3 sm:px-6 lg:px-8 xl:px-10 h-16 flex items-center justify-between gap-2 sm:gap-4">
           {/* Left: Brand Identity */}
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-slate-900 text-white flex items-center justify-center font-bold shadow-xs">
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-slate-900 text-white flex items-center justify-center font-bold shadow-xs">
               <Shield className="w-4 h-4 text-amber-400" />
             </div>
             <div>
-              <div className="flex items-center gap-2">
-                <span className="font-bold text-slate-900 text-sm tracking-tight font-sans">Aurelia Atelier</span>
-                <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200">
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <span className="font-bold text-slate-900 text-xs sm:text-sm tracking-tight font-sans whitespace-nowrap">Aurelia Atelier</span>
+                <span className="text-[9px] sm:text-[10px] font-semibold px-1.5 py-0.2 sm:px-2 sm:py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200">
                   Admin
                 </span>
               </div>
@@ -2019,9 +2032,9 @@ export const AdminPage: React.FC<AdminPageProps> = ({
           </div>
 
           {/* Right: CET Clock, Session Timer, User Profile, Store Link & Logout */}
-          <div className="flex items-center gap-2 sm:gap-4">
+          <div className="flex items-center gap-1.5 sm:gap-4 min-w-0">
             {/* System Status: CET Clock & Session Timer */}
-            <div className="flex items-center gap-2 sm:gap-3">
+            <div className="flex items-center gap-1.5 sm:gap-3">
               {/* CET Clock */}
               <div className="hidden md:flex items-center gap-1.5 text-xs text-slate-500 px-2.5 py-1.5 rounded-lg bg-slate-50 border border-slate-200">
                 <Clock className="w-3.5 h-3.5 text-slate-400" />
@@ -2029,19 +2042,19 @@ export const AdminPage: React.FC<AdminPageProps> = ({
               </div>
 
               {/* Inactivity Session Timer */}
-              <div className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg border text-xs transition-colors ${
+              <div className={`flex items-center gap-1.5 px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-lg border text-[11px] sm:text-xs transition-colors shrink-0 ${
                 sessionSecondsLeft < 180
                   ? 'bg-amber-50 border-amber-300 text-amber-900'
                   : 'bg-slate-50 border-slate-200 text-slate-700'
               }`}>
-                <Clock className={`w-3.5 h-3.5 ${sessionSecondsLeft < 180 ? 'text-amber-600 animate-pulse' : 'text-slate-400'}`} />
-                <span className="font-medium">
+                <Clock className={`w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0 ${sessionSecondsLeft < 180 ? 'text-amber-600 animate-pulse' : 'text-slate-400'}`} />
+                <span className="font-mono font-medium">
                   {formatCountdown(sessionSecondsLeft)}
                 </span>
                 <button
                   type="button"
                   onClick={handleExtendSession}
-                  className="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-200 hover:bg-slate-300 text-slate-800 transition-colors cursor-pointer"
+                  className="px-1.5 py-0.5 rounded text-[9px] sm:text-[10px] font-semibold bg-slate-200 hover:bg-slate-300 text-slate-800 transition-colors cursor-pointer"
                   title="Extend session by 15 minutes"
                 >
                   +15m
@@ -2050,10 +2063,10 @@ export const AdminPage: React.FC<AdminPageProps> = ({
             </div>
 
             {/* Separator */}
-            <div className="h-6 w-px bg-slate-200 mx-1 hidden sm:block" />
+            <div className="h-6 w-px bg-slate-200 mx-0.5 sm:mx-1 hidden sm:block" />
 
             {/* User Actions */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
               {/* Admin User Chip */}
               <div className="hidden sm:flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-700">
                 <div className="w-2 h-2 rounded-full bg-emerald-500" />
@@ -2064,7 +2077,8 @@ export const AdminPage: React.FC<AdminPageProps> = ({
               <button
                 type="button"
                 onClick={() => onNavigate('home')}
-                className="px-3 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-medium transition-colors flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                className="p-1.5 sm:px-3 sm:py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-medium transition-colors flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                title="Return to Storefront"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
                 <span className="hidden sm:inline">Store</span>
@@ -2074,7 +2088,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
               <button
                 type="button"
                 onClick={handleLogout}
-                className="px-3 py-1.5 rounded-lg border border-rose-200 bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-medium transition-colors flex items-center gap-1.5 cursor-pointer"
+                className="p-1.5 sm:px-3 sm:py-1.5 rounded-lg border border-rose-200 bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-medium transition-colors flex items-center gap-1.5 cursor-pointer"
                 title="Sign out of admin console"
               >
                 <LogOut className="w-3.5 h-3.5" />
@@ -2086,49 +2100,77 @@ export const AdminPage: React.FC<AdminPageProps> = ({
       </header>
 
       {/* Main Admin Container */}
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-6 sm:py-8 space-y-6 font-sans">
+      <div className="w-full px-3 sm:px-6 lg:px-8 xl:px-10 py-4 sm:py-8 space-y-5 sm:space-y-6 font-sans">
         
         {/* Simple Page Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 pb-3 sm:pb-4 border-b border-slate-200">
           <div>
-            <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight font-sans">
+            <h1 className="text-lg sm:text-2xl font-bold text-slate-900 tracking-tight font-sans">
               Store Management Console
             </h1>
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-xs text-slate-500 mt-0.5 sm:mt-1">
               Manage timepiece inventory, review client consignment orders, configure boutique settings, and view sales telemetry.
             </p>
           </div>
         </div>
 
         {/* Main Content Layout: Vertical Navigation Sidebar + Workspace */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-start">
           {/* Left Vertical Navigation Menu (Responsive Tabs on Mobile) */}
           <aside className="lg:col-span-3 xl:col-span-2 space-y-4 lg:sticky lg:top-24 w-full">
-            <div className="bg-white rounded-xl border border-slate-200 shadow-xs p-2.5 sm:p-3 space-y-2 lg:space-y-3">
-              <div className="px-2 py-0.5 sm:py-1 flex items-center justify-between">
-                <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
-                  Menu Modules
-                </span>
-                <span className="text-[10px] text-slate-500 font-medium">v1.2</span>
+            <div className="bg-white rounded-xl border border-slate-200 shadow-xs p-2 sm:p-3 space-y-2 lg:space-y-3">
+              <div className="px-1 sm:px-2 py-0.5 sm:py-1 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+                    Menu Modules
+                  </span>
+                  <span className="text-[10px] text-slate-500 font-medium">v1.2</span>
+                </div>
+
+                {/* Left & Right Scroll Buttons (Single set on mobile/tablet) */}
+                <div className="flex lg:hidden items-center gap-1">
+                  <button
+                    type="button"
+                    onClick={() => scrollMenuNav('left')}
+                    className="w-7 h-7 rounded-lg bg-slate-50 hover:bg-slate-100 active:bg-slate-200 active:scale-95 text-slate-700 flex items-center justify-center transition-all cursor-pointer border border-slate-200 shadow-2xs"
+                    title="Scroll modules left"
+                    aria-label="Scroll modules left"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => scrollMenuNav('right')}
+                    className="w-7 h-7 rounded-lg bg-slate-50 hover:bg-slate-100 active:bg-slate-200 active:scale-95 text-slate-700 flex items-center justify-center transition-all cursor-pointer border border-slate-200 shadow-2xs"
+                    title="Scroll modules right"
+                    aria-label="Scroll modules right"
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
 
-              {/* Navigation Items: Horizontal on mobile, vertical on desktop */}
-              <nav className="flex flex-row lg:flex-col overflow-x-auto lg:overflow-visible gap-1.5 lg:gap-1 pb-1 lg:pb-0 scrollbar-none -mx-1 px-1" aria-label="Admin Navigation Modules">
+              {/* Navigation Items: Horizontal scroll on mobile, vertical on desktop */}
+              <nav
+                ref={menuNavRef}
+                className="flex flex-row lg:flex-col overflow-x-auto lg:overflow-visible gap-1.5 lg:gap-1 pb-1 lg:pb-0 scrollbar-none px-0.5 touch-pan-x scroll-smooth w-full"
+                aria-label="Admin Navigation Modules"
+              >
                 {/* 1. Timepieces */}
                 <button
                   type="button"
                   onClick={() => setActiveTab('products')}
-                  className={`shrink-0 lg:w-full flex items-center justify-between gap-2.5 px-3 py-2 sm:py-2.5 rounded-lg transition-colors cursor-pointer text-left text-xs whitespace-nowrap ${
+                  className={`shrink-0 lg:w-full flex items-center justify-between gap-2 px-2.5 py-1.5 sm:px-3 sm:py-2.5 rounded-lg transition-colors cursor-pointer text-left text-xs whitespace-nowrap ${
                     activeTab === 'products'
                       ? 'bg-slate-900 text-white font-medium shadow-xs'
                       : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50 font-normal bg-slate-50 lg:bg-transparent'
                   }`}
                 >
-                  <div className="flex items-center gap-2 min-w-0">
-                    <Package className="w-4 h-4 shrink-0" />
+                  <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+                    <Package className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
                     <span>Timepieces Catalog</span>
                   </div>
-                  <span className={`text-[11px] font-semibold px-1.5 py-0.2 rounded-md ${
+                  <span className={`text-[10px] sm:text-[11px] font-semibold px-1.5 py-0.2 rounded-md ${
                     activeTab === 'products' ? 'bg-white/20 text-white' : 'bg-slate-200/80 text-slate-600'
                   }`}>
                     {watches.length}
@@ -2142,17 +2184,17 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                     setActiveTab('orders');
                     refreshOrders();
                   }}
-                  className={`shrink-0 lg:w-full flex items-center justify-between gap-2.5 px-3 py-2 sm:py-2.5 rounded-lg transition-colors cursor-pointer text-left text-xs whitespace-nowrap ${
+                  className={`shrink-0 lg:w-full flex items-center justify-between gap-2 px-2.5 py-1.5 sm:px-3 sm:py-2.5 rounded-lg transition-colors cursor-pointer text-left text-xs whitespace-nowrap ${
                     activeTab === 'orders'
                       ? 'bg-slate-900 text-white font-medium shadow-xs'
                       : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50 font-normal bg-slate-50 lg:bg-transparent'
                   }`}
                 >
-                  <div className="flex items-center gap-2 min-w-0">
-                    <ShoppingBag className="w-4 h-4 shrink-0" />
+                  <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+                    <ShoppingBag className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
                     <span>Orders</span>
                   </div>
-                  <span className={`text-[11px] font-semibold px-1.5 py-0.2 rounded-md ${
+                  <span className={`text-[10px] sm:text-[11px] font-semibold px-1.5 py-0.2 rounded-md ${
                     activeTab === 'orders' ? 'bg-white/20 text-white' : 'bg-slate-200/80 text-slate-600'
                   }`}>
                     {orders.length}
@@ -2163,17 +2205,17 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                 <button
                   type="button"
                   onClick={() => setActiveTab('settings')}
-                  className={`shrink-0 lg:w-full flex items-center justify-between gap-2.5 px-3 py-2 sm:py-2.5 rounded-lg transition-colors cursor-pointer text-left text-xs whitespace-nowrap ${
+                  className={`shrink-0 lg:w-full flex items-center justify-between gap-2 px-2.5 py-1.5 sm:px-3 sm:py-2.5 rounded-lg transition-colors cursor-pointer text-left text-xs whitespace-nowrap ${
                     activeTab === 'settings'
                       ? 'bg-slate-900 text-white font-medium shadow-xs'
                       : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50 font-normal bg-slate-50 lg:bg-transparent'
                   }`}
                 >
-                  <div className="flex items-center gap-2 min-w-0">
-                    <SlidersHorizontal className="w-4 h-4 shrink-0" />
+                  <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+                    <SlidersHorizontal className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
                     <span>Settings</span>
                   </div>
-                  <span className={`text-[11px] font-semibold px-1.5 py-0.2 rounded-md ${
+                  <span className={`text-[10px] sm:text-[11px] font-semibold px-1.5 py-0.2 rounded-md ${
                     activeTab === 'settings' ? 'bg-white/20 text-white' : 'bg-slate-200/80 text-slate-600'
                   }`}>
                     {promoCodes.length}
@@ -2187,14 +2229,14 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                     setActiveTab('analytics');
                     refreshAuditLogs();
                   }}
-                  className={`shrink-0 lg:w-full flex items-center justify-between gap-2.5 px-3 py-2 sm:py-2.5 rounded-lg transition-colors cursor-pointer text-left text-xs whitespace-nowrap ${
+                  className={`shrink-0 lg:w-full flex items-center justify-between gap-2 px-2.5 py-1.5 sm:px-3 sm:py-2.5 rounded-lg transition-colors cursor-pointer text-left text-xs whitespace-nowrap ${
                     activeTab === 'analytics'
                       ? 'bg-slate-900 text-white font-medium shadow-xs'
                       : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50 font-normal bg-slate-50 lg:bg-transparent'
                   }`}
                 >
-                  <div className="flex items-center gap-2 min-w-0">
-                    <BarChart3 className="w-4 h-4 shrink-0" />
+                  <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+                    <BarChart3 className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
                     <span>Analytics</span>
                   </div>
                 </button>
@@ -2206,17 +2248,17 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                     setActiveTab('audit');
                     refreshAuditLogs();
                   }}
-                  className={`shrink-0 lg:w-full flex items-center justify-between gap-2.5 px-3 py-2 sm:py-2.5 rounded-lg transition-colors cursor-pointer text-left text-xs whitespace-nowrap ${
+                  className={`shrink-0 lg:w-full flex items-center justify-between gap-2 px-2.5 py-1.5 sm:px-3 sm:py-2.5 rounded-lg transition-colors cursor-pointer text-left text-xs whitespace-nowrap ${
                     activeTab === 'audit'
                       ? 'bg-slate-900 text-white font-medium shadow-xs'
                       : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50 font-normal bg-slate-50 lg:bg-transparent'
                   }`}
                 >
-                  <div className="flex items-center gap-2 min-w-0">
-                    <History className="w-4 h-4 shrink-0" />
+                  <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+                    <History className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
                     <span>Activity Log</span>
                   </div>
-                  <span className={`text-[11px] font-semibold px-1.5 py-0.2 rounded-md ${
+                  <span className={`text-[10px] sm:text-[11px] font-semibold px-1.5 py-0.2 rounded-md ${
                     activeTab === 'audit' ? 'bg-white/20 text-white' : 'bg-slate-200/80 text-slate-600'
                   }`}>
                     {auditLogs.length}
@@ -2245,17 +2287,17 @@ export const AdminPage: React.FC<AdminPageProps> = ({
         {activeTab === 'products' && (
           <div className="space-y-6">
             {/* 1. Timepieces Module Header Card */}
-            <div className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-sm flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+            <div className="p-4 sm:p-6 rounded-2xl bg-white border border-slate-200/90 shadow-sm flex flex-col lg:flex-row lg:items-center justify-between gap-4">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
                   <span className="p-1 rounded-md bg-slate-100 text-slate-700">
                     <Package className="w-4 h-4 text-slate-800" />
                   </span>
-                  <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider font-sans">
+                  <span className="text-[10px] sm:text-[11px] font-semibold text-slate-500 uppercase tracking-wider font-sans">
                     Inventory & Calibres Module
                   </span>
                 </div>
-                <h2 className="text-xl font-bold text-slate-900 tracking-tight font-sans">
+                <h2 className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight font-sans">
                   Timepieces & Calibre Inventory
                 </h2>
                 <p className="text-xs text-slate-500 max-w-xl">
@@ -2264,11 +2306,11 @@ export const AdminPage: React.FC<AdminPageProps> = ({
               </div>
 
               {/* Action Buttons */}
-              <div className="flex flex-wrap items-center gap-2 self-start lg:self-center">
+              <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2 w-full lg:w-auto">
                 <button
                   type="button"
                   onClick={handleOpenAdd}
-                  className="px-4 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold transition-colors flex items-center gap-1.5 cursor-pointer shadow-xs"
+                  className="col-span-2 sm:col-auto px-4 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-xs active:scale-95"
                 >
                   <Plus className="w-4 h-4" />
                   <span>Add Timepiece</span>
@@ -2276,7 +2318,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                 <button
                   type="button"
                   onClick={handleExportCatalogJSON}
-                  className="px-3.5 py-2 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold transition-colors flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                  className="px-3 py-2 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs"
                   title="Export catalog backup as JSON"
                 >
                   <Download className="w-3.5 h-3.5 text-slate-500" />
@@ -2285,7 +2327,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                 <button
                   type="button"
                   onClick={() => fileImportRef.current?.click()}
-                  className="px-3.5 py-2 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold transition-colors flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                  className="px-3 py-2 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs"
                   title="Import watches from JSON backup"
                 >
                   <Upload className="w-3.5 h-3.5 text-slate-500" />
@@ -2294,91 +2336,91 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                 <button
                   type="button"
                   onClick={() => setActiveTab('analytics')}
-                  className="px-3.5 py-2 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold transition-colors flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                  className="col-span-2 sm:col-auto px-3.5 py-2 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs"
                   title="View stock consumption curve and predictive reorder modeling in Sales Analytics"
                 >
                   <TrendingUp className="w-3.5 h-3.5 text-slate-500" />
-                  <span>Velocity</span>
+                  <span>Velocity Modeling</span>
                 </button>
               </div>
             </div>
 
             {/* 2. Metric KPI Cards */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-1">
-                <div className="flex items-center justify-between text-slate-500 text-xs font-bold uppercase tracking-wider">
-                  <span>Total Timepieces</span>
-                  <Layers className="w-4 h-4 text-[#9A7B38]" />
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4">
+              <div className="p-3.5 sm:p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-1">
+                <div className="flex items-center justify-between text-slate-500 text-[10px] sm:text-xs font-bold uppercase tracking-wider">
+                  <span>Total Watches</span>
+                  <Layers className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#9A7B38]" />
                 </div>
-                <div className="font-mono text-2xl sm:text-3xl font-extrabold text-slate-900 tabular-nums">
+                <div className="font-mono text-xl sm:text-3xl font-extrabold text-slate-900 tabular-nums">
                   {watches.length}
                 </div>
-                <div className="text-[11px] text-[#9A7B38] font-semibold">Active Calibres in Catalog</div>
+                <div className="text-[10px] sm:text-[11px] text-[#9A7B38] font-semibold truncate">Active in Catalog</div>
               </div>
 
-              <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-1">
-                <div className="flex items-center justify-between text-slate-500 text-xs font-bold uppercase tracking-wider">
+              <div className="p-3.5 sm:p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-1">
+                <div className="flex items-center justify-between text-slate-500 text-[10px] sm:text-xs font-bold uppercase tracking-wider">
                   <span>Vault Inventory</span>
-                  <Package className="w-4 h-4 text-emerald-600" />
+                  <Package className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-600" />
                 </div>
-                <div className="font-mono text-2xl sm:text-3xl font-extrabold text-slate-900 tabular-nums">
+                <div className="font-mono text-xl sm:text-3xl font-extrabold text-slate-900 tabular-nums">
                   {totalStock}
                 </div>
-                <div className="flex items-center justify-between text-[11px] flex-wrap gap-1">
-                  <span className="text-emerald-600 font-semibold">Allocated Physical Units</span>
+                <div className="flex items-center justify-between text-[10px] sm:text-[11px] flex-wrap gap-1">
+                  <span className="text-emerald-600 font-semibold truncate">Physical Units</span>
                   {lowStockCount > 0 && (
                     <button
                       type="button"
                       onClick={() => setSelectedStockFilter(selectedStockFilter === 'lowstock' ? 'all' : 'lowstock')}
-                      className="inline-flex items-center gap-1 font-mono font-bold text-amber-900 bg-amber-100/90 hover:bg-amber-200 px-2 py-0.5 rounded-full border border-amber-300 transition-colors cursor-pointer text-[10px]"
+                      className="inline-flex items-center gap-1 font-mono font-bold text-amber-900 bg-amber-100/90 hover:bg-amber-200 px-1.5 py-0.2 sm:px-2 sm:py-0.5 rounded-full border border-amber-300 transition-colors cursor-pointer text-[9px] sm:text-[10px]"
                       title="Filter watches with fewer than 3 items in stock"
                     >
-                      <AlertTriangle className="w-3 h-3 text-amber-700" />
-                      <span>{lowStockCount} Low Stock</span>
+                      <AlertTriangle className="w-2.5 h-2.5 text-amber-700" />
+                      <span>{lowStockCount} Low</span>
                     </button>
                   )}
                 </div>
               </div>
 
-              <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-1">
-                <div className="flex items-center justify-between text-slate-500 text-xs font-bold uppercase tracking-wider">
+              <div className="p-3.5 sm:p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-1">
+                <div className="flex items-center justify-between text-slate-500 text-[10px] sm:text-xs font-bold uppercase tracking-wider">
                   <span>Limited Editions</span>
-                  <Award className="w-4 h-4 text-[#9A7B38]" />
+                  <Award className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#9A7B38]" />
                 </div>
-                <div className="font-mono text-2xl sm:text-3xl font-extrabold text-slate-900 tabular-nums">
+                <div className="font-mono text-xl sm:text-3xl font-extrabold text-slate-900 tabular-nums">
                   {limitedCount}
                 </div>
-                <div className="text-[11px] text-[#9A7B38] font-semibold">Numbered Collector Series</div>
+                <div className="text-[10px] sm:text-[11px] text-[#9A7B38] font-semibold truncate">Numbered Series</div>
               </div>
 
-              <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-1">
-                <div className="flex items-center justify-between text-slate-500 text-xs font-bold uppercase tracking-wider">
-                  <span>Total Vault Value</span>
-                  <DollarSign className="w-4 h-4 text-[#9A7B38]" />
+              <div className="p-3.5 sm:p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-1">
+                <div className="flex items-center justify-between text-slate-500 text-[10px] sm:text-xs font-bold uppercase tracking-wider">
+                  <span>Total Value</span>
+                  <DollarSign className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#9A7B38]" />
                 </div>
-                <div className="font-mono text-xl sm:text-2xl font-extrabold text-[#9A7B38] tabular-nums truncate">
+                <div className="font-mono text-base sm:text-2xl font-extrabold text-[#9A7B38] tabular-nums truncate">
                   <AnimatedPrice amountUSD={totalValuation} currency={currency} />
                 </div>
-                <div className="text-[11px] text-slate-500 font-semibold">Geneva Insured Holding</div>
+                <div className="text-[10px] sm:text-[11px] text-slate-500 font-semibold truncate">Geneva Insured Holding</div>
               </div>
             </div>
 
             {/* 3. Catalog Filter & Search Card Component */}
-            <div className="p-5 rounded-2xl bg-white border border-slate-200/90 shadow-sm space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+            <div className="p-3.5 sm:p-5 rounded-2xl bg-white border border-slate-200/90 shadow-sm space-y-3 sm:space-y-4">
+              <div className="flex items-center justify-between pb-2.5 border-b border-slate-100">
                 <div className="flex items-center gap-2">
                   <span className="p-1 rounded-md bg-slate-100 text-slate-700">
                     <Filter className="w-3.5 h-3.5 text-slate-800" />
                   </span>
-                  <h3 className="font-sans text-sm font-bold text-slate-900">
+                  <h3 className="font-sans text-xs sm:text-sm font-bold text-slate-900">
                     Filter & Search Catalog
                   </h3>
                 </div>
-                <span className="text-[11px] text-slate-500 font-mono font-medium">
-                  Showing {filteredWatches.length} of {watches.length} models
+                <span className="text-[10px] sm:text-[11px] text-slate-500 font-mono font-medium">
+                  {filteredWatches.length} of {watches.length} models
                 </span>
               </div>
-              <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
+              <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-2.5 sm:gap-3">
                 {/* Search */}
                 <div className="relative flex-1">
                   <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -2386,25 +2428,25 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search by timepiece name, reference (REF. AH-...), or calibre..."
-                    className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white border border-slate-200 text-xs focus:outline-none focus:border-[#9A7B38] text-slate-900 shadow-2xs font-semibold"
+                    placeholder="Search by timepiece name, reference, calibre..."
+                    className="w-full pl-10 pr-12 py-2 sm:py-2.5 rounded-xl bg-white border border-slate-200 text-xs focus:outline-none focus:border-[#9A7B38] text-slate-900 shadow-2xs font-semibold"
                   />
                   {searchQuery && (
                     <button
                       onClick={() => setSearchQuery('')}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs cursor-pointer"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs cursor-pointer font-bold"
                     >
-                      Clear
+                      ✕
                     </button>
                   )}
                 </div>
 
                 {/* Filter dropdowns */}
-                <div className="flex flex-wrap items-center gap-2">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 w-full lg:w-auto">
                   <select
                     value={selectedCollection}
                     onChange={(e) => setSelectedCollection(e.target.value)}
-                    className="px-3 py-2 rounded-xl bg-white border border-slate-200 text-xs text-slate-800 font-bold focus:outline-none focus:border-[#9A7B38] shadow-2xs cursor-pointer"
+                    className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-xs text-slate-800 font-bold focus:outline-none focus:border-[#9A7B38] shadow-2xs cursor-pointer"
                   >
                     <option value="all">All Collections</option>
                     <option value="Chronograph">Chronographs</option>
@@ -2417,7 +2459,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                   <select
                     value={selectedStockFilter}
                     onChange={(e) => setSelectedStockFilter(e.target.value as any)}
-                    className="px-3 py-2 rounded-xl bg-white border border-slate-200 text-xs text-slate-800 font-bold focus:outline-none focus:border-[#9A7B38] shadow-2xs cursor-pointer"
+                    className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-xs text-slate-800 font-bold focus:outline-none focus:border-[#9A7B38] shadow-2xs cursor-pointer"
                   >
                     <option value="all">All Inventory</option>
                     <option value="instock">In Vault Only</option>
@@ -2428,7 +2470,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                   <select
                     value={selectedSort}
                     onChange={(e) => setSelectedSort(e.target.value as any)}
-                    className="px-3 py-2 rounded-xl bg-white border border-slate-200 text-xs text-slate-800 font-bold focus:outline-none focus:border-[#9A7B38] shadow-2xs cursor-pointer"
+                    className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-xs text-slate-800 font-bold focus:outline-none focus:border-[#9A7B38] shadow-2xs cursor-pointer"
                   >
                     <option value="price-desc">Price: Highest First</option>
                     <option value="price-asc">Price: Lowest First</option>
@@ -2440,39 +2482,39 @@ export const AdminPage: React.FC<AdminPageProps> = ({
               </div>
 
               {/* Secondary Action Row: Export/Import, Reset, Add Watch */}
-              <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-slate-200/70">
-                <div className="flex items-center gap-2">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 pt-2 border-t border-slate-200/70">
+                <div className="grid grid-cols-3 sm:flex items-center gap-1.5 sm:gap-2">
                   <button
                     onClick={handleExportCatalogJSON}
-                    className="px-3 py-2 rounded-xl border border-slate-200 bg-white hover:border-[#9A7B38] text-xs font-bold text-slate-700 transition-all flex items-center gap-1.5 shadow-2xs cursor-pointer"
+                    className="px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl border border-slate-200 bg-white hover:border-[#9A7B38] text-[11px] sm:text-xs font-bold text-slate-700 transition-all flex items-center justify-center gap-1 shadow-2xs cursor-pointer"
                     title="Export backup JSON of all watches"
                   >
                     <Download className="w-3.5 h-3.5 text-[#9A7B38]" />
-                    <span>Export JSON</span>
+                    <span>Export</span>
                   </button>
 
                   <button
                     onClick={() => fileImportRef.current?.click()}
-                    className="px-3 py-2 rounded-xl border border-slate-200 bg-white hover:border-[#9A7B38] text-xs font-bold text-slate-700 transition-all flex items-center gap-1.5 shadow-2xs cursor-pointer"
+                    className="px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl border border-slate-200 bg-white hover:border-[#9A7B38] text-[11px] sm:text-xs font-bold text-slate-700 transition-all flex items-center justify-center gap-1 shadow-2xs cursor-pointer"
                     title="Import watches from JSON backup"
                   >
                     <Upload className="w-3.5 h-3.5 text-[#9A7B38]" />
-                    <span>Import JSON</span>
+                    <span>Import</span>
                   </button>
 
                   <button
                     onClick={onResetCatalog}
-                    className="px-3 py-2 rounded-xl border border-slate-200 bg-white hover:border-[#9A7B38] text-xs font-bold text-slate-700 transition-all flex items-center gap-1.5 shadow-2xs cursor-pointer"
+                    className="px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl border border-slate-200 bg-white hover:border-[#9A7B38] text-[11px] sm:text-xs font-bold text-slate-700 transition-all flex items-center justify-center gap-1 shadow-2xs cursor-pointer"
                     title="Reset to factory Swiss catalog"
                   >
                     <RefreshCw className="w-3.5 h-3.5 text-[#9A7B38]" />
-                    <span className="hidden sm:inline">Reset Default Catalog</span>
+                    <span>Reset</span>
                   </button>
                 </div>
 
                 <button
                   onClick={handleOpenAdd}
-                  className="px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider text-white bg-slate-900 hover:bg-slate-800 shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-1.5 active:scale-95 cursor-pointer shrink-0"
+                  className="w-full sm:w-auto px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider text-white bg-slate-900 hover:bg-slate-800 shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-1.5 active:scale-95 cursor-pointer shrink-0"
                 >
                   <Plus className="w-4 h-4 text-white" />
                   <span>Add New Timepiece</span>
@@ -2482,16 +2524,16 @@ export const AdminPage: React.FC<AdminPageProps> = ({
 
             {/* Low Stock Alert Notice Banner */}
             {lowStockCount > 0 && (
-              <div className="p-4 rounded-2xl bg-amber-50/90 border border-amber-300 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs shadow-2xs animate-in fade-in-50 duration-200">
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-amber-500/20 border border-amber-400 text-amber-900 flex items-center justify-center shrink-0">
+              <div className="p-3.5 sm:p-4 rounded-2xl bg-amber-50/90 border border-amber-300 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 text-xs shadow-2xs animate-in fade-in-50 duration-200">
+                <div className="flex items-center gap-2.5 sm:gap-3">
+                  <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-amber-500/20 border border-amber-400 text-amber-900 flex items-center justify-center shrink-0">
                     <AlertTriangle className="w-4 h-4 text-amber-700" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-amber-950 flex items-center gap-2">
+                    <h4 className="font-bold text-amber-950 flex items-center gap-1.5 sm:gap-2 flex-wrap">
                       <span>Vault Low Stock Notice</span>
                       <span className="px-2 py-0.2 rounded-full text-[10px] font-mono font-bold bg-amber-200 text-amber-900 border border-amber-300">
-                        {lowStockCount} Timepiece{lowStockCount > 1 ? 's' : ''} &lt; 3 Units Remaining
+                        {lowStockCount} Timepiece{lowStockCount > 1 ? 's' : ''} &lt; 3 Units Left
                       </span>
                     </h4>
                     <p className="text-amber-850 text-[11px] mt-0.5">
@@ -2500,11 +2542,11 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 self-start sm:self-center shrink-0">
+                <div className="flex items-center gap-2 self-start sm:self-center shrink-0 w-full sm:w-auto">
                   <button
                     type="button"
                     onClick={() => setSelectedStockFilter(selectedStockFilter === 'lowstock' ? 'all' : 'lowstock')}
-                    className="px-3.5 py-1.5 rounded-xl bg-white border border-amber-300 hover:bg-amber-100 text-amber-900 font-bold text-xs transition-colors cursor-pointer shadow-2xs font-mono"
+                    className="w-full sm:w-auto px-3.5 py-1.5 rounded-xl bg-white border border-amber-300 hover:bg-amber-100 text-amber-900 font-bold text-xs transition-colors cursor-pointer shadow-2xs font-mono text-center"
                   >
                     {selectedStockFilter === 'lowstock' ? 'Show All Watches' : 'Filter Low Stock Calibres'}
                   </button>
@@ -2514,42 +2556,42 @@ export const AdminPage: React.FC<AdminPageProps> = ({
 
             {/* Bulk Actions Bar (Appears when 1+ watches are selected) */}
             {selectedWatchIds.length > 0 && (
-              <div className="p-3.5 rounded-2xl bg-slate-900 text-white flex flex-col sm:flex-row items-center justify-between gap-3 shadow-lg animate-in slide-in-from-top-2 duration-200">
-                <div className="flex items-center gap-3 text-xs font-bold">
-                  <span className="px-2 py-0.5 rounded-full bg-[#C5A059] text-black font-mono">
+              <div className="p-3 sm:p-3.5 rounded-2xl bg-slate-900 text-white flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 sm:gap-3 shadow-lg animate-in slide-in-from-top-2 duration-200">
+                <div className="flex items-center gap-2 sm:gap-3 text-xs font-bold">
+                  <span className="px-2 py-0.5 rounded-full bg-[#C5A059] text-black font-mono font-extrabold text-[11px]">
                     {selectedWatchIds.length} Selected
                   </span>
                   <span>Bulk Timepiece Actions</span>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-2">
+                <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
                   <button
                     onClick={() => handleBulkSetStock(true)}
-                    className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold cursor-pointer"
+                    className="px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] sm:text-xs font-bold cursor-pointer"
                   >
                     Mark In-Vault
                   </button>
                   <button
                     onClick={() => handleBulkSetStock(false)}
-                    className="px-3 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold cursor-pointer"
+                    className="px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-[11px] sm:text-xs font-bold cursor-pointer"
                   >
                     Mark Sold Out
                   </button>
                   <button
                     onClick={handleBulkToggleFeatured}
-                    className="px-3 py-1.5 rounded-xl bg-[#9A7B38] hover:bg-[#B89243] text-black text-xs font-bold cursor-pointer"
+                    className="px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl bg-[#9A7B38] hover:bg-[#B89243] text-black text-[11px] sm:text-xs font-bold cursor-pointer"
                   >
                     Toggle Featured
                   </button>
                   <button
                     onClick={handleBulkDelete}
-                    className="px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold cursor-pointer"
+                    className="px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-[11px] sm:text-xs font-bold cursor-pointer"
                   >
                     Delete Selected
                   </button>
                   <button
                     onClick={() => setSelectedWatchIds([])}
-                    className="px-2.5 py-1.5 text-xs text-slate-400 hover:text-white cursor-pointer"
+                    className="px-2 py-1 text-[11px] text-slate-400 hover:text-white cursor-pointer"
                   >
                     Deselect All
                   </button>
@@ -2559,28 +2601,202 @@ export const AdminPage: React.FC<AdminPageProps> = ({
 
             {/* 4. Timepieces Ledger Table Card Component */}
             <div className="border border-slate-200/90 rounded-2xl overflow-hidden bg-white shadow-sm">
-              <div className="p-4 sm:p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white">
+              <div className="p-3.5 sm:p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 bg-white">
                 <div className="flex items-center gap-2.5">
                   <span className="p-1 rounded-md bg-slate-100 text-slate-700">
                     <Layers className="w-4 h-4 text-slate-800" />
                   </span>
                   <div>
-                    <h3 className="font-sans text-sm font-bold text-slate-900">
+                    <h3 className="font-sans text-xs sm:text-sm font-bold text-slate-900">
                       Active Timepiece Ledger
                     </h3>
-                    <p className="text-[11px] text-slate-500">
+                    <p className="text-[10px] sm:text-[11px] text-slate-500">
                       Physical vault stock, reference codes, calibres, and boutique prices.
                     </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-slate-500 font-mono">
+                  <span className="text-[11px] sm:text-xs text-slate-500 font-mono">
                     {filteredWatches.length} of {watches.length} Models
                   </span>
                 </div>
               </div>
-              <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse">
+
+              {/* Mobile View: Dedicated Responsive Cards */}
+              <div className="block md:hidden divide-y divide-slate-100">
+                {filteredWatches.length === 0 ? (
+                  <div className="py-12 px-4 text-center text-slate-400">
+                    <Package className="w-8 h-8 mx-auto mb-2 opacity-40 text-[#9A7B38]" />
+                    <p className="font-semibold text-slate-600 text-xs">No timepieces found matching criteria</p>
+                    <p className="text-[11px] text-slate-400 mt-1">Try clearing filters or add a new timepiece.</p>
+                  </div>
+                ) : (
+                  filteredWatches.map((watch) => {
+                    const isSelected = selectedWatchIds.includes(watch.id);
+                    return (
+                      <div
+                        key={watch.id}
+                        className={`p-3.5 space-y-3 transition-colors ${isSelected ? 'bg-[#9A7B38]/5' : 'bg-white'}`}
+                      >
+                        {/* Top: Checkbox, Thumbnail, Title & Tags */}
+                        <div className="flex items-start gap-2.5">
+                          <button
+                            type="button"
+                            onClick={() => handleToggleSelectWatch(watch.id)}
+                            className="text-slate-400 hover:text-slate-800 cursor-pointer pt-1"
+                          >
+                            {isSelected ? (
+                              <CheckSquare className="w-4 h-4 text-[#9A7B38]" />
+                            ) : (
+                              <Square className="w-4 h-4" />
+                            )}
+                          </button>
+                          <div className="relative shrink-0">
+                            <img
+                              src={watch.image}
+                              alt={watch.name}
+                              className="w-13 h-13 rounded-xl object-cover bg-slate-100 border border-slate-200 shadow-2xs"
+                            />
+                            {watch.stockCount > 0 && watch.stockCount < 3 && (
+                              <span className="absolute -top-1 -right-1 w-3 h-3 bg-amber-500 rounded-full border-2 border-white" />
+                            )}
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-1.5 flex-wrap">
+                              <span className="text-[9px] font-mono font-bold text-slate-500 bg-slate-100 px-1.5 py-0.2 rounded">
+                                {watch.reference}
+                              </span>
+                              <span className="text-[9px] font-semibold text-[#9A7B38] bg-[#9A7B38]/10 px-1.5 py-0.2 rounded">
+                                {watch.collection}
+                              </span>
+                              {watch.isLimitedEdition && (
+                                <span className="text-[9px] text-amber-700 bg-amber-50 border border-amber-200 px-1 py-0.2 rounded font-mono">
+                                  Ltd {watch.editionLimit || 25}
+                                </span>
+                              )}
+                            </div>
+                            <h4 className="font-bold text-slate-900 text-xs sm:text-sm mt-1 line-clamp-1">{watch.name}</h4>
+                            <div className="text-[10px] text-slate-400 font-mono truncate">{watch.specs.calibre || 'In-House'}</div>
+                          </div>
+                        </div>
+
+                        {/* Middle: Valuation Price & Stock Stepper */}
+                        <div className="flex items-center justify-between gap-2 pt-2 border-t border-slate-100">
+                          <div>
+                            <div className="font-mono font-bold text-slate-900 text-xs sm:text-sm">
+                              <AnimatedPrice amountUSD={watch.priceUSD} currency={currency} />
+                            </div>
+                            <div className="text-[10px] text-slate-400 font-sans">${watch.priceUSD.toLocaleString()} USD</div>
+                          </div>
+
+                          <div className="flex items-center gap-2">
+                            {/* Stock Stepper */}
+                            <div className="flex items-center border border-slate-200 rounded-lg overflow-hidden bg-white shadow-2xs">
+                              <button
+                                type="button"
+                                onClick={() => handleAdjustStock(watch, -1)}
+                                className="px-2 py-1 hover:bg-slate-100 text-slate-600 font-bold text-xs cursor-pointer"
+                                title="Decrease stock"
+                              >
+                                -
+                              </button>
+                              <span className={`px-2 font-mono font-bold text-xs ${
+                                watch.stockCount > 0 && watch.stockCount < 3
+                                  ? 'text-amber-800 bg-amber-50'
+                                  : watch.stockCount === 0
+                                  ? 'text-rose-700 bg-rose-50'
+                                  : 'text-slate-800'
+                              }`}>
+                                {watch.stockCount}
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => handleAdjustStock(watch, 1)}
+                                className="px-2 py-1 hover:bg-slate-100 text-slate-600 font-bold text-xs cursor-pointer"
+                                title="Increase stock"
+                              >
+                                +
+                              </button>
+                            </div>
+
+                            {/* Status badge */}
+                            <button
+                              type="button"
+                              onClick={() => handleToggleStock(watch)}
+                              className={`px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider border cursor-pointer ${
+                                watch.inStock && watch.stockCount > 0
+                                  ? watch.stockCount < 3
+                                    ? 'bg-amber-50 text-amber-900 border-amber-300 font-mono'
+                                    : 'bg-emerald-50 text-emerald-700 border-emerald-300'
+                                  : 'bg-rose-50 text-rose-700 border-rose-300'
+                              }`}
+                            >
+                              {watch.inStock && watch.stockCount > 0 ? (watch.stockCount < 3 ? 'Low Stock' : 'In Vault') : 'Sold Out'}
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Bottom: Action buttons */}
+                        <div className="flex items-center justify-between gap-1.5 pt-2 border-t border-slate-100">
+                          <button
+                            type="button"
+                            onClick={() => handleToggleFeatured(watch)}
+                            className={`px-2 py-1 rounded-lg border text-xs flex items-center gap-1 cursor-pointer ${
+                              watch.isFeatured
+                                ? 'bg-[#9A7B38]/15 border-[#9A7B38] text-[#9A7B38] font-semibold'
+                                : 'bg-slate-50 border-slate-200 text-slate-500'
+                            }`}
+                            title="Toggle Featured"
+                          >
+                            <Sparkles className="w-3.5 h-3.5 fill-current" />
+                            <span className="text-[10px]">{watch.isFeatured ? 'Featured' : 'Feature'}</span>
+                          </button>
+
+                          <div className="flex items-center gap-1">
+                            <button
+                              type="button"
+                              onClick={() => onViewWatch(watch)}
+                              className="p-1.5 rounded-lg border border-slate-200 bg-white text-slate-600 hover:text-[#9A7B38] cursor-pointer"
+                              title="View in store"
+                            >
+                              <Eye className="w-3.5 h-3.5" />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleDuplicateWatch(watch)}
+                              className="p-1.5 rounded-lg border border-slate-200 bg-white text-slate-600 hover:text-emerald-600 cursor-pointer"
+                              title="Duplicate timepiece"
+                            >
+                              <Copy className="w-3.5 h-3.5" />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleOpenEdit(watch)}
+                              className="px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white text-slate-700 hover:text-blue-600 text-xs font-semibold flex items-center gap-1 cursor-pointer"
+                              title="Edit full specifications"
+                            >
+                              <Edit3 className="w-3.5 h-3.5 text-blue-600" />
+                              <span className="text-[11px]">Edit</span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleDelete(watch)}
+                              className="p-1.5 rounded-lg border border-slate-200 bg-white text-slate-400 hover:text-rose-600 cursor-pointer"
+                              title="Delete timepiece"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+
+              {/* Desktop View: Full Data Ledger Table */}
+              <div className="hidden md:block overflow-x-auto">
+                <table className="w-full min-w-[760px] text-left border-collapse">
                   <thead>
                     <tr className="bg-slate-50 border-b border-slate-200 text-[11px] font-bold uppercase tracking-wider text-slate-600 font-mono">
                       <th className="py-3.5 px-3 w-10 text-center">
@@ -2872,17 +3088,17 @@ export const AdminPage: React.FC<AdminPageProps> = ({
         {activeTab === 'orders' && (
           <div className="space-y-6">
             {/* 1. Orders Module Header Card */}
-            <div className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-sm flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+            <div className="p-4 sm:p-6 rounded-2xl bg-white border border-slate-200/90 shadow-sm flex flex-col lg:flex-row lg:items-center justify-between gap-4">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
                   <span className="p-1 rounded-md bg-slate-100 text-slate-700">
                     <ShoppingBag className="w-4 h-4 text-slate-800" />
                   </span>
-                  <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider font-sans">
+                  <span className="text-[10px] sm:text-[11px] font-semibold text-slate-500 uppercase tracking-wider font-sans">
                     Commerce & Consignment Module
                   </span>
                 </div>
-                <h2 className="text-xl font-bold text-slate-900 tracking-tight font-sans">
+                <h2 className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight font-sans">
                   Consignment Orders & Client Patron Records
                 </h2>
                 <p className="text-xs text-slate-500 max-w-xl">
@@ -2891,12 +3107,12 @@ export const AdminPage: React.FC<AdminPageProps> = ({
               </div>
 
               {/* Sub-Tab Navigation & Sales Analytics */}
-              <div className="flex flex-wrap items-center gap-2 self-start lg:self-center">
-                <div className="flex items-center gap-1 p-1 rounded-lg bg-slate-100 border border-slate-200">
+              <div className="flex flex-wrap items-center gap-2 self-start lg:self-center w-full lg:w-auto">
+                <div className="flex items-center gap-1 p-1 rounded-lg bg-slate-100 border border-slate-200 flex-1 sm:flex-initial">
                   <button
                     type="button"
                     onClick={() => setOrderSubTab('orders')}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold transition-colors cursor-pointer ${
+                    className={`flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold transition-colors cursor-pointer ${
                       orderSubTab === 'orders'
                         ? 'bg-white text-slate-900 shadow-2xs'
                         : 'text-slate-600 hover:text-slate-900'
@@ -2909,7 +3125,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                   <button
                     type="button"
                     onClick={() => setOrderSubTab('customer-history')}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold transition-colors cursor-pointer ${
+                    className={`flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold transition-colors cursor-pointer ${
                       orderSubTab === 'customer-history'
                         ? 'bg-white text-slate-900 shadow-2xs'
                         : 'text-slate-600 hover:text-slate-900'
@@ -2923,7 +3139,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                 <button
                   type="button"
                   onClick={() => setActiveTab('analytics')}
-                  className="px-3.5 py-2 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold transition-colors flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                  className="px-3.5 py-2 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs w-full sm:w-auto"
                 >
                   <BarChart3 className="w-3.5 h-3.5 text-slate-500" />
                   <span>Sales Analytics</span>
@@ -2933,136 +3149,136 @@ export const AdminPage: React.FC<AdminPageProps> = ({
 
             {/* SUB-TAB 1: ALL CONSIGNMENT ORDERS FEED */}
             {orderSubTab === 'orders' && (
-              <div className="space-y-6 animate-in fade-in-50 duration-150">
+              <div className="space-y-4 sm:space-y-6 animate-in fade-in-50 duration-150">
                 {/* 2. KPI Cards for Orders */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-1">
-                    <div className="flex items-center justify-between text-slate-500 text-xs font-bold uppercase tracking-wider">
-                      <span>Total Orders Placed</span>
-                      <ShoppingBag className="w-4 h-4 text-[#9A7B38]" />
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4">
+                  <div className="p-3.5 sm:p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-1">
+                    <div className="flex items-center justify-between text-slate-500 text-[10px] sm:text-xs font-bold uppercase tracking-wider">
+                      <span>Total Orders</span>
+                      <ShoppingBag className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#9A7B38]" />
                     </div>
-                    <div className="font-mono text-2xl sm:text-3xl font-extrabold text-slate-900 tabular-nums">
+                    <div className="font-mono text-xl sm:text-3xl font-extrabold text-slate-900 tabular-nums">
                       {orders.length}
                     </div>
-                    <div className="text-[11px] text-[#9A7B38] font-semibold">Active Vault Consignments</div>
+                    <div className="text-[10px] sm:text-[11px] text-[#9A7B38] font-semibold truncate">Active Vault Consignments</div>
                   </div>
 
-                  <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-1">
-                    <div className="flex items-center justify-between text-slate-500 text-xs font-bold uppercase tracking-wider">
-                      <span>Total Order Revenue</span>
-                      <DollarSign className="w-4 h-4 text-emerald-600" />
+                  <div className="p-3.5 sm:p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-1">
+                    <div className="flex items-center justify-between text-slate-500 text-[10px] sm:text-xs font-bold uppercase tracking-wider">
+                      <span>Total Revenue</span>
+                      <DollarSign className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-600" />
                     </div>
-                    <div className="font-mono text-xl sm:text-2xl font-extrabold text-emerald-700 tabular-nums truncate">
+                    <div className="font-mono text-base sm:text-2xl font-extrabold text-emerald-700 tabular-nums truncate">
                       <AnimatedPrice amountUSD={totalOrderRevenue} currency={currency} />
                     </div>
-                    <div className="text-[11px] text-emerald-600 font-semibold">${totalOrderRevenue.toLocaleString()} USD</div>
+                    <div className="text-[10px] sm:text-[11px] text-emerald-600 font-semibold truncate">${totalOrderRevenue.toLocaleString()} USD</div>
                   </div>
 
-                  <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-1">
-                    <div className="flex items-center justify-between text-slate-500 text-xs font-bold uppercase tracking-wider">
-                      <span>Armored In Transit</span>
-                      <Truck className="w-4 h-4 text-blue-600" />
+                  <div className="p-3.5 sm:p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-1">
+                    <div className="flex items-center justify-between text-slate-500 text-[10px] sm:text-xs font-bold uppercase tracking-wider">
+                      <span>In Transit</span>
+                      <Truck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-600" />
                     </div>
-                    <div className="font-mono text-2xl sm:text-3xl font-extrabold text-slate-900 tabular-nums">
+                    <div className="font-mono text-xl sm:text-3xl font-extrabold text-slate-900 tabular-nums">
                       {orders.filter((o) => o.status === 'In Transit' || o.status === 'Out for Delivery').length}
                     </div>
-                    <div className="text-[11px] text-blue-600 font-semibold">Active Air Cargo Courier</div>
+                    <div className="text-[10px] sm:text-[11px] text-blue-600 font-semibold truncate">Armored Air Courier</div>
                   </div>
 
-                  <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-1">
-                    <div className="flex items-center justify-between text-slate-500 text-xs font-bold uppercase tracking-wider">
-                      <span>Delivered / Handed Over</span>
-                      <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                  <div className="p-3.5 sm:p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-1">
+                    <div className="flex items-center justify-between text-slate-500 text-[10px] sm:text-xs font-bold uppercase tracking-wider">
+                      <span>Delivered</span>
+                      <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-600" />
                     </div>
-                    <div className="font-mono text-2xl sm:text-3xl font-extrabold text-slate-900 tabular-nums">
+                    <div className="font-mono text-xl sm:text-3xl font-extrabold text-slate-900 tabular-nums">
                       {orders.filter((o) => o.status === 'Delivered').length}
                     </div>
-                    <div className="text-[11px] text-slate-500 font-semibold">Geneva Seal Verified Handover</div>
+                    <div className="text-[10px] sm:text-[11px] text-slate-500 font-semibold truncate">Geneva Handover Verified</div>
                   </div>
                 </div>
 
                 {/* 3. Filter, Search, and Export Card Component */}
-                <div className="p-5 rounded-2xl bg-white border border-slate-200/90 shadow-sm space-y-4">
-                  <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+                <div className="p-3.5 sm:p-5 rounded-2xl bg-white border border-slate-200/90 shadow-sm space-y-3 sm:space-y-4">
+                  <div className="flex items-center justify-between pb-2.5 border-b border-slate-100">
                     <div className="flex items-center gap-2">
                       <span className="p-1 rounded-md bg-slate-100 text-slate-700">
                         <Filter className="w-3.5 h-3.5 text-slate-800" />
                       </span>
-                      <h3 className="font-sans text-sm font-bold text-slate-900">
+                      <h3 className="font-sans text-xs sm:text-sm font-bold text-slate-900">
                         Filter & Search Consignments
                       </h3>
                     </div>
-                    <span className="text-[11px] text-slate-500 font-mono font-medium">
-                      Showing {filteredOrders.length} of {orders.length} orders
+                    <span className="text-[10px] sm:text-[11px] text-slate-500 font-mono font-medium">
+                      {filteredOrders.length} of {orders.length} orders
                     </span>
                   </div>
 
-                  <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
-                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 flex-1">
+                  <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-2.5 sm:gap-3">
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 flex-1">
                       <div className="relative flex-1">
                         <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                      <input
-                        type="text"
-                        value={orderSearchQuery}
-                        onChange={(e) => setOrderSearchQuery(e.target.value)}
-                        placeholder="Search by Order ID (AUR-...), Client Name, Email, or AWB..."
-                        className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white border border-slate-200 text-xs focus:outline-none focus:border-[#9A7B38] text-slate-900 shadow-2xs font-semibold"
-                      />
-                      {orderSearchQuery && (
-                        <button
-                          onClick={() => setOrderSearchQuery('')}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs cursor-pointer"
-                        >
-                          Clear
-                        </button>
-                      )}
+                        <input
+                          type="text"
+                          value={orderSearchQuery}
+                          onChange={(e) => setOrderSearchQuery(e.target.value)}
+                          placeholder="Search Order ID, Client Name, Email, or AWB..."
+                          className="w-full pl-10 pr-12 py-2 sm:py-2.5 rounded-xl bg-white border border-slate-200 text-xs focus:outline-none focus:border-[#9A7B38] text-slate-900 shadow-2xs font-semibold"
+                        />
+                        {orderSearchQuery && (
+                          <button
+                            onClick={() => setOrderSearchQuery('')}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs cursor-pointer font-bold"
+                          >
+                            ✕
+                          </button>
+                        )}
+                      </div>
+
+                      <select
+                        value={selectedOrderStatus}
+                        onChange={(e) => setSelectedOrderStatus(e.target.value)}
+                        className="w-full sm:w-auto px-3.5 py-2 sm:py-2.5 rounded-xl bg-white border border-slate-200 text-xs text-slate-800 font-bold focus:outline-none focus:border-[#9A7B38] shadow-2xs cursor-pointer"
+                      >
+                        <option value="all">All Order Statuses</option>
+                        <option value="Allocated">Allocated</option>
+                        <option value="Atelier Assembly">Atelier Assembly</option>
+                        <option value="In Transit">In Transit</option>
+                        <option value="Out for Delivery">Out for Delivery</option>
+                        <option value="Delivered">Delivered</option>
+                      </select>
                     </div>
 
-                    <select
-                      value={selectedOrderStatus}
-                      onChange={(e) => setSelectedOrderStatus(e.target.value)}
-                      className="px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-xs text-slate-800 font-bold focus:outline-none focus:border-[#9A7B38] shadow-2xs cursor-pointer"
-                    >
-                      <option value="all">All Order Statuses</option>
-                      <option value="Allocated">Allocated</option>
-                      <option value="Atelier Assembly">Atelier Assembly</option>
-                      <option value="In Transit">In Transit</option>
-                      <option value="Out for Delivery">Out for Delivery</option>
-                      <option value="Delivered">Delivered</option>
-                    </select>
-                  </div>
+                    <div className="grid grid-cols-2 sm:flex items-center gap-2">
+                      <button
+                        onClick={handleExportOrdersCSV}
+                        className="px-3 py-2 rounded-xl border border-slate-200 bg-white hover:border-[#9A7B38] text-xs font-bold text-slate-700 transition-all flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer"
+                        title="Export all orders to CSV"
+                      >
+                        <Download className="w-3.5 h-3.5 text-[#9A7B38]" />
+                        <span>Export CSV</span>
+                      </button>
 
-                  <div className="flex items-center gap-2.5">
-                    <button
-                      onClick={handleExportOrdersCSV}
-                      className="px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white hover:border-[#9A7B38] text-xs font-bold text-slate-700 transition-all flex items-center gap-1.5 shadow-2xs cursor-pointer"
-                      title="Export all orders to CSV"
-                    >
-                      <Download className="w-3.5 h-3.5 text-[#9A7B38]" />
-                      <span>Export CSV</span>
-                    </button>
-
-                    <button
-                      onClick={handleResetOrders}
-                      className="px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white hover:border-[#9A7B38] hover:text-[#9A7B38] text-xs font-bold text-slate-700 transition-all flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer"
-                      title="Reset to default demo orders"
-                    >
-                      <RefreshCw className="w-3.5 h-3.5 text-[#9A7B38]" />
-                      <span>Reset Demo Orders</span>
-                    </button>
+                      <button
+                        onClick={handleResetOrders}
+                        className="px-3 py-2 rounded-xl border border-slate-200 bg-white hover:border-[#9A7B38] hover:text-[#9A7B38] text-xs font-bold text-slate-700 transition-all flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer"
+                        title="Reset to default demo orders"
+                      >
+                        <RefreshCw className="w-3.5 h-3.5 text-[#9A7B38]" />
+                        <span>Reset Orders</span>
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
 
                 {/* Bulk Actions Bar (Appears when 1+ orders are selected) */}
                 {selectedOrderNumbers.length > 0 && (
-                  <div className="p-3.5 rounded-2xl bg-slate-900 text-white flex flex-col md:flex-row items-center justify-between gap-3 shadow-lg animate-in slide-in-from-top-2 duration-200">
-                    <div className="flex items-center gap-3 text-xs font-bold">
-                      <span className="px-2.5 py-0.5 rounded-full bg-slate-900 text-white font-mono font-extrabold shadow-xs">
+                  <div className="p-3 sm:p-3.5 rounded-2xl bg-slate-900 text-white flex flex-col md:flex-row items-stretch md:items-center justify-between gap-2.5 sm:gap-3 shadow-lg animate-in slide-in-from-top-2 duration-200">
+                    <div className="flex items-center gap-2 sm:gap-3 text-xs font-bold">
+                      <span className="px-2.5 py-0.5 rounded-full bg-slate-800 text-amber-400 font-mono font-extrabold shadow-xs text-[11px]">
                         {selectedOrderNumbers.length} Selected
                       </span>
-                      <span className="text-slate-300">
-                        Total Value:{' '}
+                      <span className="text-slate-300 text-[11px] truncate">
+                        Total:{' '}
                         <span className="text-[#E2C775] font-mono">
                           $
                           {orders
@@ -3074,29 +3290,28 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                       </span>
                     </div>
 
-                    <div className="flex flex-wrap items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
                       <button
                         type="button"
                         onClick={() => handleBulkUpdateOrderStatus('In Transit')}
-                        className="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold flex items-center gap-1.5 transition-all shadow-xs cursor-pointer active:scale-95"
+                        className="px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-[11px] sm:text-xs font-bold flex items-center gap-1 transition-all shadow-xs cursor-pointer active:scale-95"
                         title="Mark selected orders as Shipped / In Transit"
                       >
                         <Truck className="w-3.5 h-3.5" />
-                        <span>Mark as Shipped</span>
+                        <span>Shipped</span>
                       </button>
 
                       <button
                         type="button"
                         onClick={() => handleBulkUpdateOrderStatus('Delivered')}
-                        className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold flex items-center gap-1.5 transition-all shadow-xs cursor-pointer active:scale-95"
+                        className="px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] sm:text-xs font-bold flex items-center gap-1 transition-all shadow-xs cursor-pointer active:scale-95"
                         title="Mark selected orders as Delivered"
                       >
                         <CheckCircle2 className="w-3.5 h-3.5" />
-                        <span>Mark as Delivered</span>
+                        <span>Delivered</span>
                       </button>
 
-                      <div className="flex items-center gap-1.5 bg-slate-800 px-2.5 py-1 rounded-xl border border-slate-700">
-                        <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Set Status:</span>
+                      <div className="flex items-center gap-1 bg-slate-800 px-2 py-1 rounded-xl border border-slate-700 text-xs">
                         <select
                           onChange={(e) => {
                             if (e.target.value) {
@@ -3105,21 +3320,21 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                             }
                           }}
                           defaultValue=""
-                          className="bg-transparent text-xs font-semibold text-slate-200 focus:outline-none cursor-pointer"
+                          className="bg-transparent text-[11px] font-semibold text-slate-200 focus:outline-none cursor-pointer"
                         >
-                          <option value="" disabled className="bg-slate-900 text-slate-400">Select...</option>
-                          <option value="Allocated" className="bg-slate-900 text-slate-200">Allocated (Stage 1)</option>
-                          <option value="Atelier Assembly" className="bg-slate-900 text-slate-200">Atelier Assembly (Stage 2)</option>
-                          <option value="In Transit" className="bg-slate-900 text-slate-200">In Transit (Stage 3)</option>
-                          <option value="Out for Delivery" className="bg-slate-900 text-slate-200">Out for Delivery (Stage 4)</option>
-                          <option value="Delivered" className="bg-slate-900 text-slate-200">Delivered (Stage 5)</option>
+                          <option value="" disabled className="bg-slate-900 text-slate-400">Set Status...</option>
+                          <option value="Allocated" className="bg-slate-900 text-slate-200">Allocated</option>
+                          <option value="Atelier Assembly" className="bg-slate-900 text-slate-200">Assembly</option>
+                          <option value="In Transit" className="bg-slate-900 text-slate-200">In Transit</option>
+                          <option value="Out for Delivery" className="bg-slate-900 text-slate-200">Out for Deliv</option>
+                          <option value="Delivered" className="bg-slate-900 text-slate-200">Delivered</option>
                         </select>
                       </div>
 
                       <button
                         type="button"
                         onClick={handleBulkDeleteOrders}
-                        className="px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold flex items-center gap-1.5 transition-all shadow-xs cursor-pointer active:scale-95"
+                        className="px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-[11px] sm:text-xs font-bold flex items-center gap-1 transition-all shadow-xs cursor-pointer active:scale-95"
                         title="Delete selected orders"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -3129,9 +3344,9 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                       <button
                         type="button"
                         onClick={() => setSelectedOrderNumbers([])}
-                        className="px-2.5 py-1.5 text-xs text-slate-400 hover:text-white cursor-pointer transition-colors"
+                        className="px-2 py-1 text-[11px] text-slate-400 hover:text-white cursor-pointer transition-colors"
                       >
-                        Deselect All
+                        Deselect
                       </button>
                     </div>
                   </div>
@@ -3139,28 +3354,165 @@ export const AdminPage: React.FC<AdminPageProps> = ({
 
                 {/* 4. Orders Dispatch Ledger Table Card Component */}
                 <div className="border border-slate-200/90 rounded-2xl overflow-hidden bg-white shadow-sm">
-                  <div className="p-4 sm:p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white">
+                  <div className="p-3.5 sm:p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 bg-white">
                     <div className="flex items-center gap-2.5">
                       <span className="p-1 rounded-md bg-slate-100 text-slate-700">
                         <Truck className="w-4 h-4 text-slate-800" />
                       </span>
                       <div>
-                        <h3 className="font-sans text-sm font-bold text-slate-900">
+                        <h3 className="font-sans text-xs sm:text-sm font-bold text-slate-900">
                           Consignment Dispatch Ledger
                         </h3>
-                        <p className="text-[11px] text-slate-500">
+                        <p className="text-[10px] sm:text-[11px] text-slate-500">
                           Live order queue with airway bills, buyer profiles, and courier milestones.
                         </p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs text-slate-500 font-mono">
+                      <span className="text-[11px] sm:text-xs text-slate-500 font-mono">
                         {filteredOrders.length} of {orders.length} Consignments
                       </span>
                     </div>
                   </div>
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left border-collapse">
+
+                  {/* Mobile View: Dedicated Responsive Order Cards */}
+                  <div className="block md:hidden divide-y divide-slate-100">
+                    {filteredOrders.length === 0 ? (
+                      <div className="py-12 px-4 text-center text-slate-400">
+                        <ShoppingBag className="w-8 h-8 mx-auto mb-2 opacity-40 text-[#9A7B38]" />
+                        <p className="font-semibold text-slate-600 text-xs">No orders found</p>
+                        <p className="text-[11px] text-slate-400 mt-1">Orders placed via Checkout will appear here.</p>
+                      </div>
+                    ) : (
+                      filteredOrders.map((order) => {
+                        const isSelected = selectedOrderNumbers.includes(order.orderNumber);
+                        return (
+                          <div
+                            key={order.orderNumber}
+                            className={`p-3.5 space-y-3 transition-colors ${
+                              isSelected ? 'bg-amber-50/70' : 'bg-white'
+                            }`}
+                          >
+                            {/* Card Top: Checkbox, Order ID, Date & Status Dropdown */}
+                            <div className="flex items-start justify-between gap-2">
+                              <div className="flex items-center gap-2">
+                                <button
+                                  type="button"
+                                  onClick={() => handleToggleSelectOrder(order.orderNumber)}
+                                  className="text-slate-500 hover:text-slate-800 cursor-pointer pt-0.5"
+                                >
+                                  {isSelected ? (
+                                    <CheckSquare className="w-4 h-4 text-[#9A7B38]" />
+                                  ) : (
+                                    <Square className="w-4 h-4 text-slate-400" />
+                                  )}
+                                </button>
+                                <div>
+                                  <div className="font-mono font-extrabold text-[#9A7B38] text-xs">
+                                    {order.orderNumber}
+                                  </div>
+                                  <div className="text-[10px] text-slate-400 font-sans">{order.orderDate}</div>
+                                </div>
+                              </div>
+
+                              {/* Status Selector */}
+                              <select
+                                value={order.status}
+                                onChange={(e) => {
+                                  const newStatus = e.target.value as PlacedOrder['status'];
+                                  let step = 1;
+                                  if (newStatus === 'Atelier Assembly') step = 2;
+                                  else if (newStatus === 'In Transit') step = 3;
+                                  else if (newStatus === 'Out for Delivery') step = 4;
+                                  else if (newStatus === 'Delivered') step = 5;
+                                  handleUpdateOrderStatus(order.orderNumber, newStatus, step);
+                                }}
+                                className={`px-2 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider border cursor-pointer ${
+                                  order.status === 'Delivered'
+                                    ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                                    : order.status === 'In Transit' || order.status === 'Out for Delivery'
+                                    ? 'bg-blue-50 text-blue-800 border-blue-300'
+                                    : 'bg-amber-50 text-amber-800 border-amber-300'
+                                }`}
+                              >
+                                <option value="Allocated">Stage 1: Allocated</option>
+                                <option value="Atelier Assembly">Stage 2: Assembly</option>
+                                <option value="In Transit">Stage 3: In Transit</option>
+                                <option value="Out for Delivery">Stage 4: Out for Deliv</option>
+                                <option value="Delivered">Stage 5: Delivered</option>
+                              </select>
+                            </div>
+
+                            {/* Client & Airway Bill info */}
+                            <div className="flex items-start justify-between gap-2 text-xs pt-1 border-t border-slate-100">
+                              <div className="min-w-0 flex-1">
+                                <div className="font-bold text-slate-900 truncate">{order.clientName}</div>
+                                <div className="text-[11px] text-slate-500 truncate">{order.email}</div>
+                                <div className="text-[10px] text-slate-400 font-mono mt-0.5 truncate">AWB: {order.airwayBill}</div>
+                              </div>
+                              <div className="text-right shrink-0">
+                                <div className="font-mono font-bold text-slate-900 text-xs sm:text-sm">
+                                  <AnimatedPrice amountUSD={order.totalUSD} currency={currency} />
+                                </div>
+                                <span className="inline-block mt-0.5 px-2 py-0.5 rounded-full text-[9px] font-bold uppercase bg-slate-100 text-slate-600 border border-slate-200">
+                                  {order.paymentMethod === 'armored-cod' ? '🛡️ COD' : order.paymentMethod === 'wire' ? '🏦 Wire' : '💳 Card'}
+                                </span>
+                              </div>
+                            </div>
+
+                            {/* Timepiece items summary */}
+                            <div className="flex items-center gap-1.5 overflow-x-auto py-1 scrollbar-none">
+                              {order.items.map((it, idx) => (
+                                <div key={idx} className="flex items-center gap-1.5 shrink-0 bg-slate-50 border border-slate-200 rounded-lg p-1 pr-2">
+                                  <img src={it.image} alt={it.name} className="w-6 h-6 rounded object-cover" />
+                                  <span className="text-[10px] font-bold text-slate-700 max-w-[120px] truncate">{it.name}</span>
+                                  <span className="text-[9px] text-slate-400 font-mono">x{it.quantity}</span>
+                                </div>
+                              ))}
+                            </div>
+
+                            {/* Action buttons */}
+                            <div className="flex items-center justify-between gap-2 pt-2 border-t border-slate-100">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setSelectedCustomerId(order.email || order.clientName);
+                                  setOrderSubTab('customer-history');
+                                }}
+                                className="px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white hover:border-[#9A7B38] text-slate-600 text-xs font-semibold flex items-center gap-1 cursor-pointer"
+                              >
+                                <History className="w-3.5 h-3.5 text-[#9A7B38]" />
+                                <span className="text-[11px]">Patron Dossier</span>
+                              </button>
+
+                              <div className="flex items-center gap-1.5">
+                                <button
+                                  type="button"
+                                  onClick={() => setInspectingOrder(order)}
+                                  className="px-3 py-1.5 rounded-lg bg-slate-900 text-white hover:bg-slate-800 text-xs font-semibold flex items-center gap-1 shadow-2xs cursor-pointer"
+                                >
+                                  <Eye className="w-3.5 h-3.5 text-amber-400" />
+                                  <span className="text-[11px]">Inspect</span>
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => handleDeleteOrder(order.orderNumber)}
+                                  className="p-1.5 rounded-lg border border-slate-200 bg-white text-slate-400 hover:text-rose-600 cursor-pointer"
+                                  title="Delete order"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })
+                    )}
+                  </div>
+
+                  {/* Desktop View: Full Consignment Table */}
+                  <div className="hidden md:block overflow-x-auto">
+                    <table className="w-full min-w-[850px] text-left border-collapse">
                       <thead>
                         <tr className="bg-slate-50 border-b border-slate-200 text-[11px] font-bold uppercase tracking-wider text-slate-600 font-mono">
                           <th className="py-3.5 px-3 w-10 text-center">
@@ -3921,22 +4273,22 @@ export const AdminPage: React.FC<AdminPageProps> = ({
 
             {/* Inspect / Edit Order Modal with Print Invoice & Customer Reachout */}
             {inspectingOrder && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-                <div className="bg-white rounded-3xl border border-slate-200 shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto animate-in zoom-in-95 duration-200 text-slate-900">
-                  <div className="p-6 border-b border-slate-200 flex items-center justify-between sticky top-0 bg-white/95 backdrop-blur-md z-10">
-                    <div>
-                      <div className="flex items-center gap-2">
+              <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/60 backdrop-blur-xs">
+                <div className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200 shadow-2xl w-full max-w-2xl max-h-[92vh] overflow-y-auto animate-in zoom-in-95 duration-200 text-slate-900">
+                  <div className="p-4 sm:p-6 border-b border-slate-200 flex items-center justify-between sticky top-0 bg-white/95 backdrop-blur-md z-10 gap-2">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2 flex-wrap">
                         <span className="font-mono text-xs font-bold text-[#9A7B38]">CONSIGNMENT #{inspectingOrder.orderNumber}</span>
                         <span className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase bg-slate-100 border border-slate-200">
                           {inspectingOrder.status}
                         </span>
                       </div>
-                      <h2 className="font-sans text-xl font-bold text-slate-900 mt-1">Client Order & Armored Escort</h2>
+                      <h2 className="font-sans text-base sm:text-xl font-bold text-slate-900 mt-0.5 truncate">Client Order & Armored Escort</h2>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1.5 shrink-0">
                       <button
                         onClick={() => window.print()}
-                        className="p-2 rounded-xl border border-slate-200 hover:border-[#9A7B38] text-slate-600 hover:text-[#9A7B38] cursor-pointer"
+                        className="p-1.5 sm:p-2 rounded-xl border border-slate-200 hover:border-[#9A7B38] text-slate-600 hover:text-[#9A7B38] cursor-pointer"
                         title="Print Swiss Consignment Invoice"
                       >
                         <Printer className="w-4 h-4" />
@@ -3950,7 +4302,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                     </div>
                   </div>
 
-                  <div className="p-6 space-y-6">
+                  <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
                     {/* Status Updaters */}
                     <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
                       <div className="text-xs font-bold uppercase tracking-wider text-[#9A7B38]">
@@ -4699,7 +5051,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
             {/* ========================================================================= */}
             {/* PRIMARY RECHARTS VISUALIZATION: MONTHLY REVENUE & ORDER VOLUME TRENDS      */}
             {/* ========================================================================= */}
-            <div className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-6">
+            <div className="p-4 sm:p-6 md:p-8 rounded-2xl sm:rounded-3xl bg-white border border-slate-200 shadow-sm space-y-4 sm:space-y-6 min-w-0 overflow-hidden">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-100">
                 <div>
                   <div className="flex items-center gap-2">
@@ -5017,7 +5369,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
             {/* ========================================================================= */}
             {/* MONTHLY PERFORMANCE & ORDER VOLUME TRENDS LEDGER TABLE                     */}
             {/* ========================================================================= */}
-            <div className="p-6 sm:p-7 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-4">
+            <div className="p-4 sm:p-6 md:p-7 rounded-2xl sm:rounded-3xl bg-white border border-slate-200 shadow-sm space-y-4 min-w-0 overflow-hidden">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
                 <div>
                   <div className="flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-[0.2em] text-[#9A7B38] font-bold">
@@ -5041,7 +5393,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
 
               {/* Table Container */}
               <div className="overflow-x-auto rounded-2xl border border-slate-200">
-                <table className="w-full text-left text-xs">
+                <table className="w-full min-w-[720px] text-left text-xs">
                   <thead className="bg-slate-50/80 border-b border-slate-200 text-slate-500 uppercase tracking-wider font-mono text-[10px]">
                     <tr>
                       <th className="py-3 px-4 font-bold">Calendar Month</th>
@@ -5133,9 +5485,9 @@ export const AdminPage: React.FC<AdminPageProps> = ({
             {/* ========================================================================= */}
             {/* VISUALIZATION 2: TOP-SELLING WATCHES (RECHARTS BAR) & COLLECTION ALLOCATION */}
             {/* ========================================================================= */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 min-w-0">
               {/* Top Selling Watches Recharts Bar Chart */}
-              <div className="lg:col-span-7 p-6 sm:p-7 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-4">
+              <div className="lg:col-span-7 p-4 sm:p-6 md:p-7 rounded-2xl sm:rounded-3xl bg-white border border-slate-200 shadow-sm space-y-4 min-w-0 overflow-hidden">
                 <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                   <div>
                     <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#9A7B38] font-bold">
@@ -5193,7 +5545,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
               </div>
 
               {/* Collection Portfolio Allocation Donut Chart */}
-              <div className="lg:col-span-5 p-6 sm:p-7 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-4">
+              <div className="lg:col-span-5 p-4 sm:p-6 md:p-7 rounded-2xl sm:rounded-3xl bg-white border border-slate-200 shadow-sm space-y-4 min-w-0 overflow-hidden">
                 <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                   <div>
                     <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#9A7B38] font-bold">
@@ -5298,9 +5650,9 @@ export const AdminPage: React.FC<AdminPageProps> = ({
             {/* ========================================================================= */}
             {/* VISUALIZATION 3: RECENT ORDERS STATUS PIPELINE & LOGISTICS TELEMETRY      */}
             {/* ========================================================================= */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 min-w-0">
               {/* Recharts Bar Chart: Status Distribution */}
-              <div className="lg:col-span-7 p-6 sm:p-7 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-4">
+              <div className="lg:col-span-7 p-4 sm:p-6 md:p-7 rounded-2xl sm:rounded-3xl bg-white border border-slate-200 shadow-sm space-y-4 min-w-0 overflow-hidden">
                 <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                   <div>
                     <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#9A7B38] font-bold">
@@ -5368,7 +5720,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
               </div>
 
               {/* Swiss Logistics & Escort Protocol Summary */}
-              <div className="lg:col-span-5 p-6 sm:p-7 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-4 flex flex-col justify-between">
+              <div className="lg:col-span-5 p-4 sm:p-6 md:p-7 rounded-2xl sm:rounded-3xl bg-white border border-slate-200 shadow-sm space-y-4 flex flex-col justify-between min-w-0 overflow-hidden">
                 <div className="space-y-1 pb-3 border-b border-slate-100">
                   <div className="flex items-center gap-2">
                     <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
@@ -5763,28 +6115,28 @@ export const AdminPage: React.FC<AdminPageProps> = ({
 
       {/* ---------------- TIMEPIECE ADD / EDIT MODAL ---------------- */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-          <div className="bg-white rounded-3xl border border-slate-200 shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto animate-in zoom-in-95 duration-200 text-slate-900">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/60 backdrop-blur-xs">
+          <div className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200 shadow-2xl w-full max-w-3xl max-h-[92vh] overflow-y-auto animate-in zoom-in-95 duration-200 text-slate-900">
             {/* Modal Header */}
-            <div className="p-6 border-b border-slate-200 flex items-center justify-between sticky top-0 bg-white/95 backdrop-blur-md z-10">
-              <div>
-                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#9A7B38] font-mono">
+            <div className="p-4 sm:p-6 border-b border-slate-200 flex items-center justify-between sticky top-0 bg-white/95 backdrop-blur-md z-10">
+              <div className="min-w-0 pr-2">
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#9A7B38] font-mono block">
                   {editingWatchId ? 'Modify Timepiece Record' : 'Commission New Timepiece'}
                 </span>
-                <h2 className="font-sans text-xl sm:text-2xl font-bold text-slate-900">
+                <h2 className="font-sans text-lg sm:text-2xl font-bold text-slate-900 truncate">
                   {editingWatchId ? `Edit: ${formData.name || 'Timepiece'}` : 'Add New Horological Calibre'}
                 </h2>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
                 {!editingWatchId && (
                   <button
                     type="button"
                     onClick={handleAutofillSample}
-                    className="px-3 py-1.5 rounded-xl border border-[#9A7B38]/30 bg-[#9A7B38]/10 text-[#9A7B38] hover:bg-[#9A7B38]/20 text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
+                    className="px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl border border-[#9A7B38]/30 bg-[#9A7B38]/10 text-[#9A7B38] hover:bg-[#9A7B38]/20 text-[11px] sm:text-xs font-bold flex items-center gap-1 sm:gap-1.5 transition-colors cursor-pointer"
                     title="Load complete sample luxury specs"
                   >
                     <Sparkles className="w-3.5 h-3.5" />
-                    <span>Autofill Sample</span>
+                    <span className="hidden xs:inline">Autofill</span>
                   </button>
                 )}
                 <button
@@ -5798,7 +6150,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
             </div>
 
             {/* Modal Form */}
-            <form onSubmit={handleSubmitWatch} className="p-6 space-y-6">
+            <form onSubmit={handleSubmitWatch} className="p-4 sm:p-6 space-y-4 sm:space-y-6">
               
               {/* Basic Details */}
               <div className="space-y-4">
@@ -6055,17 +6407,17 @@ export const AdminPage: React.FC<AdminPageProps> = ({
               </div>
 
               {/* Submit Buttons */}
-              <div className="p-4 border-t border-slate-200 flex items-center justify-end gap-3 bg-slate-50 -mx-6 -mb-6 rounded-b-3xl">
+              <div className="p-3.5 sm:p-4 border-t border-slate-200 flex flex-wrap items-center justify-end gap-2 sm:gap-3 bg-slate-50 -mx-4 -mb-4 sm:-mx-6 sm:-mb-6 rounded-b-2xl sm:rounded-b-3xl">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-5 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-700 text-xs font-bold hover:bg-slate-100 cursor-pointer"
+                  className="px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl border border-slate-200 bg-white text-slate-700 text-xs font-bold hover:bg-slate-100 cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider text-white bg-slate-900 hover:bg-slate-800 shadow-sm hover:shadow-md transition-all active:scale-95 cursor-pointer"
+                  className="px-5 py-2 sm:px-6 sm:py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider text-white bg-slate-900 hover:bg-slate-800 shadow-sm hover:shadow-md transition-all active:scale-95 cursor-pointer"
                 >
                   {editingWatchId ? 'Save Timepiece Updates' : 'Add to Catalog'}
                 </button>
@@ -6078,17 +6430,17 @@ export const AdminPage: React.FC<AdminPageProps> = ({
 
       {/* ---------------- DUPLICATE MODEL NAME PREVENTION MODAL ---------------- */}
       {duplicateWatchConflict && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm overflow-y-auto">
-          <div className="bg-white rounded-3xl border border-amber-200/90 shadow-2xl w-full max-w-2xl overflow-hidden animate-in zoom-in-95 duration-200 my-8">
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-2 sm:p-4 bg-black/75 backdrop-blur-sm overflow-y-auto">
+          <div className="bg-white rounded-2xl sm:rounded-3xl border border-amber-200/90 shadow-2xl w-full max-w-2xl overflow-hidden animate-in zoom-in-95 duration-200 my-4 sm:my-8 max-h-[94vh] flex flex-col">
             
             {/* Modal Header */}
-            <div className="bg-gradient-to-r from-amber-500/10 via-amber-50 to-orange-50 border-b border-amber-200/80 px-6 py-5 flex items-start justify-between">
-              <div className="flex items-center gap-3.5">
-                <div className="w-11 h-11 rounded-2xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-700 shadow-sm shrink-0">
-                  <ShieldAlert className="w-6 h-6 text-amber-600" />
+            <div className="bg-gradient-to-r from-amber-500/10 via-amber-50 to-orange-50 border-b border-amber-200/80 px-4 py-3.5 sm:px-6 sm:py-5 flex items-start justify-between shrink-0">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-700 shadow-sm shrink-0">
+                  <ShieldAlert className="w-5 h-5 sm:w-6 sm:h-6 text-amber-600" />
                 </div>
-                <div>
-                  <div className="flex items-center gap-2">
+                <div className="min-w-0">
+                  <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
                     <span className="text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-200">
                       Catalog Collision Guard
                     </span>
@@ -6096,7 +6448,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                       {duplicateWatchConflict.pendingAction === 'update' ? 'Update Conflict' : 'New Entry Conflict'}
                     </span>
                   </div>
-                  <h3 className="font-sans text-lg font-bold text-slate-900 mt-0.5">
+                  <h3 className="font-sans text-base sm:text-lg font-bold text-slate-900 mt-0.5 truncate">
                     Duplicate Model Name Detected
                   </h3>
                 </div>
@@ -6105,7 +6457,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
               <button
                 type="button"
                 onClick={() => setDuplicateWatchConflict(null)}
-                className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:text-slate-800 hover:bg-slate-100 transition-colors"
+                className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:text-slate-800 hover:bg-slate-100 transition-colors shrink-0 ml-2"
                 title="Dismiss and revise model name"
               >
                 ✕
@@ -6113,8 +6465,8 @@ export const AdminPage: React.FC<AdminPageProps> = ({
             </div>
 
             {/* Modal Body */}
-            <div className="p-6 space-y-5 text-xs text-slate-600">
-              <div className="bg-amber-50/80 border border-amber-200/70 rounded-2xl p-4 flex items-start gap-3">
+            <div className="p-4 sm:p-6 space-y-4 sm:space-y-5 text-xs text-slate-600 overflow-y-auto flex-1">
+              <div className="bg-amber-50/80 border border-amber-200/70 rounded-2xl p-3 sm:p-4 flex items-start gap-2.5 sm:gap-3">
                 <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
                 <div className="space-y-1">
                   <p className="font-medium text-slate-800">
@@ -6127,9 +6479,9 @@ export const AdminPage: React.FC<AdminPageProps> = ({
               </div>
 
               {/* Side-by-side comparison */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
                 {/* Existing Watch Card */}
-                <div className="rounded-2xl border border-slate-200 bg-slate-50/80 p-4 space-y-3">
+                <div className="rounded-2xl border border-slate-200 bg-slate-50/80 p-3.5 sm:p-4 space-y-3">
                   <div className="flex items-center justify-between pb-2 border-b border-slate-200">
                     <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
                       Existing in Catalog
@@ -6143,7 +6495,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                     <img
                       src={duplicateWatchConflict.existingWatch.image}
                       alt={duplicateWatchConflict.existingWatch.name}
-                      className="w-16 h-16 rounded-xl object-cover border border-slate-200 shrink-0 bg-white"
+                      className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl object-cover border border-slate-200 shrink-0 bg-white"
                       onError={(e) => {
                         (e.target as HTMLElement).style.display = 'none';
                       }}
@@ -6176,7 +6528,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                 </div>
 
                 {/* Pending Watch Card */}
-                <div className="rounded-2xl border-2 border-amber-300 bg-amber-50/30 p-4 space-y-3 relative">
+                <div className="rounded-2xl border-2 border-amber-300 bg-amber-50/30 p-3.5 sm:p-4 space-y-3 relative">
                   <div className="flex items-center justify-between pb-2 border-b border-amber-200/70">
                     <span className="text-[10px] font-bold uppercase tracking-wider text-amber-800">
                       Pending Submission
@@ -6191,13 +6543,13 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                       <img
                         src={formData.image}
                         alt={formData.name}
-                        className="w-16 h-16 rounded-xl object-cover border border-amber-200 shrink-0 bg-white"
+                        className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl object-cover border border-amber-200 shrink-0 bg-white"
                         onError={(e) => {
                           (e.target as HTMLElement).style.display = 'none';
                         }}
                       />
                     ) : (
-                      <div className="w-16 h-16 rounded-xl border border-dashed border-amber-300 bg-amber-50 flex items-center justify-center text-amber-500 shrink-0">
+                      <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl border border-dashed border-amber-300 bg-amber-50 flex items-center justify-center text-amber-500 shrink-0">
                         <ImageIcon className="w-6 h-6" />
                       </div>
                     )}
@@ -6228,12 +6580,12 @@ export const AdminPage: React.FC<AdminPageProps> = ({
               </div>
 
               {/* Recommendation Suggestion Banner */}
-              <div className="bg-slate-50 border border-slate-200 rounded-xl p-3.5 flex items-center justify-between">
-                <div className="flex items-center gap-2.5">
+              <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 sm:p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                <div className="flex items-center gap-2.5 min-w-0">
                   <Sparkles className="w-4 h-4 text-[#C5A059] shrink-0" />
-                  <div>
-                    <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Suggested Distinct Name</span>
-                    <p className="text-xs font-semibold text-slate-800 font-mono">
+                  <div className="min-w-0">
+                    <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider block">Suggested Distinct Name</span>
+                    <p className="text-xs font-semibold text-slate-800 font-mono truncate">
                       {formData.name.trim()} {formData.specs.caseMaterial ? `(${formData.specs.caseMaterial.replace(/[^a-zA-Z0-9 ]/g, '').split(' ').slice(0, 2).join(' ')})` : '(Edition II)'}
                     </p>
                   </div>
@@ -6241,7 +6593,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                 <button
                   type="button"
                   onClick={handleAutoDifferentiateName}
-                  className="px-3 py-1.5 rounded-lg text-[11px] font-bold bg-[#9A7B38] text-white hover:bg-[#85682D] transition-colors cursor-pointer shrink-0 ml-3"
+                  className="px-3 py-1.5 rounded-lg text-[11px] font-bold bg-[#9A7B38] text-white hover:bg-[#85682D] transition-colors cursor-pointer shrink-0 self-start sm:self-auto"
                 >
                   Apply & Save
                 </button>
@@ -6249,31 +6601,31 @@ export const AdminPage: React.FC<AdminPageProps> = ({
             </div>
 
             {/* Modal Actions Footer */}
-            <div className="p-4 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div className="p-3.5 sm:p-4 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-2.5 sm:gap-3 shrink-0">
               <button
                 type="button"
                 onClick={handleOverrideDuplicate}
-                className="text-[11px] text-slate-500 hover:text-rose-600 underline cursor-pointer order-last sm:order-first transition-colors"
+                className="text-[11px] text-slate-500 hover:text-rose-600 underline cursor-pointer order-last sm:order-first transition-colors py-1"
                 title="Override warning and retain duplicate name in catalog"
               >
                 Force Save (Allow Duplicate)
               </button>
 
-              <div className="flex items-center gap-2.5 w-full sm:w-auto justify-end">
+              <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
                 <button
                   type="button"
                   onClick={() => setDuplicateWatchConflict(null)}
-                  className="px-4 py-2 rounded-xl border border-slate-300 bg-white text-slate-700 text-xs font-bold hover:bg-slate-100 transition-colors cursor-pointer"
+                  className="flex-1 sm:flex-none px-3.5 py-2 rounded-xl border border-slate-300 bg-white text-slate-700 text-xs font-bold hover:bg-slate-100 transition-colors cursor-pointer text-center"
                 >
                   Revise Name
                 </button>
                 <button
                   type="button"
                   onClick={handleAutoDifferentiateName}
-                  className="px-5 py-2 rounded-xl text-xs font-bold text-white bg-slate-900 hover:bg-slate-800 shadow-sm hover:shadow transition-all cursor-pointer flex items-center gap-1.5"
+                  className="flex-1 sm:flex-none px-4 py-2 rounded-xl text-xs font-bold text-white bg-slate-900 hover:bg-slate-800 shadow-sm hover:shadow transition-all cursor-pointer flex items-center justify-center gap-1.5 text-center"
                 >
                   <Sparkles className="w-3.5 h-3.5" />
-                  Auto-Differentiate & Save
+                  <span>Auto-Fix</span>
                 </button>
               </div>
             </div>
@@ -6282,10 +6634,10 @@ export const AdminPage: React.FC<AdminPageProps> = ({
         </div>
       )}
       {isPromoModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-          <div className="bg-white rounded-3xl border border-slate-200 shadow-2xl w-full max-w-md p-6 space-y-4 animate-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/60 backdrop-blur-xs">
+          <div className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200 shadow-2xl w-full max-w-md p-4 sm:p-6 space-y-4 animate-in zoom-in-95 duration-200">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="font-sans text-lg font-bold text-slate-900">Create VIP Concession Code</h3>
+              <h3 className="font-sans text-base sm:text-lg font-bold text-slate-900">Create VIP Concession Code</h3>
               <button
                 onClick={() => setIsPromoModalOpen(false)}
                 className="w-7 h-7 rounded-full border border-slate-200 flex items-center justify-center text-slate-500 hover:text-slate-800"
