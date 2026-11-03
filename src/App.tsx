@@ -26,6 +26,7 @@ import { AdminPage } from './pages/AdminPage';
 import { ProductDetailPage } from './pages/ProductDetailPage';
 import { ArticlePage } from './pages/ArticlePage';
 import { LegalPage } from './pages/LegalPage';
+import { getSEOMetadataForRoute, applySEOMetadata } from './utils/seo';
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -157,6 +158,12 @@ export default function App() {
     window.addEventListener('hashchange', handleHashChange);
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
+
+  // Dynamically update document.title, OpenGraph, Twitter, canonical, and Schema.org structured data per section
+  useEffect(() => {
+    const seoData = getSEOMetadataForRoute(currentPage, watches);
+    applySEOMetadata(seoData);
+  }, [currentPage, watches]);
 
   // Smooth, instant navigation across all pages (no blocking transitions)
   const handleNavigate = (page: PageRoute) => {
