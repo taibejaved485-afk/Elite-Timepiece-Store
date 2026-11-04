@@ -21,6 +21,7 @@ import { getShippingStatus } from '../utils/shipping';
 import { findOrderByQuery } from '../utils/orderStorage';
 import { ConciergeFAQ } from '../components/ConciergeFAQ';
 import { PageRoute } from '../types/watch';
+import { injectFAQPageStructuredData } from '../utils/seo';
 
 interface ConciergePageProps {
   onNavigate?: (page: PageRoute) => void;
@@ -47,6 +48,27 @@ interface OrderTrackingData {
 }
 
 export const ConciergePage: React.FC<ConciergePageProps> = ({ onNavigate }) => {
+  useEffect(() => {
+    injectFAQPageStructuredData([
+      {
+        question: 'How do I schedule a private salon viewing in Geneva, London, Dubai, or New York?',
+        answer: 'You can reserve a complimentary 60-minute private horologist viewing session directly through our Concierge Salon booking portal by selecting your preferred boutique location, date, and time.',
+      },
+      {
+        question: 'How can I verify the authenticity and serial number of my Aurelia timepiece?',
+        answer: 'Use our interactive Geneva Central Archive Provenance checker on the Concierge page by entering your timepiece reference or serial number to confirm official Poinçon de Genève registration.',
+      },
+      {
+        question: 'What is the recommended service interval for in-house mechanical calibres?',
+        answer: 'We recommend a complete manufacture overhaul every 3 to 5 years at an authorized Swiss service center or our Le Brassus atelier to renew lubricants and maintain COSC chronometer precision.',
+      },
+      {
+        question: 'How can I track my armored consignment dispatch in real time?',
+        answer: 'Enter your acquisition order reference and collector email in our Direct Vault Dispatch tracker to monitor live armored transit stages from Le Brassus to your private residence.',
+      },
+    ], 'concierge-faq-schema');
+  }, []);
+
   // Appointment Form State
   const [appointment, setAppointment] = useState({
     fullName: '',

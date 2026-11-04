@@ -5,6 +5,7 @@ import { Watch, CurrencyCode } from '../types/watch';
 import { formatPrice } from '../utils/currency';
 import { AnimatedPrice } from '../components/AnimatedPrice';
 import { handleImageFallback } from '../utils/imageFallback';
+import { getWatchImageAlt } from '../utils/imageSeo';
 
 interface CatalogPageProps {
   watches: Watch[];
@@ -455,7 +456,7 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
                   >
                     <img
                       src={watch.image}
-                      alt={watch.name}
+                      alt={getWatchImageAlt(watch, 'card')}
                       onError={handleImageFallback}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                       referrerPolicy="no-referrer"

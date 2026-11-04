@@ -4,6 +4,7 @@ import { X, Search, Clock, ArrowRight, BookOpen } from 'lucide-react';
 import { Watch, PageRoute } from '../types/watch';
 import { WATCHES } from '../data/watches';
 import { handleImageFallback } from '../utils/imageFallback';
+import { getWatchImageAlt } from '../utils/imageSeo';
 
 interface SearchModalProps {
   isOpen: boolean;
@@ -134,7 +135,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onNav
                         >
                           <img
                             src={watch.image}
-                            alt={watch.name}
+                            alt={getWatchImageAlt(watch, 'thumbnail')}
                             onError={handleImageFallback}
                             className="w-12 h-12 object-cover rounded-xl shadow-lg shrink-0"
                           />

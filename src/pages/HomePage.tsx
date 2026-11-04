@@ -7,6 +7,7 @@ import { AnimatedPrice } from '../components/AnimatedPrice';
 import { BrandStory } from '../components/BrandStory';
 import { CollectorMarqueeSection } from '../components/CollectorMarqueeSection';
 import { handleImageFallback } from '../utils/imageFallback';
+import { getWatchImageAlt, getStaticImageAlt } from '../utils/imageSeo';
 
 interface JournalArticle {
   id: string;
@@ -230,7 +231,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               >
                 <img
                   src={watch.image}
-                  alt={watch.name}
+                  alt={getWatchImageAlt(watch, 'card')}
                   onError={handleImageFallback}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                   referrerPolicy="no-referrer"
@@ -462,7 +463,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               >
                 <img
                   src={watch.image}
-                  alt={watch.name}
+                  alt={getWatchImageAlt(watch, 'card')}
                   onError={handleImageFallback}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                   referrerPolicy="no-referrer"
@@ -536,7 +537,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             <div key={`gallery-${idx}`} className="group relative aspect-[4/5] rounded-xl overflow-hidden border border-slate-200 shadow-sm">
               <img 
                 src={item.img} 
-                alt={item.title} 
+                alt={getWatchImageAlt(featuredWatches[idx], 'gallery')} 
                 onError={handleImageFallback}
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
                 referrerPolicy="no-referrer" 

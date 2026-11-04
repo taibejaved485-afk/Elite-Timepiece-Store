@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, ShieldCheck, Lock, FileText, CheckCircle2, Printer } from 'lucide-react';
 import { PageRoute } from '../types/watch';
+import { injectFAQPageStructuredData } from '../utils/seo';
 
 interface LegalPageProps {
   route: 'privacy' | 'terms' | 'provenance';
@@ -9,6 +10,27 @@ interface LegalPageProps {
 }
 
 export const LegalPage: React.FC<LegalPageProps> = ({ route, onNavigate }) => {
+  useEffect(() => {
+    injectFAQPageStructuredData([
+      {
+        question: 'What protections are covered under the 5-Year International Warranty?',
+        answer: 'All timepieces carry a comprehensive 5-year international mechanical warranty covering manufacturing defects, escapement regulation, and water resistance seals.',
+      },
+      {
+        question: 'How is client data and patron confidentiality protected?',
+        answer: 'Aurelia Horology operates in strict accordance with Swiss federal data protection legislation and international luxury client confidentiality standards using 256-bit AES encryption.',
+      },
+      {
+        question: 'How does international armored courier delivery operate?',
+        answer: 'Acquisitions are shipped globally via specialized armored logistics carriers with full valuation insurance, requiring direct signature and government-issued identity verification upon receipt.',
+      },
+      {
+        question: 'What does the Geneva Seal cryptographic provenance passport certify?',
+        answer: 'Every Aurelia timepiece possesses a secure digital passport registered on our private horological ledger recording exact manufacturing date, alloy purity ratios, and servicing history.',
+      },
+    ], 'legal-faq-schema');
+  }, []);
+
   const handlePrint = () => {
     window.print();
   };

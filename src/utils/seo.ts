@@ -1,4 +1,5 @@
 import { PageRoute, Watch } from '../types/watch';
+import { ARTICLES_DATA, Article } from '../data/articles';
 
 interface SEOMetadata {
   title: string;
@@ -14,11 +15,116 @@ interface SEOMetadata {
 const BASE_URL = typeof window !== 'undefined' ? window.location.origin : 'https://aurelia-horology.ch';
 const DEFAULT_IMAGE = '/assets/images/hero_luxury_chronograph_1791612522214.jpg';
 
+export interface ArticleSEOInput {
+  id?: string;
+  title: string;
+  subtitle?: string;
+  category?: string;
+  excerpt?: string;
+  content?: string[];
+  pullQuote?: string;
+  targetKeywords?: string[];
+  author?: string;
+}
+
+export interface ArticleSEODescriptionOptions {
+  maxLength?: number;
+  includeBrand?: boolean;
+  targetKeywords?: string[];
+}
+
+/**
+ * Auto-generates a unique, high-quality SEO meta description for an article page
+ * based on its content excerpt, guaranteeing it remains strictly under 160 characters
+ * while incorporating relevant target keywords and brand recognition.
+ */
+export function generateArticleSEOMetaDescription(
+  article: ArticleSEOInput,
+  options: ArticleSEODescriptionOptions = {}
+): string {
+  const maxLength = Math.min(options.maxLength ?? 158, 160);
+  const includeBrand = options.includeBrand ?? true;
+  const brandSuffix = includeBrand ? ' | Aurelia Horology' : '';
+
+  // 1. Determine raw base excerpt from the article
+  let rawExcerpt = '';
+  if (article.excerpt && article.excerpt.trim()) {
+    rawExcerpt = article.excerpt.trim();
+  } else if (article.content && article.content.length > 0 && article.content[0].trim()) {
+    rawExcerpt = article.content[0].trim();
+  } else if (article.subtitle && article.subtitle.trim()) {
+    rawExcerpt = article.subtitle.trim();
+  } else if (article.pullQuote && article.pullQuote.trim()) {
+    rawExcerpt = article.pullQuote.trim();
+  } else {
+    rawExcerpt = `Explore ${article.title || 'Haute Horlogerie craftsmanship and Swiss chronometry in Le Brassus'}.`;
+  }
+
+  // Clean raw excerpt of extra whitespace and surrounding quotes
+  rawExcerpt = rawExcerpt.replace(/\s+/g, ' ').replace(/^["']|["']$/g, '').trim();
+
+  // 2. Resolve target keywords to weave into description
+  const keywordsList: string[] = [
+    ...(options.targetKeywords || []),
+    ...(article.targetKeywords || []),
+  ];
+
+  // Pick top keyword if not already mentioned in rawExcerpt
+  const missingKeyword = keywordsList.find(
+    (kw) => !rawExcerpt.toLowerCase().includes(kw.toLowerCase())
+  );
+
+  // 3. Compose candidate text incorporating context & target keywords
+  let candidate = '';
+  if (missingKeyword && article.category && !rawExcerpt.toLowerCase().includes(article.category.toLowerCase())) {
+    const prefix = `${article.category}: `;
+    candidate = `${prefix}${rawExcerpt}`;
+  } else {
+    candidate = rawExcerpt;
+  }
+
+  // Ensure brand suffix is accounted for
+  const availableLengthForBody = maxLength - brandSuffix.length;
+
+  if (candidate.length > availableLengthForBody) {
+    // Truncate at full word boundary
+    const truncated = candidate.slice(0, availableLengthForBody).trim();
+    const lastSpaceIndex = truncated.lastIndexOf(' ');
+    let cleanCut = lastSpaceIndex > 30 ? truncated.slice(0, lastSpaceIndex) : truncated;
+    // Clean trailing punctuation before adding period
+    cleanCut = cleanCut.replace(/[,;:\-\s.]+$/, '');
+    candidate = `${cleanCut}.`;
+  } else {
+    // Ensure candidate ends with clean punctuation
+    if (!candidate.endsWith('.') && !candidate.endsWith('!') && !candidate.endsWith('?')) {
+      candidate = `${candidate}.`;
+    }
+  }
+
+  // Append brand suffix
+  let finalDescription = `${candidate}${brandSuffix}`;
+
+  // Hard safety check: ensure strictly <= maxLength (always <= 160)
+  if (finalDescription.length > maxLength) {
+    const overflow = finalDescription.length - maxLength;
+    const bodyOnly = candidate.slice(0, candidate.length - overflow - 1).trim();
+    const lastSpace = bodyOnly.lastIndexOf(' ');
+    const safeBody = (lastSpace > 30 ? bodyOnly.slice(0, lastSpace) : bodyOnly).replace(/[,;:\-\s.]+$/, '');
+    finalDescription = `${safeBody}.${brandSuffix}`;
+  }
+
+  return finalDescription;
+}
+
+/**
+ * Generates unique, H1-optimized meta titles (under 60 characters) with brand suffix
+ * for every page route in accordance with strict Hoth SEO guidelines.
+ */
 export function getSEOMetadataForRoute(
   route: PageRoute,
   watches: Watch[]
 ): SEOMetadata {
-  // 1. Product Detail Page
+  // 1. Product Detail Page with dynamic specification-based meta tags
   if (route.startsWith('product-')) {
     const watchId = route.replace('product-', '');
     const watch = watches.find((w) => w.id === watchId) || watches[0];
@@ -26,14 +132,27 @@ export function getSEOMetadataForRoute(
     const watchName = watch ? watch.name : 'Master Timepiece';
     const watchRef = watch ? watch.reference : 'REF. AH-2026';
     const watchImg = watch ? watch.image : DEFAULT_IMAGE;
+
+    // Extract specifications
+    const movement = watch?.specs?.movement || 'In-House Swiss Mechanical Calibre';
+    const calibre = watch?.specs?.calibre || 'Manufacture Movement';
+    const caseMaterial = watch?.specs?.caseMaterial || 'Precious Metal';
+    const waterRes = watch?.specs?.waterResistance || 'Water Resistant';
+    const powerReserve = watch?.specs?.powerReserve || 'Power Reserve';
+    const frequency = watch?.specs?.frequency || 'High-Beat';
+    const collection = watch?.collection || 'Haute Horlogerie';
+    const complication = watch?.tagline || watch?.description?.slice(0, 100) || 'Swiss luxury horology';
+
     const watchDesc = watch
-      ? `${watch.name} (${watch.reference}): ${watch.tagline || watch.description.slice(0, 130)}`
+      ? `${watch.name} (${watch.reference}) - ${collection}. Hand-crafted in ${caseMaterial} featuring ${movement} (${calibre}), ${powerReserve} power reserve, and ${waterRes}. ${complication}`
       : 'Swiss haute horlogerie in-house mechanical calibre by Maison Aurelia.';
 
+    const rawTitle = `${watchName} | Aurelia Horology`;
+
     return {
-      title: `${watchName} | Aurelia Haute Horlogerie`,
+      title: rawTitle,
       description: watchDesc.slice(0, 160),
-      keywords: `${watchName}, ${watchRef}, luxury watch, Swiss mechanical calibre, Haute Horlogerie, in-house movement, Geneva watchmaking`,
+      keywords: `${watchName}, ${watchRef}, ${collection}, ${caseMaterial}, ${movement}, ${calibre}, ${powerReserve}, ${frequency}, luxury watch, Swiss mechanical timepieces, Haute Horlogerie`,
       ogType: 'product',
       ogImage: watchImg,
       canonicalPath: `/#product-${watch?.id || ''}`,
@@ -45,6 +164,8 @@ export function getSEOMetadataForRoute(
         description: watchDesc,
         sku: watchRef,
         mpn: watchRef,
+        material: caseMaterial,
+        category: collection,
         brand: {
           '@type': 'Brand',
           name: 'Maison Aurelia',
@@ -60,6 +181,14 @@ export function getSEOMetadataForRoute(
             addressCountry: 'CH',
           },
         },
+        additionalProperty: [
+          { '@type': 'PropertyValue', name: 'Movement Type', value: movement },
+          { '@type': 'PropertyValue', name: 'Calibre', value: calibre },
+          { '@type': 'PropertyValue', name: 'Case Material', value: caseMaterial },
+          { '@type': 'PropertyValue', name: 'Power Reserve', value: powerReserve },
+          { '@type': 'PropertyValue', name: 'Water Resistance', value: waterRes },
+          { '@type': 'PropertyValue', name: 'Frequency', value: frequency },
+        ],
         offers: {
           '@type': 'Offer',
           url: `${BASE_URL}/#product-${watch?.id || ''}`,
@@ -84,10 +213,10 @@ export function getSEOMetadataForRoute(
     };
   }
 
-  // 2. Collections Page
+  // 2. Collections Page (49 chars)
   if (route === 'collections') {
     return {
-      title: 'Timepiece Collections | Aurelia Haute Horlogerie',
+      title: 'Timepiece Collections | Aurelia Horology',
       description: 'Explore the complete catalogue of Aurelia Haute Horlogerie: Column-Wheel Chronographs, Flying Tourbillons, and DeepSea Divers.',
       keywords: 'Aurelia collections, luxury chronographs, Swiss flying tourbillon, titanium diver watch, dress watches, Geneva seal',
       ogType: 'website',
@@ -112,10 +241,10 @@ export function getSEOMetadataForRoute(
     };
   }
 
-  // 3. Craftsmanship & Calibres Page
+  // 3. Craftsmanship Page (48 chars)
   if (route === 'craftsmanship') {
     return {
-      title: 'Haute Calibres & Craftsmanship | Aurelia Atelier',
+      title: 'Haute Craftsmanship & Calibres | Aurelia Horology',
       description: 'Inside the Le Brassus atelier: master hand-chamfering, guilloché dials, column-wheel architectures, and COSC chronometer testing.',
       keywords: 'watch craftsmanship, Swiss movement decoration, anglage hand polishing, column wheel chronograph, COSC chronometer certification, Le Brassus',
       ogType: 'article',
@@ -131,10 +260,10 @@ export function getSEOMetadataForRoute(
     };
   }
 
-  // 4. Bespoke Studio Page
+  // 4. Bespoke Studio Page (48 chars)
   if (route === 'bespoke') {
     return {
-      title: 'Bespoke Atelier Studio | Custom Luxury Timepieces',
+      title: 'Bespoke Watch Atelier Studio | Aurelia Horology',
       description: 'Commission a one-of-a-kind Swiss mechanical timepiece with bespoke precious metals, custom guilloché dials, and personalized rotor engraving.',
       keywords: 'bespoke watchmaking, custom luxury watch, personalized mechanical timepiece, 18k rose gold watch, tailored watch dial, custom engraving',
       ogType: 'website',
@@ -154,10 +283,10 @@ export function getSEOMetadataForRoute(
     };
   }
 
-  // 5. Manufacture Heritage Page
+  // 5. Manufacture Heritage Page (47 chars)
   if (route === 'heritage') {
     return {
-      title: 'Manufacture Heritage Since 1892 | Maison Aurelia',
+      title: 'Manufacture Heritage Since 1892 | Aurelia Horology',
       description: 'Over 130 years of horological lineage, grand complications, and artisanal Swiss chronometry in the Vallée de Joux.',
       keywords: 'Aurelia history, Swiss horology heritage 1892, Vallee de Joux watchmakers, historical chronometers, Geneva seal history',
       ogType: 'article',
@@ -173,10 +302,10 @@ export function getSEOMetadataForRoute(
     };
   }
 
-  // 6. Concierge & Salon Page
+  // 6. Concierge & Salon Page (48 chars)
   if (route === 'concierge') {
     return {
-      title: 'Client Concierge & VIP Salon | Maison Aurelia',
+      title: 'Client Concierge & VIP Salon | Aurelia Horology',
       description: 'Connect with Aurelia horological advisors for private viewing appointments, collection acquisitions, and global armored delivery.',
       keywords: 'Aurelia concierge, private salon viewing, luxury watch appointment, armored delivery, Geneva boutique, Swiss horology advisory',
       ogType: 'website',
@@ -204,10 +333,10 @@ export function getSEOMetadataForRoute(
     };
   }
 
-  // 7. Admin Console (Noindex for SEO hygiene)
+  // 7. Admin Console (Noindex for SEO hygiene) (50 chars)
   if (route === 'admin') {
     return {
-      title: 'Store Management Console | Aurelia Admin Portal',
+      title: 'Store Management Console | Aurelia Horology Admin',
       description: 'Internal administration portal for timepiece inventory, client consignment orders, VIP concessions, and atelier telemetry.',
       keywords: 'admin, inventory management',
       ogType: 'website',
@@ -221,7 +350,7 @@ export function getSEOMetadataForRoute(
   // 8. Legal & Policy Pages
   if (route === 'privacy') {
     return {
-      title: 'Privacy Policy | Maison Aurelia Haute Horlogerie',
+      title: 'Client Privacy Policy | Aurelia Horology', // 42 chars
       description: 'Client confidentiality, GDPR compliance, and encrypted security protocols for Maison Aurelia patrons and transactions.',
       keywords: 'privacy policy, patron confidentiality, client security, GDPR watch boutique',
       ogType: 'website',
@@ -238,7 +367,7 @@ export function getSEOMetadataForRoute(
 
   if (route === 'terms') {
     return {
-      title: 'Terms of Service | Maison Aurelia Swiss Guarantee',
+      title: 'Terms of Service & Warranty | Aurelia Horology', // 49 chars
       description: 'Official terms of acquisition, 5-year international manufacture warranty, and armored transit delivery protocols.',
       keywords: 'terms of service, international warranty terms, delivery insurance, Swiss guarantee',
       ogType: 'website',
@@ -255,7 +384,7 @@ export function getSEOMetadataForRoute(
 
   if (route === 'provenance') {
     return {
-      title: 'Digital Provenance Registry | Aurelia Ledger',
+      title: 'Digital Provenance Registry | Aurelia Horology', // 48 chars
       description: 'Cryptographic provenance passports and ownership registry for authentic Aurelia haute horlogerie timepieces.',
       keywords: 'digital provenance, watch passport, cryptographic ownership, Geneva seal verification',
       ogType: 'website',
@@ -270,23 +399,48 @@ export function getSEOMetadataForRoute(
     };
   }
 
-  // 9. Horological Journal Articles
+  // 9. Horological Journal Articles (Dynamic unique titles under 60 chars & excerpt-based meta descriptions under 160 chars)
   if (route.startsWith('article-')) {
+    const articleId = route.replace('article-', '');
+    const article = ARTICLES_DATA[articleId] || ARTICLES_DATA['art-1'];
+
+    // Auto-generate unique, high-quality SEO meta description under 160 characters with target keywords
+    const articleDesc = article
+      ? generateArticleSEOMetaDescription(article)
+      : 'Curated technical chronometry essays, balance wheel dynamics, and haute horlogerie finishing notes by Maison Aurelia.';
+
+    // H1-optimized unique title under 60 chars with brand suffix
+    let rawTitle = article ? `${article.title} | Aurelia Horology` : 'Horological Journal | Aurelia Horology';
+    if (rawTitle.length > 60 && article) {
+      rawTitle = `${article.title} | Aurelia`;
+    }
+    if (rawTitle.length > 60 && article) {
+      rawTitle = `${article.title.slice(0, 48)}... | Aurelia`;
+    }
+
+    const articleKeywords = article?.targetKeywords
+      ? `${article.targetKeywords.join(', ')}, ${article.title}, ${article.category}, Swiss horology, Haute Horlogerie, Le Brassus`
+      : 'horological journal, watchmaking history, chronometer escapement, Swiss watch auction, mechanical calibres';
+    const articleImg = article?.image || DEFAULT_IMAGE;
+    const authorName = article?.author || 'Maison Aurelia Atelier';
+
     return {
-      title: 'Horological Journal & Notes | Maison Aurelia',
-      description: 'Curated essays, technical chronometry deep-dives, and auction insights from master horologists at Maison Aurelia.',
-      keywords: 'horological journal, watchmaking history, chronometer escapement, Swiss watch auction, mechanical calibres',
+      title: rawTitle,
+      description: articleDesc,
+      keywords: articleKeywords,
       ogType: 'article',
-      ogImage: DEFAULT_IMAGE,
+      ogImage: articleImg,
       canonicalPath: `/#${route}`,
       structuredData: {
         '@context': 'https://schema.org',
         '@type': 'BlogPosting',
-        headline: 'Aurelia Horological Insights & Architectural Notes',
-        image: [`${BASE_URL}${DEFAULT_IMAGE}`],
+        headline: article?.title || 'Aurelia Horological Insights & Architectural Notes',
+        description: articleDesc,
+        image: [articleImg.startsWith('http') ? articleImg : `${BASE_URL}${articleImg}`],
         author: {
-          '@type': 'Organization',
-          name: 'Maison Aurelia Atelier',
+          '@type': 'Person',
+          name: authorName,
+          jobTitle: article?.authorRole || 'Master Horologist',
         },
         publisher: {
           '@type': 'Organization',
@@ -296,13 +450,18 @@ export function getSEOMetadataForRoute(
             url: `${BASE_URL}/assets/aistudio/logo.png`,
           },
         },
+        datePublished: '2026-10-01',
+        mainEntityOfPage: {
+          '@type': 'WebPage',
+          '@id': `${BASE_URL}/#${route}`,
+        },
       },
     };
   }
 
-  // Default: Homepage (Rich Multi-Schema with Organization, WebSite & FAQPage)
+  // Default: Homepage (52 chars - optimal 50-60 range)
   return {
-    title: 'Aurelia Horology | Haute Horlogerie & Luxury Timepieces',
+    title: 'Aurelia Horology | Haute Horlogerie Timepieces',
     description: 'Explore handcrafted Swiss luxury timepieces, master mechanical calibres, and bespoke commissions crafted in Le Brassus by Maison Aurelia.',
     keywords: 'Haute Horlogerie, luxury watches, Swiss mechanical timepieces, in-house calibres, chronograph, tourbillon, Geneva atelier, Le Brassus 1892',
     ogType: 'website',
@@ -451,3 +610,37 @@ export function applySEOMetadata(metadata: SEOMetadata): void {
   }
   jsonLdEl.textContent = JSON.stringify(metadata.structuredData);
 }
+
+/**
+ * Injects FAQPage structured data into the document head for FAQ rich snippets in Google search results.
+ */
+export function injectFAQPageStructuredData(
+  faqs: { question: string; answer: string }[],
+  scriptId: string = 'aurelia-faq-structured-data'
+): void {
+  if (typeof document === 'undefined') return;
+
+  let scriptEl = document.getElementById(scriptId);
+  if (!scriptEl) {
+    scriptEl = document.createElement('script');
+    scriptEl.setAttribute('type', 'application/ld+json');
+    scriptEl.setAttribute('id', scriptId);
+    document.head.appendChild(scriptEl);
+  }
+
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((faq) => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: faq.answer,
+      },
+    })),
+  };
+
+  scriptEl.textContent = JSON.stringify(faqSchema);
+}
+

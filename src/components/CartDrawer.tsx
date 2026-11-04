@@ -4,6 +4,7 @@ import { CartItem, CurrencyCode } from '../types/watch';
 import { formatPrice } from '../utils/currency';
 import { AnimatedPrice } from './AnimatedPrice';
 import { handleImageFallback } from '../utils/imageFallback';
+import { getWatchImageAlt } from '../utils/imageSeo';
 
 interface CartDrawerProps {
   isOpen: boolean;
@@ -98,7 +99,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                 >
                   <img
                     src={item.watch.image}
-                    alt={item.watch.name}
+                    alt={getWatchImageAlt(item.watch, 'thumbnail')}
                     onError={handleImageFallback}
                     className="w-20 h-20 object-cover rounded bg-[#161922] border border-white/[0.08] shrink-0"
                     referrerPolicy="no-referrer"

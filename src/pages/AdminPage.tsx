@@ -2100,7 +2100,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
       </header>
 
       {/* Main Admin Container */}
-      <div className="w-full px-3 sm:px-6 lg:px-8 xl:px-10 py-4 sm:py-8 space-y-5 sm:space-y-6 font-sans">
+      <div className="w-full px-3 sm:px-6 lg:px-8 xl:px-10 py-2 sm:py-3 space-y-3 sm:space-y-4 font-sans bg-white">
         
         {/* Simple Page Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 pb-3 sm:pb-4 border-b border-slate-200">

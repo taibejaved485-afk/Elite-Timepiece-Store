@@ -3,6 +3,7 @@ import { X, Trash2, ShoppingBag, ArrowRight } from 'lucide-react';
 import { Watch, CurrencyCode } from '../types/watch';
 import { formatPrice } from '../utils/currency';
 import { AnimatedPrice } from './AnimatedPrice';
+import { getWatchImageAlt } from '../utils/imageSeo';
 
 interface WishlistDrawerProps {
   isOpen: boolean;
@@ -70,7 +71,7 @@ export const WishlistDrawer: React.FC<WishlistDrawerProps> = ({
               >
                 <img
                   src={watch.image}
-                  alt={watch.name}
+                  alt={getWatchImageAlt(watch, 'thumbnail')}
                   className="w-20 h-20 object-cover rounded bg-[#161922] border border-white/[0.08] shrink-0 cursor-pointer"
                   onClick={() => onViewWatch(watch)}
                   referrerPolicy="no-referrer"
