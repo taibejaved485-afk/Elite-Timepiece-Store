@@ -26,6 +26,14 @@ const NAV_LINKS: { label: string; page: PageRoute }[] = [
 
 const SUPPORTED_CURRENCIES: CurrencyCode[] = ['PKR', 'USD', 'EUR', 'GBP', 'AED'];
 
+const CURRENCY_METADATA: Record<CurrencyCode, { flag: string; country: string; isPrimary?: boolean; badge?: string }> = {
+  PKR: { flag: '🇵🇰', country: 'Pakistan', isPrimary: true, badge: 'Primary Region' },
+  USD: { flag: '🇺🇸', country: 'United States' },
+  EUR: { flag: '🇪🇺', country: 'Eurozone' },
+  GBP: { flag: '🇬🇧', country: 'United Kingdom' },
+  AED: { flag: '🇦🇪', country: 'UAE' },
+};
+
 export const Navbar: React.FC<NavbarProps> = ({
   currentPage,
   onNavigate,
@@ -186,25 +194,84 @@ export const Navbar: React.FC<NavbarProps> = ({
             <div className="relative hidden md:block">
               <button
                 onClick={() => setCurrencyDropdownOpen(!currencyDropdownOpen)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-slate-200/80 bg-white hover:border-[#9A7B38]/60 hover:bg-[#FAF8F3] text-xs font-mono text-slate-800 transition-colors shadow-2xs active:scale-95 cursor-pointer"
-                title="Select Valuation Currency"
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all shadow-2xs active:scale-95 cursor-pointer text-xs font-mono ${
+                  currentCurrency === 'PKR'
+                    ? 'border-emerald-500/40 bg-emerald-50/50 hover:bg-emerald-50/80 text-slate-900 ring-1 ring-emerald-500/20'
+                    : 'border-slate-200/80 bg-white hover:border-[#9A7B38]/60 hover:bg-[#FAF8F3] text-slate-800'
+                }`}
+                title={`Valuation Currency: ${currentCurrency} (${CURRENCY_METADATA[currentCurrency]?.country})`}
+                aria-label={`Currency Selector: ${currentCurrency}`}
               >
-                <Globe className="w-3.5 h-3.5 text-[#9A7B38]" />
+                <span className="text-sm leading-none" role="img" aria-label={CURRENCY_METADATA[currentCurrency]?.country}>
+                  {CURRENCY_METADATA[currentCurrency]?.flag}
+                </span>
                 <span className="font-bold text-slate-900">{currentCurrency}</span>
+                {currentCurrency === 'PKR' && (
+                  <span className="px-1.5 py-0.2 rounded text-[9px] font-sans font-bold bg-emerald-600 text-white tracking-wider uppercase">
+                    PK
+                  </span>
+                )}
                 <ChevronDown className="w-3 h-3 text-slate-400 transition-transform duration-200" />
               </button>
 
               {currencyDropdownOpen && (
                 <div
-                  className="absolute right-0 mt-2 w-44 bg-white border border-slate-200 rounded-2xl shadow-xl py-2 z-50 animate-in fade-in zoom-in-95 duration-150"
+                  className="absolute right-0 mt-2 w-60 bg-white border border-slate-200 rounded-2xl shadow-xl py-2 z-50 animate-in fade-in zoom-in-95 duration-150"
                   onMouseLeave={() => setCurrencyDropdownOpen(false)}
                 >
-                  <div className="px-3.5 py-1 border-b border-slate-100 text-[9px] uppercase font-mono tracking-widest text-slate-400 font-semibold">
-                    Select Currency
+                  <div className="px-3.5 py-1.5 border-b border-slate-100 flex items-center justify-between text-[9px] uppercase font-mono tracking-wider text-slate-400 font-semibold">
+                    <span>Valuation Currency</span>
+                    <span className="text-emerald-700 font-bold font-sans bg-emerald-50 px-1.5 py-0.2 rounded border border-emerald-200/50 flex items-center gap-1">
+                      <span>🇵🇰</span>
+                      <span>PKR Primary</span>
+                    </span>
                   </div>
-                  {SUPPORTED_CURRENCIES.map((curr) => {
+
+                  {/* Featured Primary Regional Currency: PKR */}
+                  <div className="p-1.5">
+                    <button
+                      onClick={() => {
+                        onSelectCurrency('PKR');
+                        setCurrencyDropdownOpen(false);
+                      }}
+                      className={`w-full text-left p-2.5 rounded-xl text-xs font-mono transition-all flex items-center justify-between cursor-pointer border ${
+                        currentCurrency === 'PKR'
+                          ? 'bg-slate-900 text-white border-slate-900 shadow-xs'
+                          : 'bg-emerald-50/70 border-emerald-200/90 text-slate-900 hover:bg-emerald-100/70 hover:border-emerald-300'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <span className="text-lg leading-none shrink-0" role="img" aria-label="Pakistan Flag">
+                          🇵🇰
+                        </span>
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-1.5 leading-tight">
+                            <span className="font-bold">PKR</span>
+                            <span className={`text-[11px] font-sans font-bold ${currentCurrency === 'PKR' ? 'text-emerald-300' : 'text-emerald-700'}`}>
+                              (₨)
+                            </span>
+                          </div>
+                          <span className={`text-[10px] block truncate font-sans ${currentCurrency === 'PKR' ? 'text-slate-300' : 'text-slate-500'}`}>
+                            Pakistani Rupee
+                          </span>
+                        </div>
+                      </div>
+                      <span className={`text-[9px] font-sans font-bold px-1.5 py-0.5 rounded uppercase tracking-wider shrink-0 ${
+                        currentCurrency === 'PKR' ? 'bg-emerald-500 text-white' : 'bg-emerald-600 text-white'
+                      }`}>
+                        Primary
+                      </span>
+                    </button>
+                  </div>
+
+                  <div className="px-3.5 py-1 text-[9px] uppercase font-mono tracking-wider text-slate-400 font-semibold border-t border-slate-100">
+                    International Reserve
+                  </div>
+
+                  {SUPPORTED_CURRENCIES.filter((curr) => curr !== 'PKR').map((curr) => {
                     const isSelected = currentCurrency === curr;
                     const meta = CURRENCY_CONFIG[curr];
+                    const flagMeta = CURRENCY_METADATA[curr];
                     return (
                       <button
                         key={curr}
@@ -218,7 +285,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                             : 'text-slate-700 hover:text-slate-950 hover:bg-slate-50'
                         }`}
                       >
-                        <span className="flex items-center gap-2">
+                        <span className="flex items-center gap-2.5">
+                          <span className="text-sm leading-none" role="img" aria-label={flagMeta?.country}>
+                            {flagMeta?.flag}
+                          </span>
                           <span className="font-bold">{curr}</span>
                           <span className="text-[10px] text-slate-400 font-sans">({meta?.symbol})</span>
                         </span>
@@ -354,14 +424,56 @@ export const Navbar: React.FC<NavbarProps> = ({
               })}
             </nav>
 
-            {/* Currency Selector Grid */}
-            <div className="pt-4 border-t border-slate-100 space-y-2">
-              <div className="text-[10px] uppercase font-mono tracking-wider text-slate-400 font-semibold">
-                Valuation Currency
+            {/* Currency Selector Section */}
+            <div className="pt-4 border-t border-slate-100 space-y-2.5">
+              <div className="flex items-center justify-between text-[10px] uppercase font-mono tracking-wider text-slate-400 font-semibold">
+                <span>Valuation Currency</span>
+                <span className="text-emerald-700 font-sans font-bold text-[9px] bg-emerald-50 px-1.5 py-0.2 rounded border border-emerald-200/50 flex items-center gap-1">
+                  <span>🇵🇰</span>
+                  <span>Primary: Pakistan</span>
+                </span>
               </div>
-              <div className="grid grid-cols-5 gap-2">
-                {SUPPORTED_CURRENCIES.map((curr) => {
+
+              {/* Featured Primary Regional Currency: PKR */}
+              <button
+                onClick={() => {
+                  onSelectCurrency('PKR');
+                  setMobileMenuOpen(false);
+                }}
+                className={`w-full py-2.5 px-3.5 rounded-xl text-xs font-mono transition-all flex items-center justify-between border cursor-pointer ${
+                  currentCurrency === 'PKR'
+                    ? 'bg-slate-900 text-white border-slate-900 shadow-sm'
+                    : 'bg-emerald-50/70 text-slate-900 border-emerald-300 hover:bg-emerald-100/70'
+                }`}
+              >
+                <div className="flex items-center gap-2.5">
+                  <span className="text-lg leading-none" role="img" aria-label="Pakistan Flag">
+                    🇵🇰
+                  </span>
+                  <div className="text-left">
+                    <div className="flex items-center gap-1.5 font-bold">
+                      <span>PKR</span>
+                      <span className={`${currentCurrency === 'PKR' ? 'text-emerald-300' : 'text-emerald-700'} font-sans text-xs`}>
+                        (₨)
+                      </span>
+                    </div>
+                    <span className={`text-[10px] font-sans block ${currentCurrency === 'PKR' ? 'text-slate-300' : 'text-slate-500'}`}>
+                      Pakistani Rupee · Primary Regional
+                    </span>
+                  </div>
+                </div>
+                <span className={`text-[9px] font-sans font-bold px-2 py-0.5 rounded uppercase tracking-wider ${
+                  currentCurrency === 'PKR' ? 'bg-emerald-500 text-white' : 'bg-emerald-600 text-white'
+                }`}>
+                  Primary
+                </span>
+              </button>
+
+              {/* Other Reserve Currencies Grid */}
+              <div className="grid grid-cols-4 gap-1.5 pt-0.5">
+                {SUPPORTED_CURRENCIES.filter((curr) => curr !== 'PKR').map((curr) => {
                   const isSelected = currentCurrency === curr;
+                  const flagMeta = CURRENCY_METADATA[curr];
                   return (
                     <button
                       key={curr}
@@ -369,13 +481,14 @@ export const Navbar: React.FC<NavbarProps> = ({
                         onSelectCurrency(curr);
                         setMobileMenuOpen(false);
                       }}
-                      className={`py-2 px-1 rounded-xl text-xs font-mono transition-colors text-center font-bold cursor-pointer ${
+                      className={`py-2 px-1 rounded-xl text-xs font-mono transition-all text-center font-bold flex flex-col items-center gap-0.5 cursor-pointer border ${
                         isSelected
-                          ? 'bg-slate-900 text-white shadow-xs'
-                          : 'bg-slate-50 text-slate-700 hover:text-slate-900 border border-slate-200'
+                          ? 'bg-slate-900 text-white border-slate-900 shadow-xs'
+                          : 'bg-slate-50 text-slate-700 hover:text-slate-900 border-slate-200'
                       }`}
                     >
-                      {curr}
+                      <span className="text-sm leading-none">{flagMeta?.flag}</span>
+                      <span>{curr}</span>
                     </button>
                   );
                 })}

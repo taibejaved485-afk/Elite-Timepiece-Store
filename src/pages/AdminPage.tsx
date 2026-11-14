@@ -57,6 +57,8 @@ import {
   clearAuditLogs
 } from '../utils/auditLogger';
 import { AdminActivityLog } from '../components/AdminActivityLog';
+import { AdminSEODiagnostics } from '../components/AdminSEODiagnostics';
+import { AdminPakistanSalesAnalytics } from '../components/AdminPakistanSalesAnalytics';
 
 interface AdminPageProps {
   watches: Watch[];
@@ -82,7 +84,7 @@ const INITIAL_FORM_STATE: Omit<Watch, 'id'> = {
   collection: 'Chronograph',
   tagline: '',
   description: '',
-  priceUSD: 35000,
+  priceUSD: 35,
   image: '/assets/images/hero_luxury_chronograph_1791612522214.jpg',
   gallery: ['/assets/images/hero_luxury_chronograph_1791612522214.jpg'],
   specs: {
@@ -108,7 +110,7 @@ const INITIAL_FORM_STATE: Omit<Watch, 'id'> = {
   stockCount: 3,
 };
 
-type AdminTab = 'products' | 'orders' | 'settings' | 'analytics' | 'audit';
+type AdminTab = 'products' | 'orders' | 'settings' | 'analytics' | 'audit' | 'seo';
 
 const ADMIN_CREDS_KEY = 'aurelia_admin_credentials_v1';
 const ADMIN_SESSION_KEY = 'aurelia_admin_session_v1';
@@ -1122,7 +1124,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
         collection: 'Tourbillon' as const,
         tagline: 'Titanium Grade 5 openworked flying tourbillon with ruby pallet fork',
         description: 'An architectural feat of Swiss micromechanics. Hand-finished titanium bridges framing a one-minute flying tourbillon cage floating over a deep meteorite dial with 72-hour power reserve.',
-        priceUSD: 94000,
+        priceUSD: 49,
         image: '/assets/images/watch_skeleton_tourbillon_1791612558576.jpg',
         specs: {
           caseDiameter: '41 mm',
@@ -1149,7 +1151,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
         collection: 'Diver' as const,
         tagline: 'Extreme ocean flyback chronograph in 904L steel and ceramic',
         description: 'Engineered for absolute underwater fidelity. Unidirectional ceramic timing bezel, locking chronograph pushers, automatic helium relief valve, and high-contrast tritium glow markers.',
-        priceUSD: 21500,
+        priceUSD: 29,
         image: '/assets/images/watch_diver_submariner_1791612540699.jpg',
         specs: {
           caseDiameter: '43 mm',
@@ -2262,6 +2264,27 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                     activeTab === 'audit' ? 'bg-white/20 text-white' : 'bg-slate-200/80 text-slate-600'
                   }`}>
                     {auditLogs.length}
+                  </span>
+                </button>
+
+                {/* 6. SEO Diagnostics */}
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('seo')}
+                  className={`shrink-0 lg:w-full flex items-center justify-between gap-2 px-2.5 py-1.5 sm:px-3 sm:py-2.5 rounded-lg transition-colors cursor-pointer text-left text-xs whitespace-nowrap ${
+                    activeTab === 'seo'
+                      ? 'bg-slate-900 text-white font-medium shadow-xs'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50 font-normal bg-slate-50 lg:bg-transparent'
+                  }`}
+                >
+                  <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+                    <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 text-[#C5A059]" />
+                    <span>SEO Diagnostics</span>
+                  </div>
+                  <span className={`text-[10px] sm:text-[11px] font-semibold px-1.5 py-0.2 rounded-md ${
+                    activeTab === 'seo' ? 'bg-[#C5A059] text-white' : 'bg-emerald-50 text-emerald-700 border border-emerald-200/60'
+                  }`}>
+                    Audit
                   </span>
                 </button>
               </nav>
@@ -5367,6 +5390,11 @@ export const AdminPage: React.FC<AdminPageProps> = ({
             </div>
 
             {/* ========================================================================= */}
+            {/* PAKISTANI MARKET 30-DAY PURCHASE VOLUME & FREQUENCY RECHARTS ANALYTICS     */}
+            {/* ========================================================================= */}
+            <AdminPakistanSalesAnalytics currency={currency} watches={watches} />
+
+            {/* ========================================================================= */}
             {/* MONTHLY PERFORMANCE & ORDER VOLUME TRENDS LEDGER TABLE                     */}
             {/* ========================================================================= */}
             <div className="p-4 sm:p-6 md:p-7 rounded-2xl sm:rounded-3xl bg-white border border-slate-200 shadow-sm space-y-4 min-w-0 overflow-hidden">
@@ -6060,6 +6088,17 @@ export const AdminPage: React.FC<AdminPageProps> = ({
               adminUser={adminCreds.username}
               title="Maison Security & Activity Audit Log"
               subtitle="Full-spectrum historical chronicle of all timepiece additions, updates, deletions, and administrative operations."
+            />
+          </div>
+        )}
+
+        {/* ---------------- TAB 6: SEO METADATA AUDITOR & DIAGNOSTIC LEDGER ---------------- */}
+        {activeTab === 'seo' && (
+          <div className="space-y-6">
+            <AdminSEODiagnostics
+              watches={watches}
+              onNavigate={onNavigate}
+              showToast={showToast}
             />
           </div>
         )}

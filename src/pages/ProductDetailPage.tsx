@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Clock, Shield, Compass, Sparkles, Heart, ShoppingBag, Share2, Check, Printer } from 'lucide-react';
+import { ArrowLeft, Clock, Shield, Compass, Sparkles, Heart, ShoppingBag, Share2, Check, Printer, TrendingUp } from 'lucide-react';
 import { Watch, CurrencyCode, PageRoute } from '../types/watch';
 import { formatPrice } from '../utils/currency';
 import { AnimatedPrice } from '../components/AnimatedPrice';
 import { handleImageFallback } from '../utils/imageFallback';
 import { getWatchImageAlt } from '../utils/imageSeo';
+import { WatchPriceTrendChart } from '../components/WatchPriceTrendChart';
 
 interface ProductDetailPageProps {
   watch: Watch;
@@ -31,7 +32,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
   const [selectedImage, setSelectedImage] = useState<string>(watch.image);
   const [quantity, setQuantity] = useState(1);
   const [selectedStrap, setSelectedStrap] = useState<string>('Alligator Leather - Noir');
-  const [activeTab, setActiveTab] = useState<'specs' | 'movement' | 'provenance'>('specs');
+  const [activeTab, setActiveTab] = useState<'specs' | 'movement' | 'provenance' | 'valuation'>('specs');
   const [addedAnimation, setAddedAnimation] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
 
@@ -176,13 +177,21 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
               {watch.tagline}
             </p>
 
-            <div className="pt-2 flex flex-wrap items-baseline gap-2 sm:gap-4">
+            <div className="pt-2 flex flex-wrap items-center gap-2 sm:gap-4">
               <span className="font-mono text-2xl sm:text-4xl font-bold text-slate-900 tabular-nums">
                 <AnimatedPrice amountUSD={watch.priceUSD} currency={currency} duration={1500} replayOnHover={true} />
               </span>
               <span className="text-xs text-slate-500">
                 Includes taxes & insured courier
               </span>
+              <a
+                href="#valuation-history"
+                className="group inline-flex items-center gap-1.5 text-[11px] font-semibold text-[#9A7B38] hover:text-slate-900 transition-colors bg-[#FAF7F0] hover:bg-[#F3EEDC] px-3 py-1 rounded-full border border-[#C5A059]/30"
+                title="View secondary market index & valuation history"
+              >
+                <TrendingUp className="w-3.5 h-3.5 text-[#9A7B38] group-hover:scale-110 transition-transform" />
+                <span>Market Trend Index</span>
+              </a>
             </div>
           </div>
 
@@ -250,13 +259,14 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
             </div>
           </div>
 
-          {/* Technical Tabs (Specs, Movement, Story) */}
+          {/* Technical Tabs (Specs, Movement, Story, Valuation) */}
           <div className="pt-4 sm:pt-6 border-t border-slate-200 space-y-4">
             <div className="flex border-b border-slate-200 overflow-x-auto scrollbar-none whitespace-nowrap -mx-1 px-1">
               {[
                 { id: 'specs', label: 'Technical Specifications' },
                 { id: 'movement', label: 'Manufacture Movement' },
                 { id: 'provenance', label: 'Provenance & History' },
+                { id: 'valuation', label: 'Valuation & Trends' },
               ].map((tab) => (
                 <button
                   key={tab.id}
@@ -305,9 +315,35 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                   </p>
                 </div>
               )}
+
+              {activeTab === 'valuation' && (
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between pb-2 border-b border-slate-200">
+                    <span className="text-slate-600 font-medium">Estimated Secondary Value:</span>
+                    <span className="font-mono font-bold text-slate-900">
+                      <AnimatedPrice amountUSD={watch.priceUSD} currency={currency} />
+                    </span>
+                  </div>
+                  <p className="text-slate-600">
+                    Continuous price telemetry tracking secondary sales, Geneva & London auction hammer prices, and atelier MSRP historical growth.
+                  </p>
+                  <a
+                    href="#valuation-history"
+                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#9A7B38] hover:text-slate-900 transition-colors pt-1 cursor-pointer"
+                  >
+                    <span>Inspect Interactive Recharts Trend Chart Below</span>
+                    <TrendingUp className="w-3.5 h-3.5" />
+                  </a>
+                </div>
+              )}
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Haute Horlogerie Market Index & Price Trend Visualization (Recharts) */}
+      <div id="valuation-history" className="w-full mt-12 sm:mt-16 pt-8 sm:pt-12 border-t border-slate-200">
+        <WatchPriceTrendChart watch={watch} currency={currency} />
       </div>
 
       {/* Related / Similar Masterpieces Section */}

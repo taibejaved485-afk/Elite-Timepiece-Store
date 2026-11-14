@@ -44,8 +44,8 @@ export interface PlacedOrder {
   placedAtISO: string;
 }
 
-const STORAGE_KEY = 'aurelia_placed_orders_v2';
-const LAST_ORDER_KEY = 'aurelia_last_order_v2';
+const STORAGE_KEY = 'aurelia_placed_orders_v3';
+const LAST_ORDER_KEY = 'aurelia_last_order_v3';
 
 export const INITIAL_DEMO_ORDERS: PlacedOrder[] = [
   {
@@ -64,11 +64,11 @@ export const INITIAL_DEMO_ORDERS: PlacedOrder[] = [
         reference: 'REF. AH-5980-RG',
         image: '/assets/images/hero_luxury_chronograph_1791612522214.jpg',
         quantity: 1,
-        priceUSD: 42500,
+        priceUSD: 35,
       },
     ],
     timepieceSummary: 'Aurelia Royal Chronograph 41 (18k Rose Gold)',
-    totalUSD: 42500,
+    totalUSD: 35,
     paymentMethod: 'wire',
     orderDate: 'October 19, 2026',
     estimatedDelivery: 'October 25, 2026 · Armored Escort (14:00 - 16:30)',
@@ -135,11 +135,11 @@ export const INITIAL_DEMO_ORDERS: PlacedOrder[] = [
         reference: 'REF. AH-9010-SK',
         image: '/assets/images/watch_skeleton_tourbillon_1791612558576.jpg',
         quantity: 1,
-        priceUSD: 115000,
+        priceUSD: 49,
       },
     ],
     timepieceSummary: 'Symphonie Skeleton Flying Tourbillon (Limited 25 Pcs)',
-    totalUSD: 115000,
+    totalUSD: 49,
     paymentMethod: 'armored-cod',
     orderDate: 'October 20, 2026',
     estimatedDelivery: 'October 26, 2026 · Morning Diplomatic Escort',
@@ -206,11 +206,11 @@ export const INITIAL_DEMO_ORDERS: PlacedOrder[] = [
         reference: 'REF. AH-300-TI',
         image: '/assets/images/watch_diver_submariner_1791612540699.jpg',
         quantity: 1,
-        priceUSD: 24500,
+        priceUSD: 24,
       },
     ],
     timepieceSummary: 'Abyss Master Diver 300M Titanium',
-    totalUSD: 24500,
+    totalUSD: 24,
     paymentMethod: 'card',
     orderDate: 'October 21, 2026',
     estimatedDelivery: 'October 27, 2026',

@@ -9,6 +9,7 @@ import { WishlistDrawer } from './components/WishlistDrawer';
 import { CheckoutModal } from './components/CheckoutModal';
 import { SearchModal } from './components/SearchModal';
 import { TrackOrderModal } from './components/TrackOrderModal';
+import { LivePurchaseNotifier } from './components/LivePurchaseNotifier';
 
 import { CompareModal } from './components/CompareModal';
 import { LoadingSpinner } from './components/LoadingSpinner';
@@ -31,14 +32,15 @@ import { getSEOMetadataForRoute, applySEOMetadata } from './utils/seo';
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
 
-  // Timepieces Catalog state with persistent localStorage and image path auto-healing
+  // Timepieces Catalog state with persistent localStorage and low-price auto-sync
   const [watches, setWatches] = useState<Watch[]>(() => {
     try {
-      // Clear legacy broken cached catalog
+      // Clear legacy cached catalogs with outdated high prices
       localStorage.removeItem('aurelia_watches_catalog');
       localStorage.removeItem('aurelia_watches_catalog_v2');
+      localStorage.removeItem('aurelia_watches_catalog_v3');
 
-      const saved = localStorage.getItem('aurelia_watches_catalog_v3');
+      const saved = localStorage.getItem('aurelia_watches_catalog_v4');
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
@@ -47,6 +49,7 @@ export default function App() {
             if (canonical) {
               return {
                 ...w,
+                priceUSD: canonical.priceUSD,
                 image: canonical.image,
                 gallery: canonical.gallery,
               };
@@ -64,7 +67,7 @@ export default function App() {
   // Sync watches to localStorage whenever modified
   useEffect(() => {
     try {
-      localStorage.setItem('aurelia_watches_catalog_v3', JSON.stringify(watches));
+      localStorage.setItem('aurelia_watches_catalog_v4', JSON.stringify(watches));
     } catch (e) {
       console.error('Error saving watches to localStorage', e);
     }
@@ -86,7 +89,7 @@ export default function App() {
   const handleResetCatalog = () => {
     if (window.confirm('Reset catalog back to initial factory Swiss watches? Any custom added watches will be cleared.')) {
       setWatches(WATCHES);
-      localStorage.removeItem('aurelia_watches_catalog_v3');
+      localStorage.removeItem('aurelia_watches_catalog_v4');
       import('./utils/auditLogger').then(({ logAdminAction }) => {
         logAdminAction('Catalog Reset', 'product', 'Reset timepiece catalog to initial factory Swiss references', 'admin');
       });
@@ -450,6 +453,7 @@ export default function App() {
         isOpen={isSearchOpen}
         onClose={() => setIsSearchOpen(false)}
         onNavigate={handleNavigate}
+        currency={currency}
       />
 
       <TrackOrderModal
@@ -468,6 +472,15 @@ export default function App() {
           currency={currency}
           onClose={() => setIsCompareOpen(false)}
           onToggleCompare={handleToggleCompare}
+        />
+      )}
+
+      {/* Live Purchase Notifier Toast (Social proof shown only when viewing a product) */}
+      {currentPage.startsWith('product-') && (
+        <LivePurchaseNotifier
+          currency={currency}
+          onNavigate={handleNavigate}
+          watches={watches}
         />
       )}
     </div>

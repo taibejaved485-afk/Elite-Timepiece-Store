@@ -34,22 +34,22 @@ export const BespokePage: React.FC<BespokePageProps> = ({
   const [activeSide, setActiveSide] = useState<'front' | 'caseback'>('front');
   const [orderedSuccess, setOrderedSuccess] = useState<boolean>(false);
 
-  // Dynamic price calculation based on selections
+  // Dynamic price calculation based on selections (accessible luxury pricing)
   const totalPriceUSD = useMemo(() => {
     let total = 0;
     // 1. Case Material
-    if (config.caseMaterial === '18k-rose-gold') total += 24500;
-    if (config.caseMaterial === 'obsidian-ceramic') total += 18800;
-    if (config.caseMaterial === 'titanium-grade-5') total += 15600;
-    if (config.caseMaterial === 'oystersteel-904l') total += 12200;
+    if (config.caseMaterial === '18k-rose-gold') total += 38;
+    if (config.caseMaterial === 'obsidian-ceramic') total += 32;
+    if (config.caseMaterial === 'titanium-grade-5') total += 28;
+    if (config.caseMaterial === 'oystersteel-904l') total += 22;
 
     // 2. Complication
-    if (config.movementType === 'skeleton-tourbillon') total += 28000;
+    if (config.movementType === 'skeleton-tourbillon') total += 25;
 
     // 3. Strap
-    if (config.strapType === 'oyster-steel') total += 2400;
-    if (config.strapType === 'milanese-mesh') total += 1200;
-    if (config.strapType === 'tuscan-suede') total += 400;
+    if (config.strapType === 'oyster-steel') total += 8;
+    if (config.strapType === 'milanese-mesh') total += 5;
+    if (config.strapType === 'tuscan-suede') total += 3;
 
     return total;
   }, [config]);
@@ -289,10 +289,10 @@ export const BespokePage: React.FC<BespokePageProps> = ({
             </label>
             <div className="grid grid-cols-2 gap-3">
               {[
-                { id: '18k-rose-gold', name: '18k 5N Rose Gold', price: 24500, desc: 'Mirror & satin beveled' },
-                { id: 'obsidian-ceramic', name: 'Obsidian Ceramic', price: 18800, desc: 'Scratch-proof monolithic' },
-                { id: 'titanium-grade-5', name: 'Grade 5 Titanium', price: 15600, desc: 'Featherlight aerospace' },
-                { id: 'oystersteel-904l', name: 'Oystersteel 904L', price: 12200, desc: 'Super-alloy polished' },
+                { id: '18k-rose-gold', name: '18k 5N Rose Gold', price: 38, desc: 'Mirror & satin beveled' },
+                { id: 'obsidian-ceramic', name: 'Obsidian Ceramic', price: 32, desc: 'Scratch-proof monolithic' },
+                { id: 'titanium-grade-5', name: 'Grade 5 Titanium', price: 28, desc: 'Featherlight aerospace' },
+                { id: 'oystersteel-904l', name: 'Oystersteel 904L', price: 22, desc: 'Super-alloy polished' },
               ].map((item) => (
                 <button
                   key={item.id}
@@ -385,9 +385,9 @@ export const BespokePage: React.FC<BespokePageProps> = ({
             <div className="grid grid-cols-2 gap-3">
               {[
                 { id: 'alligator-leather', name: 'Mississippi Alligator', price: 0 },
-                { id: 'oyster-steel', name: 'Solid Matching Bracelet', price: 2400 },
-                { id: 'milanese-mesh', name: 'Milanese Mesh Weave', price: 1200 },
-                { id: 'tuscan-suede', name: 'Tuscan Suede Calfskin', price: 400 },
+                { id: 'oyster-steel', name: 'Solid Matching Bracelet', price: 8 },
+                { id: 'milanese-mesh', name: 'Milanese Mesh Weave', price: 5 },
+                { id: 'tuscan-suede', name: 'Tuscan Suede Calfskin', price: 3 },
               ].map((strap) => (
                 <button
                   key={strap.id}

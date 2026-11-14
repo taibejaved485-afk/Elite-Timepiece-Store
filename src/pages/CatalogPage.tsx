@@ -1,11 +1,29 @@
 import React, { useState, useMemo } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { Search, SlidersHorizontal, Heart, ShoppingBag, Eye, X, Check, RotateCcw, Sparkles, ChevronDown } from 'lucide-react';
 import { Watch, CurrencyCode } from '../types/watch';
 import { formatPrice } from '../utils/currency';
 import { AnimatedPrice } from '../components/AnimatedPrice';
 import { handleImageFallback } from '../utils/imageFallback';
 import { getWatchImageAlt } from '../utils/imageSeo';
+
+const cardRevealVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 32,
+    scale: 0.98,
+  },
+  visible: (customIndex: number) => ({
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      duration: 0.55,
+      delay: Math.min((customIndex % 4) * 0.08, 0.28),
+      ease: [0.215, 0.61, 0.355, 1],
+    },
+  }),
+};
 
 interface CatalogPageProps {
   watches: Watch[];
@@ -42,7 +60,7 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedMaterial, setSelectedMaterial] = useState<string>('all');
-  const [priceRange, setPriceRange] = useState<[number, number]>([10000, 100000]);
+  const [priceRange, setPriceRange] = useState<[number, number]>([15, 60]);
   const [activeTier, setActiveTier] = useState<string>('all');
   const [showCustomPrice, setShowCustomPrice] = useState(false);
   const [sortBy, setSortBy] = useState<'featured' | 'price-asc' | 'price-desc'>('featured');
@@ -66,13 +84,13 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
   ];
 
   const handleMinPriceChange = (val: number) => {
-    const safeMin = Math.min(val, priceRange[1] - 2500);
+    const safeMin = Math.min(val, priceRange[1] - 5);
     setPriceRange([safeMin, priceRange[1]]);
     setActiveTier('custom');
   };
 
   const handleMaxPriceChange = (val: number) => {
-    const safeMax = Math.max(val, priceRange[0] + 2500);
+    const safeMax = Math.max(val, priceRange[0] + 5);
     setPriceRange([priceRange[0], safeMax]);
     setActiveTier('custom');
   };
@@ -80,18 +98,18 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
   const handleSelectTier = (tierId: string) => {
     setActiveTier(tierId);
     if (tierId === 'all') {
-      setPriceRange([10000, 100000]);
-    } else if (tierId === 'under-25k') {
-      setPriceRange([10000, 25000]);
-    } else if (tierId === '25k-50k') {
-      setPriceRange([25000, 50000]);
-    } else if (tierId === 'over-50k') {
-      setPriceRange([50000, 100000]);
+      setPriceRange([15, 60]);
+    } else if (tierId === 'under-25') {
+      setPriceRange([15, 25]);
+    } else if (tierId === '25-40') {
+      setPriceRange([25, 40]);
+    } else if (tierId === 'over-40') {
+      setPriceRange([40, 60]);
     }
   };
 
   const handleResetPrice = () => {
-    setPriceRange([10000, 100000]);
+    setPriceRange([15, 60]);
     setActiveTier('all');
   };
 
@@ -141,7 +159,12 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
   return (
     <div className="w-full min-h-screen bg-white text-slate-900 px-3 sm:px-8 lg:px-16 xl:px-24 py-8 sm:py-12 space-y-6">
       {/* Category Navigation & Summary Stats */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-3">
+      <motion.div
+        initial={{ opacity: 0, y: -8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: 'easeOut' }}
+        className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-3"
+      >
         <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1 scrollbar-none">
           {categories.map((cat) => {
             const isActive = selectedCategory === cat.id;
@@ -175,10 +198,15 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
             Showing <span className="font-bold text-slate-900">{filteredWatches.length}</span> of {watches.length} timepieces
           </span>
         </div>
-      </div>
+      </motion.div>
 
       {/* Streamlined Professional Filter Toolbar */}
-      <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 sm:p-3.5 shadow-2xs space-y-3">
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.08, ease: 'easeOut' }}
+        className="bg-slate-50 border border-slate-200 rounded-xl p-3 sm:p-3.5 shadow-2xs space-y-3"
+      >
         <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3 text-xs">
           {/* Left: Search & Quick Selects */}
           <div className="flex flex-1 flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
@@ -234,10 +262,10 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
                 }}
                 className="w-full sm:w-auto bg-white border border-slate-200 hover:border-slate-300 text-slate-800 px-3 py-2 rounded-lg text-xs focus:outline-none focus:border-[#9A7B38] shadow-2xs cursor-pointer appearance-none pr-8 font-mono tabular-nums"
               >
-                <option value="all">All Valuations</option>
-                <option value="under-25k">Under {formatPrice(25000, currency)}</option>
-                <option value="25k-50k">{formatPrice(25000, currency)} – {formatPrice(50000, currency)}</option>
-                <option value="over-50k">Over {formatPrice(50000, currency)}</option>
+                <option value="all">All Prices</option>
+                <option value="under-25">Under {formatPrice(25, currency)}</option>
+                <option value="25-40">{formatPrice(25, currency)} – {formatPrice(40, currency)}</option>
+                <option value="over-40">Over {formatPrice(40, currency)}</option>
                 <option value="custom">Custom Range...</option>
               </select>
               <ChevronDown className="w-3 h-3 text-slate-400 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
@@ -301,13 +329,13 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
               <div className="space-y-1">
                 <div className="flex justify-between text-[11px] text-slate-600 font-mono">
                   <span>Min: {formatPrice(priceRange[0], currency)}</span>
-                  <span className="text-slate-400">{formatPrice(10000, currency)} min</span>
+                  <span className="text-slate-400">{formatPrice(15, currency)} min</span>
                 </div>
                 <input
                   type="range"
-                  min={10000}
-                  max={90000}
-                  step={2500}
+                  min={15}
+                  max={55}
+                  step={1}
                   value={priceRange[0]}
                   onChange={(e) => handleMinPriceChange(Number(e.target.value))}
                   className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-[#9A7B38]"
@@ -317,13 +345,13 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
               <div className="space-y-1">
                 <div className="flex justify-between text-[11px] text-slate-600 font-mono">
                   <span>Max: {formatPrice(priceRange[1], currency)}</span>
-                  <span className="text-slate-400">{formatPrice(100000, currency)}+ max</span>
+                  <span className="text-slate-400">{formatPrice(60, currency)} max</span>
                 </div>
                 <input
                   type="range"
-                  min={20000}
-                  max={100000}
-                  step={2500}
+                  min={20}
+                  max={60}
+                  step={1}
                   value={priceRange[1]}
                   onChange={(e) => handleMaxPriceChange(Number(e.target.value))}
                   className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-[#9A7B38]"
@@ -369,11 +397,11 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
                 <span>
                   {activeTier === 'custom'
                     ? `${formatPrice(priceRange[0], currency)} - ${formatPrice(priceRange[1], currency)}`
-                    : activeTier === 'under-25k'
-                    ? `< ${formatPrice(25000, currency)}`
-                    : activeTier === '25k-50k'
-                    ? `${formatPrice(25000, currency)} - ${formatPrice(50000, currency)}`
-                    : `> ${formatPrice(50000, currency)}`}
+                    : activeTier === 'under-25'
+                    ? `< ${formatPrice(25, currency)}`
+                    : activeTier === '25-40'
+                    ? `${formatPrice(25, currency)} - ${formatPrice(40, currency)}`
+                    : `> ${formatPrice(40, currency)}`}
                 </span>
                 <button
                   type="button"
@@ -414,7 +442,7 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
             </button>
           </div>
         )}
-      </div>
+      </motion.div>
 
       {/* Grid of Product Cards */}
       {filteredWatches.length === 0 ? (
@@ -435,14 +463,12 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
                 <motion.div
                   key={watch.id}
                   layout
-                  initial={{ opacity: 0, y: 18 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  custom={index}
+                  variants={cardRevealVariants}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, amount: 0.12, margin: '0px 0px -40px 0px' }}
                   exit={{ opacity: 0, scale: 0.96, transition: { duration: 0.2 } }}
-                  transition={{
-                    duration: 0.45,
-                    delay: Math.min(index * 0.06, 0.3),
-                    ease: [0.21, 0.47, 0.32, 0.98],
-                  }}
                   whileHover={{
                     y: -6,
                     transition: { duration: 0.25, ease: 'easeOut' },
